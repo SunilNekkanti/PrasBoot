@@ -1,0 +1,2 @@
+LOAD DATA LOCAL INFILE :file INTO TABLE csv2table_bh_roster FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n'   IGNORE 1 LINES SET textbox9 =  case when POSITION(' 0:00' IN textbox9) > 0 then   SUBSTR(textbox9, 1,POSITION(' 0:00' IN textbox9)) else textbox9 end
+ 

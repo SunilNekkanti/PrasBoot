@@ -1,0 +1,22 @@
+<html>
+ 
+<head>
+</head>
+ 
+<body>
+    <p><b>Dear ${careCoordinator} </b>,</p>
+    
+    <p>Existing Lead Details have been updated</p>
+  
+    <p>Please login to Lead Management System for more details </p>
+     
+     
+    <p>Thanks</p>
+    <p>${currentUser}</p>
+    <p>${currentUserRole}</p>
+    <p>${currentLocalTime}</p>
+    
+    
+</body>
+ 
+</html>

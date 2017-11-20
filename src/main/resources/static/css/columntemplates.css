@@ -1,0 +1,61 @@
+/*
+    Header column template styles
+*/
+.columnTemplate .inputField,
+.columnTemplate .selectMenu {
+    padding-left: 4px;
+    width: 100%;
+    background-color: #FAFAFA;
+    height: 24px;
+    border:1px solid #AAA;
+    -moz-box-shadow: inset 0 0 1px #1589FF;
+    -webkit-box-shadow: inset 0 0 1px #1589FF;
+    box-shadow: inset 0 0 1px #1589FF;
+}
+
+.columnTemplate .selectMenu {
+    cursor: pointer;
+}
+
+/*
+    Body column styles: active column
+*/
+.activeStyle {
+    color: #21af17;
+}
+
+.inactiveStyle {
+    color: #DD0000;
+}
+
+/*
+    Body column styles: car.price column
+*/
+.carPriceStyleGreen {
+    color: #21af17;
+}
+
+.carPriceStyleRed {
+    color: #DD0000;
+}
+
+.carPriceStyleGreen,
+.carPriceStyleRed {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/*
+    Body column styles: car.features column
+*/
+.carFeatures1Style {
+    background-color: #FFE6E6;
+}
+
+.carFeatures2Style {
+    background-color: #FFFFAA;
+}
+
+.carFeatures3Style {
+    background-color: #DCFFDC;
+}

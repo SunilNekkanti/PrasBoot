@@ -1,0 +1,1263 @@
+//Code goes here
+'use strict';
+var app = angular.module('my-app', ['ui.bootstrap','datatables.bootstrap','ui.router','ngStorage','datatables','ngAnimate', 'ngSanitize','btorfs.multiselect']);
+
+
+app.constant('urls', {
+    BASE: '/Pras',
+    USER_SERVICE_API : '/Pras/api/user/',
+    MEMBERSHIP_SERVICE_API : '/Pras/api/membership/',
+    MEMBERSHIP_FOLLOWUP_SERVICE_API : '/Pras/api/membershipFollowup/',
+    MEMBERSHIP_ACTIVITY_SERVICE_API : '/Pras/api/membershipActivityMonth/',    
+    ATTPHYISICIAN_SERVICE_API : '/Pras/api/attPhysician/',
+    LEAD_SERVICE_API : '/Pras/api/lead/',
+    GENDER_SERVICE_API : '/Pras/api/gender/',
+    HOSPITAL_SERVICE_API : '/Pras/api/hospital/',
+    ROLE_SERVICE_API : '/Pras/api/role/',
+    STATE_SERVICE_API : '/Pras/api/state/',
+    STATUS_SERVICE_API : '/Pras/api/membershipStatus/',
+    REPORTMONTH_SERVICE_API : '/Pras/api/membershipClaimReportMonth/',
+    LANGUAGE_SERVICE_API : '/Pras/api/language/',
+    PLANTYPE_SERVICE_API : '/Pras/api/planType/',
+    FILE_TYPE_SERVICE_API : '/Pras/api/fileType/',
+    FILE_SERVICE_API : '/Pras/api/file/',
+    FREQUENCY_TYPE_SERVICE_API : '/Pras/api/frequencyType/',
+    MLR_SERVICE_API : '/Pras/api/medicalLossRatio/',
+    CLAIM_REPORT_SERVICE_API : '/Pras/api/membershipClaimsReport/',
+    CLAIM_RISK_CATEGORY_SERVICE_API : '/Pras/api/membershipClaimRiskCategory/',
+    HEDIS_REPORT_SERVICE_API : '/Pras/api/hedisReport/',
+    HEDIS_REPORT_MEMBERSHIP_SERVICE_API: '/Pras/api/membershipHedisMeasure/',
+    MEMBERSHIP_FOLLOWUPDETAILS_SERVICE_API:  '/Pras/api/membershipFollowupDetails/',
+    PLACE_OF_SERVICE_API : '/Pras/api/placeOfService/',
+    CATEGORY_SERVICE_API : '/Pras/api/riskRecon/',
+    INSURANCE_SERVICE_API : '/Pras/api/insurance/',
+    CPT_MEASURE_SERVICE_API : '/Pras/api/cptMeasure/',
+    ICD_MEASURE_SERVICE_API : '/Pras/api/icdMeasure/',
+    HEDIS_MEASURE_SERVICE_API : '/Pras/api/hedisMeasure/',
+    HEDIS_MEASURE_RULE_SERVICE_API : '/Pras/api/hedisMeasureRule/',
+    PROBLEM_SERVICE_API : '/Pras/api/problem/',
+    HEDIS_MEASURE_GROUP_SERVICE_API : '/Pras/api/hedisMeasureGroup/',
+    PROVIDER_SERVICE_API : '/Pras/api/provider/',
+    FACILITYTYPE_SERVICE_API : '/Pras/api/facilityType/',
+    EVENT_SERVICE_API : '/Pras/api/event/',
+    EVENT_ASSIGNMENT_SERVICE_API : '/Pras/api/eventAssignment/',
+    LOGIN_USER : '/Pras/getloginInfo',
+    FILE_UPLOADER : '/Pras/api/fileUpload/fileProcessing.do' ,
+    COUNTY_SERVICE_API : '/Pras/api/county/',
+    EVENT_FREQUENCY_SERVICE_API : '/Pras/api/eventFrequency/',
+    EVENT_MONTH_SERVICE_API : '/Pras/api/eventMonth/',
+    EVENT_WEEKDAY_SERVICE_API : '/Pras/api/eventWeekDay/',
+    FILE_UPLOADED_SERVICE_API : '/Pras/api/fileUploaded/',
+    EVENT_WEEKNUMBER_SERVICE_API : '/Pras/api/eventWeekNumber/',
+    BESTTIMETOCALL_SERVICE_API : '/Pras/api/bestTimeToCall/'
+});
+
+app.controller('NavbarController',  ['$rootScope', '$scope', '$state', '$stateParams', 'UserService', '$localStorage', '$window' , function( $rootScope, $scope, $state, $stateParams, UserService, $localStorage, $window){
+
+	$rootScope.displayNavbar =   false;
+	  loginUser();
+  
+  function loginUser() {
+	  if($localStorage.loginUser === undefined  ){
+		     
+			console.log('About to fetch loginUser');
+			UserService
+					.loginUser()
+					.then(
+							function(loginUser) {
+								console
+										.log('fetched loginUser details successfully');
+								$rootScope.displayNavbar =true;
+								$rootScope.loginUser = $localStorage.loginUser;
+							},
+							function(errResponse) {
+								 callMe('logout')
+								 $rootScope.displayNavbar =false;
+								console
+										.error('Error while fetching loginUser');
+								
+							});
+	  }else{
+			 $rootScope.loginUser = $localStorage.loginUser;
+			 $rootScope.displayNavbar =   true;
+		}
+	}
+  $scope.callMe = function(url,params){
+	  if(url === 'logout'){
+		  $rootScope.displayNavbar = false;
+		  $rootScope.loginUser = undefined;
+		  $window.localStorage.clear();
+		   
+		 
+	  }
+	  if( params !==''){
+		  $state.go(url,params);
+		  
+	  }else{
+		  $state.go(url);
+	  }
+  }
+}]);
+
+
+
+app.config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider) {
+	
+	
+    // Now set up the states
+    $stateProvider
+      .state('home', {
+        url: '/home',
+        templateUrl: 'home'
+       })
+       .state('user', {
+          url: '/user',
+          templateUrl: 'partials/list',
+          controller:'UserController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('user.edit', {
+          url: '/',
+          templateUrl: 'partials/list',
+          controller:'UserController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'userDisplay': false, 
+      	  },
+          resolve: {
+        	  roles: function ( $q, RoleService) {
+        			  console.log('Load all users');
+                      var deferred = $q.defer();
+                      RoleService.loadAllRoles().then(deferred.resolve, deferred.resolve);
+                      console.log('deferred.promise'+deferred.promise);
+                      return deferred.promise;
+              },
+		      languages: function ( $q,  LanguageService) {
+		    		  console.log('Load all languages');
+			          var deferred = $q.defer();
+			          LanguageService.loadAllLanguages().then(deferred.resolve, deferred.resolve);
+			          console.log('deferred.promise'+deferred.promise);
+			          return deferred.promise; 
+		      },
+		      insurances: function ($q,  InsuranceService) {
+		    		    console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+		      },
+		      states: function ($q,  StateService) {
+		    		  console.log('Load all states');
+			          var deferred = $q.defer();
+			          StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
+			          console.log('deferred.promise'+deferred.promise);
+			          return deferred.promise; 
+		      }
+          }
+      })
+       .state('lead', {
+          url: '/lead' ,
+          templateUrl: 'partials/lead_list',
+          controller:'LeadController',
+          controllerAs:'ctrl',
+          resolve: {
+		     
+          }
+      })
+      .state('lead.edit', {
+          url: '/' ,
+          templateUrl: 'partials/lead_list',
+          controller:'LeadController',
+          controllerAs:'ctrl',
+          params: {
+        	    'eventId': '',   
+        	    'leadDisplay': true
+        	  },
+          resolve: {
+		      events: function ($q,  EventService) {
+		    		  console.log('Load all events');
+			          var deferred = $q.defer();
+			          EventService.loadAllEvents().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+		      users: function ( $q,  UserService) {
+		    		  console.log('Load all users');
+			          var deferred = $q.defer();
+			          UserService.loadAllUsers().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+		      providers: function ( $q,  ProviderService) {
+		    		  console.log('Load all providers');
+			          var deferred = $q.defer();
+			          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+      		  states: function ( $q,  StateService) {
+      				console.log('Load all states');
+      				var deferred = $q.defer();
+      				StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
+		      },
+              genders: function ( $q,  GenderService) {
+            		  console.log('Load all genders');
+    		          var deferred = $q.defer();
+    		          GenderService.loadAllGenders().then(deferred.resolve, deferred.resolve);
+    		          return deferred.promise;
+		      },
+		      statuses: function ( $q,  LeadStatusService) {
+		    		  console.log('Load all leadStatuses');
+			          var deferred = $q.defer();
+			          LeadStatusService.loadAllLeadStatuses().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+		      languages: function ( $q,  LanguageService) {
+		    		  console.log('Load all languages');
+			          var deferred = $q.defer();
+			          LanguageService.loadAllLanguages().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+		      insurances: function ( $q,  InsuranceService) {
+		    		  console.log('Load all leadInsurances');
+			          var deferred = $q.defer();
+			          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+		      planTypes: function ( $q,  PlanTypeService) {
+		    		  console.log('Load all users');
+			          var deferred = $q.defer();
+			          PlanTypeService.loadAllPlanTypes().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      },
+		      bestTimeToCalls: function ( $q,  BestTimeToCallService) {
+		    		  console.log('Load all bestTimeToCalls');
+			          var deferred = $q.defer();
+			          BestTimeToCallService.loadAllBestTimeToCalls().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		      }
+          }
+      })
+      .state('role', {
+          url: '/role',
+          templateUrl: 'partials/role_list',
+          controller:'RoleController',
+          controllerAs:'ctrl',
+          resolve: {
+             
+          }
+      })
+      .state('facilityType', {
+          url: '/facilityType',
+          templateUrl: 'partials/facilityType_list',
+          controller:'FacilityTypeController',
+          controllerAs:'ctrl',
+          resolve: {
+        	  facilityTypes: function ($q,FacilityTypeService) {
+                  console.log('Load all facilityTypes');
+                  var deferred = $q.defer();
+                  FacilityTypeService.loadFacilityTypes(0,20,'',null).then(deferred.resolve, deferred.resolve);
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              }
+          }
+      })
+      .state('leadStatus', {
+          url: '/leadStatus',
+          templateUrl: 'partials/leadStatus_list',
+          controller:'LeadStatusController',
+          controllerAs:'ctrl',
+          resolve: {
+              leadStatuses: function ($q,LeadStatusService) {
+                  console.log('Load all leadStatuses');
+                  var deferred = $q.defer();
+                  LeadStatusService.loadLeadStatuses(0,20,'',null).then(deferred.resolve, deferred.resolve);
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              }
+          }
+      })
+      
+      .state('event', {
+          url: '/event',
+          templateUrl: 'partials/event_list',
+          controller:'EventController',
+          controllerAs:'ctrl',
+          params: {
+        	    'id': '', 
+        	    'eventDisplay': false
+        	  },
+          resolve: {
+        	  facilityTypes: function ($q,FacilityTypeService) {
+                  console.log('Load all facilityTypes');
+                  var deferred = $q.defer();
+                  FacilityTypeService.loadAllFacilityTypes().then(deferred.resolve, deferred.resolve);
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              }
+          }
+      })
+       .state('event.edit', {
+          url: '/',
+          templateUrl: 'partials/event_list',
+          controller:'EventController',
+          controllerAs:'ctrl',
+          resolve: {
+              facilityTypes: function ($q,FacilityTypeService) {
+                  console.log('Load all facilityTypes');
+                  var deferred = $q.defer();
+                  FacilityTypeService.loadAllFacilityTypes().then(deferred.resolve, deferred.resolve);
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              },
+		      states: function ($stateParams,$q,  StateService) {
+	    		  console.log('Load all states');
+		          var deferred = $q.defer();
+		          StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise; 
+	      }
+          }
+      })
+       .state('eventAssignment', {
+          url: '/eventAssignment' ,
+          templateUrl: 'partials/eventAssignment_list',
+          controller:'EventAssignmentController',
+          controllerAs:'ctrl',
+          params: {
+        	    'id': '', 
+        	    'eventAssignmentDisplay': false
+        	  }
+      })
+      .state('eventAssignment.edit', {
+          url: '/' ,
+          templateUrl: 'partials/eventAssignment_list',
+          controller:'EventAssignmentController',
+          controllerAs:'ctrl',
+          params: {
+        	    'eventAssignmentDisplay': true, 
+        	  },
+          resolve: {
+        	  events: function ($q,  EventService) {
+		          console.log('Load all events');
+		          var deferred = $q.defer();
+		          EventService.loadAllEvents().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      },
+		      users: function ($q,  UserService) {
+		          console.log('Load all users');
+		          var deferred = $q.defer();
+		          UserService.loadAllUsers().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      },
+      		  eventMonths: function ($q,  EventMonthService) {
+		          console.log('Load all eventMonths');
+		          var deferred = $q.defer();
+		          EventMonthService.loadAllEventMonths().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      },
+      		  eventWeekDays: function ($q,  EventWeekDayService) {
+		          console.log('Load all eventWeekDays');
+		          var deferred = $q.defer();
+		          EventWeekDayService.loadAllEventWeekDays().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      },
+      		  eventWeekNumbers: function ($q,  EventWeekNumberService) {
+		          console.log('Load all eventWeekNumbers');
+		          var deferred = $q.defer();
+		          EventWeekNumberService.loadAllEventWeekNumbers().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      }
+          }
+      })
+      .state('provider', {
+          url: '/provider',
+          templateUrl: 'partials/provider_list',
+          controller:'ProviderController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('provider.edit', {
+          url: '/',
+          templateUrl: 'partials/provider_list',
+          controller:'ProviderController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'providerDisplay': false, 
+      	  },
+          resolve: {
+        	  languages: function ($q,LanguageService) {
+                  console.log('Load all languages');
+                  var deferred = $q.defer();
+                  LanguageService.loadLanguages().then(deferred.resolve, deferred.resolve);
+                  
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              },
+      		  states: function ($q,  StateService) {
+		          console.log('Load all states');
+		          var deferred = $q.defer();
+		          StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      },
+		      insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+	      }
+          }
+      })
+       .state('membership', {
+          url: '/membership',
+          templateUrl: 'partials/membership_list',
+          controller:'MembershipController',
+          controllerAs:'ctrl',
+          resolve: {
+		      insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      providers: function ( $q,  ProviderService) {
+	    		  console.log('Load all providers');
+		          var deferred = $q.defer();
+		          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+	         }
+          }
+      })
+      .state('membership.edit', {
+          url: '/',
+          templateUrl: 'partials/membership_list',
+          controller:'MembershipController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'membershipDisplay': false, 
+      	  },
+          resolve: {
+        	  languages: function ($q,LanguageService) {
+                  console.log('Load all languages');
+                  var deferred = $q.defer();
+                  LanguageService.loadLanguages().then(deferred.resolve, deferred.resolve);
+                  
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              },
+      		  states: function ($q,  StateService) {
+		          console.log('Load all states');
+		          var deferred = $q.defer();
+		          StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise;
+		      },
+		      insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      providers: function ( $q,  ProviderService) {
+	    		  console.log('Load all providers');
+		          var deferred = $q.defer();
+		          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+	         },
+		      statuses: function ( $q,  MembershipStatusService) {
+	    		  console.log('Load all statuses');
+		          var deferred = $q.defer();
+		          MembershipStatusService.loadAllMembershipStatuses().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+	         },
+             genders: function ( $q,  GenderService) {
+       		  console.log('Load all genders');
+		          var deferred = $q.defer();
+		          GenderService.loadAllGenders().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+	      }
+          }
+      })
+      .state('insurance', {
+          url: '/insurance',
+          templateUrl: 'partials/insurance_list',
+          controller:'InsuranceController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('insurance.edit', {
+          url: '/',
+          templateUrl: 'partials/insurance_list',
+          controller:'InsuranceController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'insuranceDisplay': false, 
+      	  },
+          resolve: {
+        	  insurances: function ($q,InsuranceService) {
+                  console.log('Load all insurances');
+                  var deferred = $q.defer();
+                  InsuranceService.loadInsurances(0,20,'',null).then(deferred.resolve, deferred.resolve);
+                  
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              },
+              planTypes: function ($q,PlanTypeService) {
+                  console.log('Load all planTypes');
+                  var deferred = $q.defer();
+                  PlanTypeService.loadAllPlanTypes().then(deferred.resolve, deferred.resolve);
+                  
+                  console.log('deferred.promise'+deferred.promise);
+                  return deferred.promise;
+              },
+		      states: function ($q,  StateService) {
+	    		  console.log('Load all states');
+		          var deferred = $q.defer();
+		          StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise; 
+	      }
+          }
+      })
+      .state('language', {
+          url: '/language',
+          templateUrl: 'partials/language_list',
+          controller:'LanguageController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('logout', {
+          url: '/logout',
+          templateUrl: 'logout'
+      })
+       .state('login', {
+          url: '/login',
+          templateUrl: 'login'
+      })
+      .state('cpt', {
+          url: '/cpt',
+          templateUrl: 'partials/cpt_list',
+          controller:'CPTMeasureController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('cpt.edit', {
+          url: '/',
+          templateUrl: 'partials/cpt_list',
+          controller:'CPTMeasureController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'cptDisplay': false, 
+      	  },
+          resolve: {
+          }
+      })
+      .state('icd', {
+          url: '/icd',
+          templateUrl: 'partials/icd_list',
+          controller:'ICDMeasureController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('icd.edit', {
+          url: '/',
+          templateUrl: 'partials/icd_list',
+          controller:'ICDMeasureController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'icdDisplay': false, 
+      	  },
+          resolve: {
+          }
+      })
+       .state('hedis', {
+          url: '/hedis',
+          templateUrl: 'partials/hedis_list',
+          controller:'HedisMeasureController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('hedis.edit', {
+          url: '/',
+          templateUrl: 'partials/hedis_list',
+          controller:'HedisMeasureController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'hedisDisplay': false, 
+      	  },
+          resolve: {
+        	  hedisGroups: function ($q,  HedisMeasureGroupService) {
+	    		  console.log('Load all states');
+		          var deferred = $q.defer();
+		          HedisMeasureGroupService.loadAllHedisMeasureGroups().then(deferred.resolve, deferred.resolve);
+		          console.log('deferred.promise'+deferred.promise);
+		          return deferred.promise; 
+	               }
+          }
+      })
+      .state('hedisGroup', {
+          url: '/hedisGroup',
+          templateUrl: 'partials/hedisGroup_list',
+          controller:'HedisMeasureGroupController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('hedisGroup.edit', {
+          url: '/',
+          templateUrl: 'partials/hedisGroup_list',
+          controller:'HedisMeasureGroupController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'hedisGroupDisplay': false, 
+      	  },
+          resolve: {
+          }
+      })
+      .state('planType', {
+          url: '/planType',
+          templateUrl: 'partials/planType_list',
+          controller:'PlanTypeController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('planType.edit', {
+          url: '/',
+          templateUrl: 'partials/planType_list',
+          controller:'PlanTypeGroupController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'planTypeDisplay': false, 
+      	  },
+          resolve: {
+          }
+      })
+       .state('problem', {
+          url: '/problem',
+          templateUrl: 'partials/problem_list',
+          controller:'ProblemController',
+          controllerAs:'ctrl',
+          resolve: {
+        	  insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      icdMeasures : function ( $q,  ICDMeasureService) {
+	    		  console.log('Load all ICDMeasures');
+		          var deferred = $q.defer();
+		          ICDMeasureService.loadICDMeasures().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      }
+          }
+      })
+      .state('problem.edit', {
+          url: '/',
+          templateUrl: 'partials/problem_list',
+          controller:'ProblemController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'problemDisplay': false, 
+      	  },
+          resolve: {
+        	  insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      }
+          }
+      })
+      .state('hedisMeasureRule', {
+          url: '/hedisMeasureRule',
+          templateUrl: 'partials/hedisMeasureRule_list',
+          controller:'HedisMeasureRuleController',
+          controllerAs:'ctrl',
+          resolve: {
+        	  insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      }
+          }
+      })
+      .state('hedisMeasureRule.edit', {
+          url: '/',
+          templateUrl: 'partials/hedisMeasureRule_list',
+          controller:'HedisMeasureRuleController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'hedisMeasureRuleDisplay': false, 
+      	  },
+          resolve: {
+        	  insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      icdMeasures : function ( $q,  ICDMeasureService) {
+	    		  console.log('Load all ICDMeasures');
+		          var deferred = $q.defer();
+		          ICDMeasureService.loadICDMeasures().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      problems : function ( $q,  ProblemService) {
+	    		  console.log('Load all problems');
+		          var deferred = $q.defer();
+		          ProblemService.loadAllProblems().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      hedisMeasures : function ( $q,  HedisMeasureService) {
+	    		  console.log('Load all hedisMeasures');
+		          var deferred = $q.defer();
+		          HedisMeasureService.loadAllHedisMeasures().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+		      frequencyTypes : function ( $q,  FrequencyTypeService) {
+	    		  console.log('Load all frequencyTypes');
+		          var deferred = $q.defer();
+		          FrequencyTypeService.loadAllFrequencyTypes().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      },
+              genders: function ( $q,  GenderService) {
+        		  console.log('Load all genders');
+		          var deferred = $q.defer();
+		          GenderService.loadAllGenders().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+	      }
+          }
+      })
+      .state('frequencyType', {
+          url: '/frequencyType',
+          templateUrl: 'partials/frequencyType_list',
+          controller:'FrequencyTypeController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('frequencyType.edit', {
+          url: '/',
+          templateUrl: 'partials/frequencyType_list',
+          controller:'FrequencyTypeController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'frequencyTypeDisplay': false, 
+      	  },
+          resolve: {
+          }
+      })
+      .state('fileType', {
+          url: '/fileType',
+          templateUrl: 'partials/fileType_list',
+          controller:'FileTypeController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('fileType.edit', {
+          url: '/',
+          templateUrl: 'partials/fileType_list',
+          controller:'FileTypeController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'fileTypeDisplay': false, 
+      	  },
+          resolve: {
+        	  insurances: function ( $q,  InsuranceService) {
+	    		  console.log('Load all leadInsurances');
+		          var deferred = $q.defer();
+		          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+		          return deferred.promise;
+		      }
+          }
+      })
+      .state('roomType', {
+          url: '/placeOfService',
+          templateUrl: 'partials/placeOfService_list',
+          controller:'PlaceOfServiceController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('roomType.edit', {
+          url: '/',
+          templateUrl: 'partials/placeOfService_list',
+          controller:'PlaceOfServiceController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'placeOfServiceDisplay': false, 
+      	  },
+          resolve: {
+        	  
+          }
+      })
+      .state('attPhysician', {
+          url: '/attPhysician',
+          templateUrl: 'partials/attPhysician_list',
+          controller:'AttPhysicianController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('attPhysician.edit', {
+          url: '/',
+          templateUrl: 'partials/attPhysician_list',
+          controller:'AttPhysicianController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'attPhysicianDisplay': false, 
+      	  },
+          resolve: {
+        	  
+          }
+      })
+      .state('hospital', {
+          url: '/hospital',
+          templateUrl: 'partials/hospital_list',
+          controller:'HospitalController',
+          controllerAs:'ctrl',
+          resolve: {
+          }
+      })
+      .state('hospital.edit', {
+          url: '/',
+          templateUrl: 'partials/hospital_list',
+          controller:'HospitalController',
+          controllerAs:'ctrl',
+          params: {
+      	    'id': '', 
+      	    'hospitalnDisplay': false, 
+      	  },
+          resolve: {
+        	  
+          }
+      })
+       .state('fileUpload', {
+          url: '/fileUpload',
+          templateUrl: 'partials/fileUpload_list',
+          controller:'FileController',
+          controllerAs:'ctrl',
+          resolve: {
+        	        insurances: function ($q,  InsuranceService) {
+		    		      console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+	              },
+	              fileTypes: function ($q,  FileTypeService) {
+	    		      console.log('Load all fileTypes');
+			          var deferred = $q.defer();
+			          FileTypeService.loadAllFileTypes().then(deferred.resolve, deferred.resolve);
+			          console.log('deferred.promise'+deferred.promise);
+			          return deferred.promise;	  
+                  }
+          }
+      })
+      .state('medicalLossRatio', {
+          url: '/medicalLossRatio',
+          templateUrl: 'partials/medicalLossRatio_list',
+          controller:'MedicalLossRatioController',
+          controllerAs:'ctrl',
+          resolve: {
+        	      insurances: function ($q,  InsuranceService) {
+		    		      console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+	              },
+			      providers: function ( $q,  ProviderService) {
+		    		  console.log('Load all providers');
+			          var deferred = $q.defer();
+			          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         },
+			      reportMonths: function ( $q,  MedicalLossRatioService) {
+		    		  console.log('Load all reportMonths');
+			          var deferred = $q.defer();
+			          MedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }
+          }
+      })
+       .state('membershipActivityMonth', {
+          url: '/membershipActivityMonth',
+          templateUrl: 'partials/membershipActivityMonth_list',
+          controller:'MembershipActivityMonthController',
+          controllerAs:'ctrl',
+          resolve: {
+        	      insurances: function ($q,  InsuranceService) {
+		    		      console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+	              },
+			      providers: function ( $q,  ProviderService) {
+		    		  console.log('Load all providers');
+			          var deferred = $q.defer();
+			          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }          }
+      })
+       .state('membershipProblem', {
+          url: '/membershipProblem',
+          templateUrl: 'partials/membershipProblem_list',
+          controller:'MembershipProblemController',
+          controllerAs:'ctrl',
+          resolve: {
+        	      insurances: function ($q,  InsuranceService) {
+		    		      console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+	              },
+			      providers: function ( $q,  ProviderService) {
+		    		  console.log('Load all providers');
+			          var deferred = $q.defer();
+			          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }     ,
+			      problems: function ( $q,  ProblemService) {
+		    		  console.log('Load all problems');
+			          var deferred = $q.defer();
+			          ProblemService.loadAllProblems().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }         
+          }
+      })
+      .state('membershipClaims', {
+          url: '/membershipClaims',
+          templateUrl: 'partials/membershipClaims_list',
+          controller:'MembershipClaimsController',
+          controllerAs:'ctrl',
+          resolve: {
+        	      insurances: function ($q,  InsuranceService) {
+		    		      console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+	              },
+			      providers: function ( $q,  ProviderService) {
+		    		  console.log('Load all providers');
+			          var deferred = $q.defer();
+			          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         },
+		         categories: function ( $q,  MembershipClaimsService) {
+		    		  console.log('Load all categories');
+			          var deferred = $q.defer();
+			          MembershipClaimsService.loadAllRiskCategories().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         },
+			      reportMonths: function ( $q,  MedicalLossRatioService) {
+		    		  console.log('Load all reportMonths');
+			          var deferred = $q.defer();
+			          MedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }   
+          }
+      })
+     .state('membershipHedis', {
+          url: '/membershipHedis',
+          templateUrl: 'partials/membershipHedis_list',
+          controller:'MembershipHedisController',
+          controllerAs:'ctrl',
+          resolve: {
+        	      insurances: function ($q,  InsuranceService) {
+		    		      console.log('Load all insurances');
+				          var deferred = $q.defer();
+				          InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
+				          console.log('deferred.promise'+deferred.promise);
+				          return deferred.promise;	  
+	              },
+			      providers: function ( $q,  ProviderService) {
+		    		  console.log('Load all providers');
+			          var deferred = $q.defer();
+			          ProviderService.loadAllProviders().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         },
+		         categories: function ( $q,  MembershipClaimsService) {
+		    		  console.log('Load all categories');
+			          var deferred = $q.defer();
+			          MembershipClaimsService.loadAllRiskCategories().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         },
+			      reportMonths: function ( $q,  MedicalLossRatioService) {
+		    		  console.log('Load all reportMonths');
+			          var deferred = $q.defer();
+			          MedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         } ,
+			      hedisMeasureRules : function ( $q,  HedisMeasureRuleService) {
+		    		  console.log('Load all hedisMeasureRules');
+			          var deferred = $q.defer();
+			          HedisMeasureRuleService.loadAllHedisMeasureRules().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+			      }  
+          }
+      })
+        $urlRouterProvider.otherwise('login');
+    
+    function run() {
+        FastClick.attach(document.body);
+    }
+    }
+
+]);
+
+// DatePicker -> NgModel
+app.directive('datePicker', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attr, ngModel) {
+            $(element).datetimepicker({
+                locale: 'en-us',
+                format: 'MM/DD/YYYY HH:mm',
+                parseInputDate: function (data) {
+                    if (data instanceof Date) {
+                        return moment(data);
+                    } else {
+                        return moment(new Date(data));
+                    }
+                },
+                minDate:   new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+                maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+            });
+
+            $(element).on("dp.change", function (e) {
+                ngModel.$viewValue = moment(e.date).format('MM/DD/YYYY HH:mm')  ;
+                ngModel.$commitViewValue();
+            });
+        }
+    };
+});
+
+//DatePicker -> NgModel
+app.directive('date1Picker', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attr, ngModel) {
+            $(element).datetimepicker({
+                locale: 'en-us',
+                format: 'MM/DD/YYYY',
+                parseInputDate: function (data) {
+                    if (data instanceof Date) {
+                        return moment(data);
+                    } else {
+                        return moment(new Date(data));
+                    }
+                },
+                maxDate: new Date(new Date().setFullYear(new Date().getFullYear() +3))
+            });
+
+            $(element).on("dp.change", function (e) {
+                ngModel.$viewValue = moment(e.date).format('MM/DD/YYYY');
+                ngModel.$commitViewValue();
+            });
+        }
+    };
+});
+
+
+
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        require: "ngModel",
+        link: function (scope, element, attrs, ngModel) {
+        	
+            var model = $parse(attrs.fileModel);
+            var isMultiple = attrs.multiple;
+            var modelSetter = model.assign;
+            var dirty = false;
+            element.bind('change', function () {
+                var values = [];
+                angular.forEach(element[0].files, function (item) {
+                    var value = {
+                       // File Name 
+                        name: item.name,
+                        //File Size 
+                        size: item.size,
+                        //File URL to view 
+                        url: URL.createObjectURL(item),
+                        // File Input Value 
+                        _file: item
+                    };
+                    values.push(value);
+                    scope.myForm.$setDirty();  
+                });
+                scope.$apply(function () {
+                    if (isMultiple) {
+                        modelSetter(scope, element[0].files);
+                    } else {
+                        modelSetter(scope, element[0].files[0]);
+                    }
+                });
+              
+            });
+        }
+    };
+}]);
+
+
+app.directive('phoneInput', function($filter, $browser) {
+    return {
+        require: 'ngModel',
+        link: function($scope, $element, $attrs, ngModelCtrl) {
+            var listener = function() {
+                var value = $element.val().replace(/[^0-9]/g, '');
+                $element.val($filter('tel')(value, false));
+            };
+
+            // This runs when we update the text field
+            ngModelCtrl.$parsers.push(function(viewValue) {
+                return viewValue.replace(/[^0-9]/g, '').slice(0,10);
+            });
+
+            // This runs when the model gets updated on the scope directly and keeps our view in sync
+            ngModelCtrl.$render = function() {
+                $element.val($filter('tel')(ngModelCtrl.$viewValue, false));
+            };
+
+            $element.bind('change', listener);
+            $element.bind('keydown', function(event) {
+                var key = event.keyCode;
+                // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
+                // This lets us support copy and paste too
+                if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40)){
+                    return;
+                }
+                $browser.defer(listener); // Have to do this or changes don't get picked up properly
+            });
+
+            $element.bind('paste cut', function() {
+                $browser.defer(listener);
+            });
+        }
+
+    };
+});
+
+app.filter('nonAdminUsersFilter', function () {
+  return function (input, arrayOfString) {
+	  var out =[];
+      input.filter( function( user ) {
+    		    if( arrayOfString.indexOf( user.role.role ) >-1){
+    		    	
+    		    	out.push(user);
+    		    }
+    });
+      return out;
+  }
+});
+
+app.filter('filterFromArray', function() {
+	  return function(input, arrayToMatch) {
+		    input = input || [];
+		    arrayToMatch= arrayToMatch|| [];
+		    var l = input.length,
+		        k = arrayToMatch.length,
+		        out = [], i = 0,
+		        map = {};
+
+		    for (; i < k; i++) {
+		      map[arrayToMatch[k]] = true;
+		    }
+
+		    for (i = 0; i < l; i++) {
+		      if(map[input[i].name]){
+		          out.push(input[i]);
+		      }
+		    }
+
+		    return out;
+		  };
+		});
+
+app.filter('tel', function () {
+    return function (tel) {
+        if (!tel) { return ''; }
+
+        var value = tel.toString().trim().replace(/^\+/, '');
+
+        if (value.match(/[^0-9]/)) {
+            return tel;
+        }
+
+        var country, city, number;
+
+        switch (value.length) {
+            case 1:
+            case 2:
+            case 3:
+                city = value;
+                break;
+
+            default:
+                city = value.slice(0, 3);
+                number = value.slice(3);
+        }
+
+        if(number){
+            if(number.length>3){
+                number = number.slice(0, 3) + '-' + number.slice(3,7);
+            }
+            else{
+                number = number;
+            }
+
+            return ("(" + city + ") " + number).trim();
+        }
+        else{
+            return "(" + city;
+        }
+
+    };
+});
+
+app.filter('range', function() {
+	  return function(input, total) {
+	    total = parseInt(total);
+
+	    for (var i=0; i<total; i++) {
+	      input.push(i);
+	    }
+
+	    return input;
+	  };
+	});
