@@ -13,20 +13,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import org.hibernate.bytecode.internal.javassist.FieldHandled;
-import org.hibernate.bytecode.internal.javassist.FieldHandler;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.pfchoice.springboot.model.Insurance;
 
 /**
  *
  * @author SarathGandluri
  */
-@Entity(name = "reference_contract")
+@Entity(name = "reference_contracts")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class ReferenceContract extends RecordDetails implements Serializable, FieldHandled {
+public class ReferenceContract implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,21 +32,21 @@ public class ReferenceContract extends RecordDetails implements Serializable, Fi
 	@Column(name = "ref_contract_Id", nullable = false)
 	private Integer id;
 
-	@OneToOne(fetch = FetchType.LAZY) 
+	@JsonIgnore
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_id")
 	private Insurance ins;
 
 	@JsonIgnore
-	@ManyToOne 
+	@ManyToOne
 	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id")
 	private Provider prvdr;
 
-	@OneToOne(mappedBy = "referenceContract")
-	private Contract contract;
-	
 	@JsonIgnore
-	private FieldHandler fieldHandler;
-	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "contract_id", referencedColumnName = "contract_id", nullable = false)
+	private Contract contract;
+
 	/**
 	 * 
 	 */
@@ -123,16 +119,6 @@ public class ReferenceContract extends RecordDetails implements Serializable, Fi
 	 */
 	public void setContract(Contract contract) {
 		this.contract = contract;
-	}
-
-	@Override
-	public void setFieldHandler(FieldHandler fieldHandler) {
-		this.fieldHandler = fieldHandler;
-	}
-
-	@Override
-	public FieldHandler getFieldHandler() {
-		return fieldHandler;
 	}
 
 	@Override

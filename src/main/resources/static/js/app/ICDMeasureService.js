@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('ICDMeasureService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -133,3 +135,4 @@ app.service('ICDMeasureService',
 
         }
     ]);
+   })();

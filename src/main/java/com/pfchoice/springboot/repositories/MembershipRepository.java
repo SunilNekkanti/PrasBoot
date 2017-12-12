@@ -16,14 +16,14 @@ public interface MembershipRepository
 	public Membership findById(Integer id);
 
 	public Membership findByFirstName(String name);
-	
+
 	public Membership findByLastName(String name);
 
 	public Membership findByDob(Date dob);
-	
-	@Query(value= "SELECT count(*)>0 FROM  csv2table_cap_report ",nativeQuery = true)
+
+	@Query(value = "SELECT count(*)>0 FROM  csv2table_cap_report ", nativeQuery = true)
 	public int isDataExistsInTable();
-	
-	@Query(value= "truncate table csv2table_cap_report ",nativeQuery = true)
-	public int  unloadCSV2Table();
+
+	@Query(value = "truncate table csv2table_cap_report ", nativeQuery = true)
+	public int unloadCSV2Table();
 }

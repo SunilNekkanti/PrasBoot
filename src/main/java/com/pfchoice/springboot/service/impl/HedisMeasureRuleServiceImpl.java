@@ -27,7 +27,7 @@ public class HedisMeasureRuleServiceImpl implements HedisMeasureRuleService {
 	public HedisMeasureRule findByDescription(String description) {
 		return hedisMeasureRuleRepository.findByDescription(description);
 	}
-	
+
 	public void saveHedisMeasureRule(HedisMeasureRule hedisMeasureRule) {
 		hedisMeasureRuleRepository.save(hedisMeasureRule);
 	}
@@ -48,14 +48,13 @@ public class HedisMeasureRuleServiceImpl implements HedisMeasureRuleService {
 		return (List<HedisMeasureRule>) hedisMeasureRuleRepository.findAll();
 	}
 
-	public Page<HedisMeasureRule> findAllHedisMeasureRulesByPage(Specification<HedisMeasureRule> spec, Pageable pageable) {
+	public Page<HedisMeasureRule> findAllHedisMeasureRulesByPage(Specification<HedisMeasureRule> spec,
+			Pageable pageable) {
 		return hedisMeasureRuleRepository.findAll(spec, pageable);
 	}
 
 	public boolean isHedisMeasureRuleExist(HedisMeasureRule hedisMeasureRule) {
 		return findByDescription(hedisMeasureRule.getDescription()) != null;
 	}
-
-	
 
 }

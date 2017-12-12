@@ -19,8 +19,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -28,64 +26,50 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "medical_loss_ratio")
 @NamedStoredProcedureQueries({
-	   @NamedStoredProcedureQuery(name = "mlr_report", 
-	                              procedureName = "NEW_MLR_REPORT",
-	                              parameters = {
-	                                 @StoredProcedureParameter( name = "tableName", type = String.class),
-	                                 @StoredProcedureParameter( name = "insId", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "prvdrIds", type = String.class),
-	                                 @StoredProcedureParameter( name = "repMonths", type = String.class),
-	                                 @StoredProcedureParameter( name = "categories", type = String.class),
-	                                 @StoredProcedureParameter( name = "adminRole", type = Character.class),
-	                              })
-	})
+		@NamedStoredProcedureQuery(name = "mlr_report", procedureName = "NEW_MLR_REPORT", parameters = {
+				@StoredProcedureParameter(name = "tableName", type = String.class),
+				@StoredProcedureParameter(name = "insId", type = Integer.class),
+				@StoredProcedureParameter(name = "prvdrIds", type = String.class),
+				@StoredProcedureParameter(name = "repMonths", type = String.class),
+				@StoredProcedureParameter(name = "categories", type = String.class),
+				@StoredProcedureParameter(name = "adminRole", type = Character.class), }) })
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class MedicalLossRatio extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "medical_loss_ratio_id", nullable = false)
 	private Integer id;
 
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", nullable = false, referencedColumnName = "insurance_id")
 	private Insurance ins;
 
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "prvdr_id", nullable = false, referencedColumnName = "prvdr_id")
 	private Provider prvdr;
-	
-	
+
 	@Column(nullable = true, name = "report_month")
 	private Integer reportMonth;
 
-	
 	@Column(name = "activity_Month")
 	private Integer activityMonth;
-	
-	
+
 	@Column(name = "patients")
 	private BigDecimal patients;
-	
-	
+
 	@Column(nullable = true, name = "fund")
 	private BigDecimal fund;
-	
-	
+
 	@Column(nullable = true, name = "prof")
 	private BigDecimal prof;
-	
-	
+
 	@Column(nullable = true, name = "inst")
 	private BigDecimal inst;
-	
-	
+
 	@Column(nullable = true, name = "pharmacy")
 	private BigDecimal pharmacy;
 

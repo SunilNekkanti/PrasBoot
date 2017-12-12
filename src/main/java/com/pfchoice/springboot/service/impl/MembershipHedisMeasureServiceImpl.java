@@ -24,7 +24,6 @@ public class MembershipHedisMeasureServiceImpl implements MembershipHedisMeasure
 		return membershipHedisMeasureRepository.findOne(id);
 	}
 
-
 	public void saveMembershipHedisMeasure(MembershipHedisMeasure membershipHedisMeasure) {
 		membershipHedisMeasureRepository.save(membershipHedisMeasure);
 	}
@@ -45,7 +44,8 @@ public class MembershipHedisMeasureServiceImpl implements MembershipHedisMeasure
 		return (List<MembershipHedisMeasure>) membershipHedisMeasureRepository.findAll();
 	}
 
-	public Page<MembershipHedisMeasure> findAllMembershipHedisMeasuresByPage(Specification<MembershipHedisMeasure> spec, Pageable pageable) {
+	public Page<MembershipHedisMeasure> findAllMembershipHedisMeasuresByPage(Specification<MembershipHedisMeasure> spec,
+			Pageable pageable) {
 		return membershipHedisMeasureRepository.findAll(spec, pageable);
 	}
 
@@ -53,12 +53,12 @@ public class MembershipHedisMeasureServiceImpl implements MembershipHedisMeasure
 		return findById(membershipHedisMeasure.getId()) != null;
 	}
 
-	public boolean isDataExistsInTable(String tableName){
-		return (membershipHedisMeasureRepository.isDataExistsInTable() == 0)?false:true;
+	public boolean isDataExistsInTable(String tableName) {
+		return (membershipHedisMeasureRepository.isDataExistsInTable() == 0) ? false : true;
 	}
-	
-	public int  unloadCSV2Table(){
+
+	public int unloadCSV2Table() {
 		return membershipHedisMeasureRepository.unloadCSV2Table();
 	}
-	
+
 }

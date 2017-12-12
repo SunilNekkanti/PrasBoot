@@ -38,5 +38,4 @@ public class MedicalLossRatioServiceImpl implements MedicalLossRatioService {
 		return (List<MedicalLossRatio>) medicalLossRatioRepository.findAll(spec);
 	}
 
-
 }

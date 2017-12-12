@@ -14,8 +14,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -27,25 +25,21 @@ public class Hospital extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "hos_id", nullable = false)
 	private Integer id;
 
-	
 	@Size(min = 3, max = 15, message = "The code must be between {min} and {max} characters long")
 	@Column(name = "code")
 	private String code;
 
-	
 	@NotNull
 	@Size(min = 5, max = 100, message = "The name must be between {min} and {max} characters long")
 	@Column(name = "name")
 	private String name;
 
-	
 	@Column(name = "file_id", nullable = false)
 	private Integer fileId;
 

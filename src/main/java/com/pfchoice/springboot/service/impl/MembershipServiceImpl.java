@@ -28,11 +28,11 @@ public class MembershipServiceImpl implements MembershipService {
 	public Membership findByFirstName(String name) {
 		return membershipRepository.findByFirstName(name);
 	}
-	
+
 	public Membership findByLastName(String name) {
 		return membershipRepository.findByLastName(name);
 	}
-	
+
 	public Membership findByDob(Date dob) {
 		return membershipRepository.findByDob(dob);
 	}
@@ -65,12 +65,12 @@ public class MembershipServiceImpl implements MembershipService {
 		return findByFirstName(membership.getFirstName()) != null;
 	}
 
-	public boolean isDataExistsInTable(String tableName){
-		return (membershipRepository.isDataExistsInTable() == 0)?false:true;
+	public boolean isDataExistsInTable(String tableName) {
+		return (membershipRepository.isDataExistsInTable() == 0) ? false : true;
 	}
-	
-	public int  unloadCSV2Table(){
+
+	public int unloadCSV2Table() {
 		return membershipRepository.unloadCSV2Table();
 	}
-	
+
 }

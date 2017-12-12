@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('MembershipHedisController',
     [ 'MembershipHedisService','ProviderService',  'InsuranceService', 'HedisMeasureRuleService', 'MedicalLossRatioService','$scope', '$compile', '$filter' ,'$localStorage','$modal','$log','DTOptionsBuilder', 'DTColumnBuilder', 
@@ -250,3 +252,4 @@ app.controller('MembershipHedisController',
     }
 
     ]);
+})();

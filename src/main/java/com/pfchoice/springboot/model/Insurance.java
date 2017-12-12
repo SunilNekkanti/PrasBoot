@@ -1,6 +1,7 @@
 package com.pfchoice.springboot.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -12,10 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -43,21 +45,19 @@ public class Insurance extends RecordDetails implements Serializable {
 	@JoinColumn(name = "plan_Type_id", referencedColumnName = "plan_type_id")
 	private PlanType planType;
 
-	@OneToOne(cascade =  CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "reference_contacts", joinColumns = {
-			@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_Id", nullable = false,  unique = true) }, inverseJoinColumns = {
-					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false,  unique = true) })
+			@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_Id", nullable = false, unique = true) }, inverseJoinColumns = {
+					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })
 	private Contact contact;
-	
 
-	@OneToOne(cascade =  CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "reference_contracts", joinColumns = {
-			@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_Id", nullable = false,  unique = true) }, inverseJoinColumns = {
-					@JoinColumn(name = "contract_id", referencedColumnName = "contract_id", nullable = false,  unique = true) })
-	@Where(clause = "prvdr_id is null")
-	private Contract contract;
-	
-	
+			@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_Id", nullable = false, unique = true) }, inverseJoinColumns = {
+					@JoinColumn(name = "contract_id", referencedColumnName = "contract_id", nullable = false, unique = true) })
+	@WhereJoinTable(clause = "prvdr_id is null")
+	private Set<Contract> contracts;
+
 	/**
 	 * 
 	 */
@@ -133,17 +133,18 @@ public class Insurance extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @return the contract
+	 * @return the contracts
 	 */
-	public Contract getContract() {
-		return contract;
+	public Set<Contract> getContracts() {
+		return contracts;
 	}
 
 	/**
-	 * @param contract the contract to set
+	 * @param contracts
+	 *            the contracts to set
 	 */
-	public void setContract(Contract contract) {
-		this.contract = contract;
+	public void setContracts(Set<Contract> contracts) {
+		this.contracts = contracts;
 	}
 
 	@Override

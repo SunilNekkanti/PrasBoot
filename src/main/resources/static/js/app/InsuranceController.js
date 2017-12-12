@@ -1,12 +1,14 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('InsuranceController',
-    ['InsuranceService','PlanTypeService', 'StateService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( InsuranceService,  PlanTypeService,  StateService, $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
+    ['InsuranceService','PlanTypeService', 'StateService','FileUploadService', '$sce', '$scope',  '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( InsuranceService,  PlanTypeService,  StateService, FileUploadService, $sce, $scope, $compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
         self.insurance = {};
         self.insurances=[];
-        self.display =$stateParams.insuranceDisplay||false;;
+        self.display =$stateParams.insuranceDisplay||false;
         self.displayEditButton = false;
         self.submit = submit;
         self.planTypes=[];
@@ -24,6 +26,7 @@ app.controller('InsuranceController',
         self.reset = reset;
         self.insuranceEdit = insuranceEdit;
         self.cancelEdit = cancelEdit;
+        self.readUploadedFile = readUploadedFile;
         self.successMessage = '';
         self.errorMessage = '';
         self.done = false;
@@ -115,14 +118,42 @@ app.controller('InsuranceController',
        
         function submit() {
             console.log('Submitting');
-            if (self.insurance.id === undefined || self.insurance.id === null) {
-                console.log('Saving New Insurance', self.insurance);
-                createInsurance(self.insurance);
-            } else {
-                updateInsurance(self.insurance, self.insurance.id);
-                console.log('Insurance updated with id ', self.insurance.id);
-            }
-            self.displayEditButton = false;
+            if(self.myFile){
+				var  promise = FileUploadService.uploadContractFileToUrl(self.myFile);
+
+	            promise.then(function (response) {
+	            	if(!self.insurance.contracts[0].fileUpload){
+	            		self.insurance.contract[0].fileUpload = {};
+	            	}
+	            	 var fileuploads = response;
+	            	 if(fileuploads.length >0 )
+	                self.insurance.contracts[0].fileUpload= fileuploads[0];
+	            	 if (self.insurance.id === undefined || self.insurance.id === null) {
+							console.log('Saving New Insurance');
+							createInsurance(self.insurance);
+							
+						} else {
+							updateInsurance(self.insurance, self.insurance.id)	 
+							console.log('Insurance updated with id ',
+									self.insurance.id);
+						}
+						self.displayEditButton = false;
+	                
+	            }, function () {
+	                self.serverResponse = 'An error has occurred';
+	            });
+			}else{
+				if (self.insurance.id === undefined || self.insurance.id === null) {
+					console.log('Saving New Insurance');
+					createInsurance(self.insurance);
+					
+				} else {
+					updateInsurance(self.insurance, self.insurance.id)	 
+					console.log('Insurance updated with id ',
+							self.insurance.id);
+				}
+				self.displayEditButton = false;
+			}
         }
 
         function createInsurance(insurance) {
@@ -137,7 +168,7 @@ app.controller('InsuranceController',
                         self.display =false;
                         self.insurances = getAllInsurances();
                         self.insurance={};
-                        $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating Insurance');
@@ -158,7 +189,7 @@ app.controller('InsuranceController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("insurance");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating Insurance');
@@ -184,9 +215,7 @@ app.controller('InsuranceController',
 
 
         function getAllInsurances(){
-             self.insurances = InsuranceService.getAllInsurances();
-   
-            return self.insurances;
+        	return  InsuranceService.getAllInsurances();
         }
         
         
@@ -229,26 +258,51 @@ app.controller('InsuranceController',
             self.errorMessage='';
             self.insurance={};
             self.display = false;
-            $state.go('insurance');
+            $state.go('main.insurance', {}, {location: true,reload: false,notify: false});
         }
         
         function insuranceEdit(id) {
         	var params = {'insuranceDisplay':true};
-			var trans =  $state.go('insurance.edit',params).transition;
+			var trans =  $state.go('main.insurance.edit',params).transition;
 			trans.onSuccess({}, function() { editInsurance(id);  }, { priority: -1 });
 			
         }
         
         function addInsurance() {
-            self.successMessage='';
-            self.errorMessage='';
-            self.planTypes = getAllPlanTypes();
-            self.states = getAllStates();
-            self.display =true;
+        	var params = {'insuranceDisplay':true};
+			var trans =  $state.go('main.insurance.edit',params).transition;
+			trans.onSuccess({}, function() { 
+				self.successMessage='';
+	            self.errorMessage='';
+	            self.insurance = {};
+	            self.planTypes = getAllPlanTypes();
+	            self.states = getAllStates();
+	            self.display =true; 
+				}, { priority: -1 });
+            
         }
         
+        function readUploadedFile(){
+			console.log('About to read consignment form');
+			FileUploadService.getFileUpload(self.insurance.contracts[0].fileUpload.id).then(
+					function(response) {
+						self.errorMessage = '';
+						var file = new Blob([response], {type: self.insurance.contracts[0].fileUpload.contentType});
+						 var fileURL = URL.createObjectURL(file);
+					    self.content = $sce.trustAsResourceUrl(fileURL); 
+					    
+					},
+					function(errResponse) {
+						console
+								.error('Error while reading consignment form');
+						self.errorMessage = 'Error while reading consignment form: '
+								+ errResponse.data.errorMessage;
+						self.successMessage = '';
+					}); 
+		}
     
     }
     
 
     ]);
+   })();

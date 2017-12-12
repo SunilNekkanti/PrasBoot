@@ -23,8 +23,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -36,7 +34,6 @@ public class MembershipInsurance extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
@@ -54,58 +51,45 @@ public class MembershipInsurance extends RecordDetails implements Serializable {
 	@Where(clause = "active_ind ='Y'")
 	private Membership mbr;
 
-	
 	@Column(name = "New_Medicare_Bene_Medicaid_Flag")
 	private char newBenifits;
 
-	
 	@Column(name = "activitydate")
 	@Temporal(TemporalType.DATE)
 	private Date activityDate;
 
-	
 	@Column(name = "activityMonth")
 	private Integer activityMonth;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "effective_strt_dt")
 	private Date effStartDate;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "effecctive_end_dt")
 	private Date effEndDate;
 
-	
 	@Column(name = "product")
 	private String product;
 
-	
 	@Column(name = "product_label")
 	private String productLabel;
 
-	
 	@Column(name = "planID")
 	private String planId;
 
-	
 	@Column(name = "groupp")
 	private String group;
 
-	
 	@Column(name = "class")
 	private String clazz;
-	
-	
+
 	@Column(name = "SRC_SYS_MBR_NBR")
 	private Long srcSysMbrNbr;
 
-	
 	@Column(name = "risk_flag")
 	private char riskFlag;
 
-	
 	@Column(name = "file_id")
 	private Integer fileId;
 

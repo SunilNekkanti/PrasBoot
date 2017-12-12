@@ -21,8 +21,6 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author SarathGandluri
@@ -33,7 +31,6 @@ public class MembershipFollowup extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
@@ -44,23 +41,20 @@ public class MembershipFollowup extends RecordDetails implements Serializable {
 	@JoinColumn(name = "mbr_id", nullable = false, referencedColumnName = "mbr_id")
 	private Membership mbr;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "followup_type_id", nullable = false, referencedColumnName = "id")
 	private FollowupType followupType;
 
-	
 	@Column(name = "followup_details")
 	private String followupDetails;
 
-	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "date_of_contact")
 	private Date dateOfContact;
 
 	@Transient
 	private List<Map<Integer, String>> mbrHedisMeasureIds = new ArrayList<>();
-	
+
 	@Transient
 	private String notesHistory;
 
@@ -172,11 +166,12 @@ public class MembershipFollowup extends RecordDetails implements Serializable {
 	 * @return the notesHistory
 	 */
 	public String getNotesHistory() {
-		return createdDate+" >>>>> "+createdBy+" >>> "+followupDetails;
+		return createdDate + " >>>>> " + createdBy + " >>> " + followupDetails;
 	}
 
 	/**
-	 * @param notesHistory the notesHistory to set
+	 * @param notesHistory
+	 *            the notesHistory to set
 	 */
 	public void setNotesHistory(String notesHistory) {
 		this.notesHistory = notesHistory;

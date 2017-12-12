@@ -8,11 +8,11 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 public class CustomLogoutHandler implements LogoutHandler {
-    @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+	@Override
+	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 		if (authentication != null) {
 			new SecurityContextLogoutHandler().logout(request, response, authentication);
 		}
-			
-    }
+
+	}
 }

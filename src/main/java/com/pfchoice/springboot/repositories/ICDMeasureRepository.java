@@ -23,12 +23,11 @@ public interface ICDMeasureRepository
 	 */
 	ICDMeasure findByCode(String code);
 
-	
 	/**
 	 * 
 	 * @param code
 	 * @return
 	 */
 	@Query("SELECT i FROM ICDMeasure i WHERE LOWER(i.code) in ( :icdCodes)")
-	List<ICDMeasure> findByCodes(@Param("icdCodes")String[] icdCodes);
+	List<ICDMeasure> findByCodes(@Param("icdCodes") String[] icdCodes);
 }

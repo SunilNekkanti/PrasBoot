@@ -17,8 +17,6 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -29,170 +27,131 @@ public class MembershipClaimDetails extends RecordDetails implements Serializabl
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_claim_details_id", nullable = false)
 	private Integer id;
 
-	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mbr_claim_id", referencedColumnName = "mbr_claim_id")
 	private MembershipClaim mbrClaim;
 
-	
 	@Column(name = "claim_line_seq_nbr")
 	private String claimLineseqNbr;
 
-	
 	@Column(name = "clm_line_adj_seq_nbr")
 	private String clmLineAdjSeqNbr;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "activity_date")
 	protected Date activityDate;
 
-	
 	@Column(name = "activity_month")
 	private Integer activityMonth;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "claim_start_date")
 	protected Date claimStartDate;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "claim_end_date")
 	protected Date claimEndDate;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "paid_date")
 	protected Date paidDate;
 
-	
 	@Column(name = "revenue_code")
 	private String revenueCode;
 
-	
 	@OneToOne(optional = true, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "cpt_code", referencedColumnName = "cpt_id")
 	private CPTMeasure cpt;
 
-	
 	@Column(name = "cpt_code_modifier1")
 	private String cptCodeModifier1;
 
-	
 	@Column(name = "cpt_code_modifier2")
 	private String cptCodeModifier2;
 
-	
 	@Column(name = "claim_status")
 	private String claimStatus;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private PlaceOfService roomType;
 
-	
 	@Column(name = "risk_recon_cos_des")
 	private String riskReconCosDes;
 
-	
 	@Column(name = "amount_paid")
 	private Double amountPaid;
 
-	
 	@Column(name = "allow_amt")
 	private Double allowAmt;
 
-	
 	@Column(name = "co_insurance")
 	private Double coInsurance;
 
-	
 	@Column(name = "co_pay")
 	private Double coPay;
 
-	
 	@Column(name = "deductible")
 	private Double deductible;
 
-	
 	@Column(name = "cob_paid_amount")
 	private Double cobPaidAmount;
 
-	
 	@Column(name = "processing_status")
 	private String processingStatus;
 
-	
 	@Column(name = "pharmacy_name")
 	private String pharmacyName;
 
-	
 	@Column(name = "quantity")
 	private Integer quantity;
 
-	
 	@Column(name = "npos")
 	private String npos;
 
-	
 	@Column(name = "risk_id")
 	private String riskId;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "runn_date")
 	protected Date runnDate;
 
-	
 	@Column(name = "ndc")
 	private String ndc;
 
-	
 	@Column(name = "mony")
 	private String mony;
 
-	
 	@Column(name = "drug_label_name")
 	private String drugLabelName;
 
-	
 	@Column(name = "drug_version")
 	private String drugVersion;
 
-	
 	@Column(name = "pharmacy")
 	private String pharmacy;
 
-	
 	@Column(name = "membership_claims")
 	private Double membershipClaims;
 
-	
 	@Column(name = "psychare")
 	private String psychare;
 
-	
 	@Column(name = "simple_county")
 	private String simpleCounty;
 
-	
 	@Column(name = "triangles")
 	private String triangles;
 
-	
 	@Column(name = "cover")
 	private String cover;
 
-	
 	@Column(name = "file_id")
 	private Integer fileId;
 

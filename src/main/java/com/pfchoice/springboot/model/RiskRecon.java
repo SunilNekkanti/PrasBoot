@@ -13,8 +13,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -26,23 +24,19 @@ public class RiskRecon extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "risk_recon_id", nullable = false)
 	private Integer id;
 
-	
 	@Size(min = 2, max = 50, message = "The code must be between {min} and {max} characters long")
 	@Column(name = "name")
 	private String name;
 
-
 	@Column(name = "file_id", nullable = false)
 	private Integer fileId;
-	
-	
+
 	@Column(name = "claim_type", nullable = false)
 	private Integer claimType;
 
@@ -107,7 +101,7 @@ public class RiskRecon extends RecordDetails implements Serializable {
 	public void setFileId(Integer fileId) {
 		this.fileId = fileId;
 	}
-	
+
 	/**
 	 * @return the claimType
 	 */
@@ -116,7 +110,8 @@ public class RiskRecon extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param claimType the claimType to set
+	 * @param claimType
+	 *            the claimType to set
 	 */
 	public void setClaimType(Integer claimType) {
 		this.claimType = claimType;

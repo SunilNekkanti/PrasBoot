@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('ICDMeasureController',
     ['ICDMeasureService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( ICDMeasureService,   $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -137,6 +139,7 @@ app.controller('ICDMeasureController',
                         self.icdMeasures = getAllICDMeasures();
                         self.icdMeasure={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating ICDMeasure');
@@ -157,7 +160,7 @@ app.controller('ICDMeasureController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("icdMeasure");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating ICDMeasure');
@@ -216,12 +219,13 @@ app.controller('ICDMeasureController',
             self.errorMessage='';
             self.icdMeasure={};
             self.display = false;
-            $state.go('icd');
+            $state.transitionTo('main.icd', {}, {location: true,reload: false,notify: false});
+            $state.go('main.icd', {}, {reload: false}); 
         }
         
         function icdMeasureEdit(id) {
         	var params = {'icdMeasureDisplay':true};
-			var trans =  $state.go('icd.edit',params).transition;
+			var trans =  $state.go('main.icd.edit',params).transition;
 			trans.onSuccess({}, function() { editICDMeasure(id);  }, { priority: -1 });
 			
         }
@@ -237,3 +241,4 @@ app.controller('ICDMeasureController',
     
 
     ]);
+   })();

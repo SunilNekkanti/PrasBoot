@@ -32,20 +32,22 @@ public class HedisMeasureGroupController {
 	public static final Logger logger = LoggerFactory.getLogger(HedisMeasureGroupController.class);
 
 	@Autowired
-	HedisMeasureGroupService hedisMeasureGroupService; // Service which will do all data
-										// retrieval/manipulation work
+	HedisMeasureGroupService hedisMeasureGroupService; // Service which will do
+														// all data
+	// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// HedisMeasureGroups---------------------------------------------
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasureGroup/", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllHedisMeasureGroups(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<?> listAllHedisMeasureGroups(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<HedisMeasureGroup> spec = new HedisMeasureGroupSpecifications( search);
-		Page<HedisMeasureGroup> hedisMeasureGroups = hedisMeasureGroupService.findAllHedisMeasureGroupsByPage(spec, pageRequest);
-		
+		Specification<HedisMeasureGroup> spec = new HedisMeasureGroupSpecifications(search);
+		Page<HedisMeasureGroup> hedisMeasureGroups = hedisMeasureGroupService.findAllHedisMeasureGroupsByPage(spec,
+				pageRequest);
+
 		if (hedisMeasureGroups.getTotalElements() == 0) {
 			System.out.println("no hedisMeasureGroups");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -73,14 +75,14 @@ public class HedisMeasureGroupController {
 	// HedisMeasureGroup-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasureGroup/", method = RequestMethod.POST)
-	public ResponseEntity<?> createHedisMeasureGroup(@RequestBody HedisMeasureGroup hedisMeasureGroup, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<?> createHedisMeasureGroup(@RequestBody HedisMeasureGroup hedisMeasureGroup,
+			UriComponentsBuilder ucBuilder) {
 		logger.info("Creating HedisMeasureGroup : {}", hedisMeasureGroup);
 
 		if (hedisMeasureGroupService.isHedisMeasureGroupExist(hedisMeasureGroup)) {
 			logger.error("Unable to create. A HedisMeasureGroup with name {} already exist", hedisMeasureGroup.getId());
-			return new ResponseEntity(
-					new CustomErrorType(
-							"Unable to create. A HedisMeasureGroup with name " + hedisMeasureGroup.getId() + " already exist."),
+			return new ResponseEntity(new CustomErrorType(
+					"Unable to create. A HedisMeasureGroup with name " + hedisMeasureGroup.getId() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
 		hedisMeasureGroup.setCreatedBy("sarath");
@@ -88,7 +90,8 @@ public class HedisMeasureGroupController {
 		hedisMeasureGroupService.saveHedisMeasureGroup(hedisMeasureGroup);
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/hedisMeasureGroup/{id}").buildAndExpand(hedisMeasureGroup.getId()).toUri());
+		headers.setLocation(
+				ucBuilder.path("/api/hedisMeasureGroup/{id}").buildAndExpand(hedisMeasureGroup.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
@@ -96,14 +99,16 @@ public class HedisMeasureGroupController {
 	// ------------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasureGroup/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateHedisMeasureGroup(@PathVariable("id") int id, @RequestBody HedisMeasureGroup hedisMeasureGroup) {
+	public ResponseEntity<?> updateHedisMeasureGroup(@PathVariable("id") int id,
+			@RequestBody HedisMeasureGroup hedisMeasureGroup) {
 		logger.info("Updating HedisMeasureGroup with id {}", id);
 
 		HedisMeasureGroup currentHedisMeasureGroup = hedisMeasureGroupService.findById(id);
 
 		if (currentHedisMeasureGroup == null) {
 			logger.error("Unable to update. HedisMeasureGroup with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. HedisMeasureGroup with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. HedisMeasureGroup with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -124,14 +129,16 @@ public class HedisMeasureGroupController {
 		HedisMeasureGroup hedisMeasureGroup = hedisMeasureGroupService.findById(id);
 		if (hedisMeasureGroup == null) {
 			logger.error("Unable to delete. HedisMeasureGroup with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. HedisMeasureGroup with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. HedisMeasureGroup with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		hedisMeasureGroupService.deleteHedisMeasureGroupById(id);
 		return new ResponseEntity<HedisMeasureGroup>(HttpStatus.NO_CONTENT);
 	}
 
-	// ------------------- Delete All HedisMeasureGroups-----------------------------
+	// ------------------- Delete All
+	// HedisMeasureGroups-----------------------------
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping(value = "/hedisMeasureGroup/", method = RequestMethod.DELETE)
 	public ResponseEntity<HedisMeasureGroup> deleteAllHedisMeasureGroups() {

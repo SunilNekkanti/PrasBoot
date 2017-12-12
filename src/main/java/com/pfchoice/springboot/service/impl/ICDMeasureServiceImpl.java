@@ -27,7 +27,7 @@ public class ICDMeasureServiceImpl implements ICDMeasureService {
 	public ICDMeasure findByCode(String code) {
 		return icdMeasureRepository.findByCode(code);
 	}
-	
+
 	public void saveICDMeasure(ICDMeasure icdMeasure) {
 		icdMeasureRepository.save(icdMeasure);
 	}

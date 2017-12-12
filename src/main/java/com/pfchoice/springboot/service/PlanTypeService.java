@@ -23,7 +23,7 @@ public interface PlanTypeService {
 	void deleteAllPlanTypes();
 
 	List<PlanType> findAllPlanTypes();
-	
+
 	Page<PlanType> findAllPlanTypesByPage(Specification<PlanType> spec, Pageable pageable);
 
 	boolean isPlanTypeExist(PlanType planType);

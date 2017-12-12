@@ -132,58 +132,59 @@ public class FileUploadController {
 		return new ResponseEntity<FileUpload>(HttpStatus.NO_CONTENT);
 	}
 
-	/*@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
-	@RequestMapping(value = { "/fileUpload/fileProcessing.do" }, method = RequestMethod.POST)
-	public List<FileUpload> uploadFileProcessing(Model model, @RequestParam MultipartFile[] files) throws IOException {
-		logger.info("started file processsing" + files.toString());
-		logger.info("fileUpload.length:" + files.length);
-		List<FileUpload> fileUploaders = new ArrayList<>();
-
-		for (MultipartFile fileUpload : files) {
-			logger.info("fileUpload.getOriginalFilename() :" + fileUpload.getOriginalFilename());
-			if (fileUpload != null && !"".equals(fileUpload.getOriginalFilename())) {
-
-				String fileName = fileUpload.getOriginalFilename();
-
-				try {
-					// String ext = FilenameUtils.getExtension(fileName);
-					logger.info("fileName is : " + fileName);
-					FileUploadContent fileUploader = new FileUploadContent();
-					fileUploader.setFileName(fileName);
-					fileUploader.setContentType(fileUpload.getContentType());
-					fileUploader.setData(fileUpload.getBytes());
-					fileUploadService.saveFileUpload(fileUploader);
-
-					fileUploaders.add(fileUploader);
-
-				} catch (IOException e) {
-					logger.warn(e.getCause().getMessage());
-				}
-
-			}
-		}
-		return fileUploaders;
-
-	}
-*/
-/*	// -------------------Retrieve FileUploaded data
-	// ------------------------------------------
-	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
-	@RequestMapping(value = "/fileUploaded/{id}", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> getFileUploadContents(@PathVariable("id") int id) {
-		FileUpload fileUpload = fileUploadService.findById(id);
-		if (fileUpload == null) {
-			logger.error("FileUpload with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("FileUpload with id " + id + " not found"),
-					HttpStatus.NOT_FOUND);
-		}
-
-	//	byte[] contents = fileUpload.getData();
-		HttpHeaders headers = new HttpHeaders();
-		String filename = fileUpload.getFileName();
-		headers.setContentDispositionFormData("inline", filename);
-		headers.setContentType(MediaType.parseMediaType(fileUpload.getContentType()));
-
-		return new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
-	}*/
+	/*
+	 * @Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER",
+	 * "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
+	 * 
+	 * @RequestMapping(value = { "/fileUpload/fileProcessing.do" }, method =
+	 * RequestMethod.POST) public List<FileUpload> uploadFileProcessing(Model
+	 * model, @RequestParam MultipartFile[] files) throws IOException {
+	 * logger.info("started file processsing" + files.toString());
+	 * logger.info("fileUpload.length:" + files.length); List<FileUpload>
+	 * fileUploaders = new ArrayList<>();
+	 * 
+	 * for (MultipartFile fileUpload : files) {
+	 * logger.info("fileUpload.getOriginalFilename() :" +
+	 * fileUpload.getOriginalFilename()); if (fileUpload != null &&
+	 * !"".equals(fileUpload.getOriginalFilename())) {
+	 * 
+	 * String fileName = fileUpload.getOriginalFilename();
+	 * 
+	 * try { // String ext = FilenameUtils.getExtension(fileName);
+	 * logger.info("fileName is : " + fileName); FileUploadContent fileUploader
+	 * = new FileUploadContent(); fileUploader.setFileName(fileName);
+	 * fileUploader.setContentType(fileUpload.getContentType());
+	 * fileUploader.setData(fileUpload.getBytes());
+	 * fileUploadService.saveFileUpload(fileUploader);
+	 * 
+	 * fileUploaders.add(fileUploader);
+	 * 
+	 * } catch (IOException e) { logger.warn(e.getCause().getMessage()); }
+	 * 
+	 * } } return fileUploaders;
+	 * 
+	 * }
+	 */
+	/*
+	 * // -------------------Retrieve FileUploaded data //
+	 * ------------------------------------------
+	 * 
+	 * @Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER",
+	 * "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
+	 * 
+	 * @RequestMapping(value = "/fileUploaded/{id}", method = RequestMethod.GET)
+	 * public ResponseEntity<byte[]> getFileUploadContents(@PathVariable("id")
+	 * int id) { FileUpload fileUpload = fileUploadService.findById(id); if
+	 * (fileUpload == null) { logger.error("FileUpload with id {} not found.",
+	 * id); return new ResponseEntity(new CustomErrorType("FileUpload with id "
+	 * + id + " not found"), HttpStatus.NOT_FOUND); }
+	 * 
+	 * // byte[] contents = fileUpload.getData(); HttpHeaders headers = new
+	 * HttpHeaders(); String filename = fileUpload.getFileName();
+	 * headers.setContentDispositionFormData("inline", filename);
+	 * headers.setContentType(MediaType.parseMediaType(fileUpload.getContentType
+	 * ()));
+	 * 
+	 * return new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK); }
+	 */
 }

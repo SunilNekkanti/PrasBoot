@@ -17,7 +17,7 @@ public interface MembershipFollowupService {
 	void deleteAllMembershipFollowups();
 
 	List<MembershipFollowup> findAllMembershipFollowups();
-	
+
 	List<MembershipFollowup> findAllMembershipFollowupsByMbrId(Integer mbrId);
 
 	boolean isMembershipFollowupExist(MembershipFollowup membershipFollowup);

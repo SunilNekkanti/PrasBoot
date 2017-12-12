@@ -32,35 +32,30 @@ import com.pfchoice.springboot.model.converter.ICDMeasureListConverter;
  */
 @Entity(name = "membership_claims")
 @NamedStoredProcedureQueries({
-	   @NamedStoredProcedureQuery(name = "new_clm_report", 
-	                              procedureName = "NEW_CLM_REPORT",
-	                              parameters = {
-	                                 @StoredProcedureParameter( name = "tableName", type = String.class),
-	                                 @StoredProcedureParameter( name = "insId", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "prvdrId", type = String.class),
-	                                 @StoredProcedureParameter( name = "mbrId", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "rptMonth", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "activityMonth", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "claimType", type = String.class),
-	                                 @StoredProcedureParameter( name = "category", type = String.class),
-	                                 @StoredProcedureParameter( name = "roster", type = String.class),
-	                                 @StoredProcedureParameter( name = "cap", type = String.class),
-	                                 @StoredProcedureParameter( name = "levelNo", type = Integer.class)
-	                              })
-	})
+		@NamedStoredProcedureQuery(name = "new_clm_report", procedureName = "NEW_CLM_REPORT", parameters = {
+				@StoredProcedureParameter(name = "tableName", type = String.class),
+				@StoredProcedureParameter(name = "insId", type = Integer.class),
+				@StoredProcedureParameter(name = "prvdrId", type = String.class),
+				@StoredProcedureParameter(name = "mbrId", type = Integer.class),
+				@StoredProcedureParameter(name = "rptMonth", type = Integer.class),
+				@StoredProcedureParameter(name = "activityMonth", type = Integer.class),
+				@StoredProcedureParameter(name = "claimType", type = String.class),
+				@StoredProcedureParameter(name = "category", type = String.class),
+				@StoredProcedureParameter(name = "roster", type = String.class),
+				@StoredProcedureParameter(name = "cap", type = String.class),
+				@StoredProcedureParameter(name = "levelNo", type = Integer.class),
+				@StoredProcedureParameter(name = "maxReportMonth", type = Integer.class) }) })
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class MembershipClaim extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_claim_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "claim_id_number")
 	private String claimNumber;
 
@@ -69,133 +64,103 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	@JoinColumn(name = "mbr_id", referencedColumnName = "mbr_id")
 	private Membership mbr;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id")
 	@Where(clause = "active_ind ='Y'")
 	private Provider prvdr;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", referencedColumnName = "insurance_id")
 	@Where(clause = "active_ind ='Y'")
 	private Insurance ins;
 
-	
 	@Column(name = "claim_type")
 	private String claimType;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "facility_type_code", referencedColumnName = "code")
 	@Where(clause = "active_ind ='Y'")
 	private FacilityType facilityType;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
 	@Where(clause = "active_ind ='Y'")
 	@JoinColumn(name = "bill_type_code", referencedColumnName = "code")
 	private BillType billType;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
 	@Where(clause = "active_ind ='Y'")
 	@JoinColumn(name = "frequency_type_code", referencedColumnName = "code")
 	private FrequencyType frequencyType;
 
-	
 	@Column(name = "bill_type")
 	private String billTypec;
 
-	
 	@Column(name = "dischargestatus")
 	private String dischargeStatus;
 
-	
 	@Column(name = "memEnrollId")
 	private String MemEnrollId;
 
-	
 	@Column(name = "diagnoses")
 	private String diagnosis;
 
-	
 	@Column(name = "product_label")
 	private String productLabel;
 
-	
 	@Column(name = "product_lvl1")
 	private String productLvl1;
 
-	
 	@Column(name = "product_lvl2")
 	private String productLvl2;
 
-	
 	@Column(name = "product_lvl3")
 	private String productLvl3;
 
-	
 	@Column(name = "product_lvl4")
 	private String productLvl4;
 
-	
 	@Column(name = "product_lvl5")
 	private String productLvl5;
 
-	
 	@Column(name = "product_lvl6")
 	private String productLvl6;
 
-	
 	@Column(name = "product_lvl7")
 	private String productLvl7;
 
-	
 	@Column(name = "market_lvl1")
 	private String marketLvl1;
 
-	
 	@Column(name = "market_lvl2")
 	private String marketLvl2;
 
-	
 	@Column(name = "market_lvl3")
 	private String marketLvl3;
 
-	
 	@Column(name = "market_lvl4")
 	private String marketLvl4;
 
-	
 	@Column(name = "market_lvl5")
 	private String marketLvl5;
 
-	
 	@Column(name = "market_lvl6")
 	private String marketLvl6;
 
-	
 	@Column(name = "market_lvl7")
 	private String marketLvl7;
 
-	
 	@Column(name = "market_lvl8")
 	private String marketLvl8;
 
-	
 	@Column(name = "tin")
 	private String tin;
 
-	
 	@Column(name = "dx_type_cd")
 	private String dxTypeCode;
 
-	
 	@Column(name = "proc_type_cd")
 	private String procTypeCode;
 
-	
 	@Column(name = "file_id")
 	private Integer fileId;
 
@@ -208,7 +173,6 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	@Convert(converter = ICDMeasureListConverter.class)
 	private List<ICDMeasure> icdCodesList;
 
-	
 	/**
 	 * 
 	 */

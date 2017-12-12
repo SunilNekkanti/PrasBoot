@@ -36,19 +36,20 @@ public class FrequencyTypeController {
 
 	@Autowired
 	FrequencyTypeService frequencyTypeService; // Service which will do all data
-								// retrieval/manipulation work
+	// retrieval/manipulation work
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	// -------------------Retrieve FrequencyTypes as per page request
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/frequencyType/", method = RequestMethod.GET)
-	public ResponseEntity<Page<FrequencyType>> listAllFrequencyTypes(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<FrequencyType>> listAllFrequencyTypes(
+			@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<FrequencyType> spec = new FrequencyTypeSpecifications(search);
 		Page<FrequencyType> frequencyTypes = frequencyTypeService.findAllFrequencyTypesByPage(spec, pageRequest);
-		
+
 		if (frequencyTypes.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,14 +59,15 @@ public class FrequencyTypeController {
 
 	// -------------------Retrieve Single
 	// FrequencyType------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/frequencyType/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getFrequencyType(@PathVariable("id") int id) {
 		logger.info("Fetching FrequencyType with id {}", id);
 		FrequencyType frequencyType = frequencyTypeService.findById(id);
 		if (frequencyType == null) {
 			logger.error("FrequencyType with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("FrequencyType with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("FrequencyType with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<FrequencyType>(frequencyType, HttpStatus.OK);
 	}
@@ -74,17 +76,18 @@ public class FrequencyTypeController {
 	// FrequencyType-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CARE_COORDINATOR" })
 	@RequestMapping(value = "/frequencyType/", method = RequestMethod.POST)
-	public ResponseEntity<?> createFrequencyType(@RequestBody FrequencyType frequencyType, UriComponentsBuilder ucBuilder,
-			@ModelAttribute("username") String username) {
+	public ResponseEntity<?> createFrequencyType(@RequestBody FrequencyType frequencyType,
+			UriComponentsBuilder ucBuilder, @ModelAttribute("username") String username) {
 		logger.info("Creating FrequencyType : {}", frequencyType);
 
 		if (frequencyTypeService.isFrequencyTypeExist(frequencyType)) {
-			logger.error("Unable to create. A FrequencyType with description {} already exist", frequencyType.getDescription());
-			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A FrequencyType with description " + frequencyType.getDescription() + " already exist."),
-					HttpStatus.CONFLICT);
+			logger.error("Unable to create. A FrequencyType with description {} already exist",
+					frequencyType.getDescription());
+			return new ResponseEntity(new CustomErrorType("Unable to create. A FrequencyType with description "
+					+ frequencyType.getDescription() + " already exist."), HttpStatus.CONFLICT);
 		}
-		// logger.info(" frequencyType.getRoles().size() :{} ", frequencyType.getRoles().size());
+		// logger.info(" frequencyType.getRoles().size() :{} ",
+		// frequencyType.getRoles().size());
 		frequencyType.setCreatedBy(username);
 		frequencyType.setUpdatedBy(username);
 		frequencyTypeService.saveFrequencyType(frequencyType);
@@ -106,7 +109,8 @@ public class FrequencyTypeController {
 
 		if (currentFrequencyType == null) {
 			logger.error("Unable to update. FrequencyType with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. FrequencyType with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. FrequencyType with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -126,14 +130,16 @@ public class FrequencyTypeController {
 		FrequencyType frequencyType = frequencyTypeService.findById(id);
 		if (frequencyType == null) {
 			logger.error("Unable to delete. FrequencyType with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. FrequencyType with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. FrequencyType with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		frequencyTypeService.deleteFrequencyTypeById(id);
 		return new ResponseEntity<FrequencyType>(HttpStatus.NO_CONTENT);
 	}
 
-	// ------------------- Delete All FrequencyTypes-----------------------------
+	// ------------------- Delete All
+	// FrequencyTypes-----------------------------
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping(value = "/frequencyType/", method = RequestMethod.DELETE)
 	public ResponseEntity<FrequencyType> deleteAllFrequencyTypes() {

@@ -17,8 +17,6 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -30,26 +28,21 @@ public class HedisMeasure extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "qlty_msr_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "code", nullable = false)
 	private String code;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@Transient
 	private String codeAndDescription;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "qlty_msr_group_id", nullable = false, referencedColumnName = "qlty_msr_group_id")
 	private HedisMeasureGroup hedisMsrGrp;

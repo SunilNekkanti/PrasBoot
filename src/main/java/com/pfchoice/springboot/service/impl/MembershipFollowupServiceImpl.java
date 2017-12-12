@@ -40,8 +40,8 @@ public class MembershipFollowupServiceImpl implements MembershipFollowupService 
 	public List<MembershipFollowup> findAllMembershipFollowups() {
 		return membershipFollowupRepository.findAll();
 	}
-	
-	public List<MembershipFollowup> findAllMembershipFollowupsByMbrId(Integer mbrId){
+
+	public List<MembershipFollowup> findAllMembershipFollowupsByMbrId(Integer mbrId) {
 		return membershipFollowupRepository.findAllMembershipFollowupsByMbrId(mbrId);
 	}
 

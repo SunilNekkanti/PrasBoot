@@ -19,10 +19,9 @@ public class ICDMeasureListConverter implements AttributeConverter<List, String>
 	private static final String SEPARATOR = ",";
 
 	private static ICDMeasureRepository icdMeasureRepository;
-	
+
 	@Autowired
 	private ICDMeasureRepository icdMeasureRepository1;
-
 
 	@PostConstruct
 	public void init() {
@@ -36,12 +35,12 @@ public class ICDMeasureListConverter implements AttributeConverter<List, String>
 
 	@Override
 	public List convertToEntityAttribute(final String diagnosis) {
-		if(diagnosis != null){
-		String diagnoses = diagnosis.replace(" ", "");
-		String[] icdCodes = diagnoses.split(SEPARATOR);
+		if (diagnosis != null) {
+			String diagnoses = diagnosis.replace(" ", "");
+			String[] icdCodes = diagnoses.split(SEPARATOR);
 
-		return icdMeasureRepository.findByCodes(icdCodes);
-		}else{
+			return icdMeasureRepository.findByCodes(icdCodes);
+		} else {
 			return null;
 		}
 	}

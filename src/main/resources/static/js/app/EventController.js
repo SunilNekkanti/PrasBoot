@@ -1,7 +1,7 @@
+(function(){
 'use strict';
-
-app
-		.controller(
+var app = angular.module('my-app');
+app.controller(
 				'EventController',
 				[
 						'EventService',
@@ -249,7 +249,7 @@ app
 															.$setPristine();
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
-							                        $state.go('event');
+							                        $state.go('main.event');
 												},
 												function(errResponse) {
 													console
@@ -278,7 +278,7 @@ app
 															.$setPristine();
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
-							                        $state.go('event');
+							                        $state.go('main.event');
 												},
 												function(errResponse) {
 													console
@@ -344,7 +344,7 @@ app
 							function addEvent() {
 								self.successMessage = '';
 								self.errorMessage = '';
-								var trans =  $state.go('event.edit').transition;
+								var trans =  $state.go('main.event.edit').transition;
 								trans.onSuccess({}, function() {
 									self.users = getAllAgents();
 									self.states = getAllStates();
@@ -372,7 +372,7 @@ app
 					            self.event={};
 					            $scope.myForm.$setPristine(); //reset Form
 					            self.display = false;
-					            $state.go('event');
+					            $state.go('main.event');
 					        }
 							
                             function convertToInt(id){
@@ -581,7 +581,7 @@ app
 							
 							function eventEdit(id){
 							//	var params = {"id":id,"eventDisplay":true};
-								var trans =  $state.go('event.edit').transition;
+								var trans =  $state.go('main.event.edit').transition;
 								trans.onSuccess({}, function() {
 								
 								editEvent(id);
@@ -745,3 +745,4 @@ app
 								  
 	} 
 ]);
+   })();

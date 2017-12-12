@@ -61,7 +61,6 @@
                       <div class="col-md-7">
                         <input type="text" ng-model="ctrl.prvdr.ageSeen" name="ageSeen" class="username form-control input-sm" placeholder="Enter Ages Seen" />
                         <div class="has-error" ng-show="myForm.$dirty">
-                          <span ng-show="myForm.ageSeen.$error.required">This is a required field</span>
                           <span ng-show="myForm.ageSeen.$invalid">This field is invalid </span>
                         </div>
                       </div>
@@ -72,13 +71,11 @@
                       <div class="col-md-7">
                         <input type="text" ng-model="ctrl.prvdr.hrsOfOperation" name="hrsOfOperation" class="username form-control input-sm" placeholder="Enter Business Hours" />
                         <div class="has-error" ng-show="myForm.$dirty">
-                          <span ng-show="myForm.hrsOfOperation.$error.required">This is a required field</span>
                           <span ng-show="myForm.hrsOfOperation.$invalid">This field is invalid </span>
                         </div>
                       </div>
                     </div>
                   </div>
-
                   <div class="row">
                     <div class="form-group col-md-6">
                       <label class="col-md-4 control-lable" for="uname">Languages</label>
@@ -210,7 +207,7 @@
                       <div class="col-sm-3">
                         <div class="form-group col-sm-12">
                           <label for="contractNumber">Contract Number</label>
-                          <input type="text" ng-model="ctrl.prvdr.refContracts[0].contract.contractNBR" name="contractNumber" class="username form-control input-sm" placeholder="Enter Contract Number" required ng-minlength="5" />
+                          <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[0].contract.contractNBR" name="contractNumber" class="username form-control input-sm" placeholder="Enter Contract Number" required ng-minlength="5" />
                           <div class="has-error" ng-show="myForm.$dirty">
                             <span ng-show="myForm.contractNumber.$error.required">This is a required field</span>
                             <span ng-show="myForm.contractNumber.$error.minlength">Minimum length required is 5</span>
@@ -222,8 +219,8 @@
                       <div class="col-sm-3">
                         <div class="form-group col-sm-12">
                           <label for="contractNumber">Start Date</label>
-                          <div class="input-group date" id="startDate" name="startDate" ng-model="ctrl.prvdr.refContracts[0].contract.startDate" date1-picker>
-                            <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.refContracts[0].contract.startDate" date-picker-input>
+                          <div class="input-group date" id="startDate" name="startDate" ng-model="ctrl.prvdr.prvdrRefContracts[0].contract.startDate" date1-picker>
+                            <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.prvdrRefContracts[0].contract.startDate" date-picker-input ng-required="true">
                             <span class="input-group-addon">
 			           							<span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -239,8 +236,8 @@
                       <div class="col-sm-3">
                         <div class="form-group col-sm-12">
                           <label for="contractNumber">End Date</label>
-                          <div class="input-group date" id="startDate" name="endDate" ng-model="ctrl.prvdr.refContracts[0].contract.endDate" date1-picker>
-                            <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.refContracts[0].contract.endDate" date-picker-input>
+                          <div class="input-group date" id="startDate" name="endDate" ng-model="ctrl.prvdr.prvdrRefContracts[0].contract.endDate" date1-picker>
+                            <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.prvdrRefContracts[0].contract.endDate" date-picker-input ng-required="true">
                             <span class="input-group-addon">
 			           							<span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -254,12 +251,15 @@
                       </div>
 
                       <div class="col-sm-3">
-                        <div class="group col-sm-12">
+                        <div class="group col-sm-11">
                           <label for="file">File </label>
-                          <input class="col-sm-12  control-label form-control" name="fileUpload" type="file" file-model="ctrl.myFile" ng-model="ctrl.myFile" id="myFileField" ng-required="ctrl.consentFormSigned==='Y'" />
-                          <div class="has-error" ng-show="ctrl.consentFormSigned==='Y' && myForm.$dirty && !ctrl.myFile">
-                            <span ng-show="myForm.fileUpload.$error.required">This is a required field</span>
-                          </div>
+                          <input class="col-sm-12  control-label form-control" name="fileUpload" type="file" file-model="ctrl.prvdr.prvdrRefContracts[0].myFile"  ng-model="ctrl.prvdr.prvdrRefContracts[0].myFile" id="myFileField"  />
+                          <div class="group col-sm-1" ng-if="ctrl.prvdr.id">
+                                     	<a  ng-click="ctrl.readUploadedFile(0)" style="display:block;">
+          					                <span class="glyphicon glyphicon-file">{{ctrl.prvdr.prvdrRefContracts[0].contract.fileUpload.fileName}}</span>
+        				                </a>
+                           </div>
+                                  
                         </div>
                       </div>
 
@@ -271,21 +271,19 @@
               </div>
             </div>
           </div>
-
-
-          <div class="row">
+          <div class="row" >
             <div class="col-sm-12 contractInfo">
               <div class="panel panel-success">
                 <div class="panel-heading">Third Party Agreement</div>
-                <div ng-repeat="refContract in ctrl.prvdr.refInsContracts track by $index" ng-if="refContract.ins">
+                <div ng-repeat=" prvdrInsContract in ctrl.prvdr.prvdrRefContracts" ng-if="$index > 0" >
+              
                   <div class="panel panel-success panel-body">
                     <div class="row col-md-12">
-
                       <div class="row">
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="contractNumber">Contract Number</label>
-                            <input type="text" ng-model="ctrl.prvdr.refInsContracts[$index].contract.contractNBR" name="contractNumber" class="username form-control input-sm" placeholder="Enter Contract Number" required ng-minlength="5" />
+                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.contractNBR" name="contractNumber" class="username form-control input-sm" placeholder="Enter Contract Number" required ng-minlength="5" />
                             <div class="has-error" ng-show="myForm.$dirty">
                               <span ng-show="myForm.contractNumber.$error.required">This is a required field</span>
                               <span ng-show="myForm.contractNumber.$error.minlength">Minimum length required is 5</span>
@@ -294,18 +292,19 @@
                           </div>
                         </div>
 
+
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="plan">Insurance</label>
-                            <select class=" form-control" ng-model="ctrl.prvdr.refInsContracts[$index].ins" ng-options="insurance.name for insurance in ctrl.insurances | orderBy:'name' track by insurance.name"></select>
+                            <select class=" form-control" ng-model="ctrl.prvdr.prvdrRefContracts[$index].ins" ng-options="insurance.name for insurance in ctrl.insurances | orderBy:'name' track by insurance.id"></select>
                           </div>
                         </div>
 
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="contractNumber">Start Date</label>
-                            <div class="input-group date" id="startDate" name="startDate" ng-model="ctrl.prvdr.refInsContracts[$index].contract.startDate" date1-picker>
-                              <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.refInsContracts[$index].contract.startDate" date-picker-input>
+                            <div class="input-group date" id="startDate" name="startDate" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.startDate" date1-picker>
+                              <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.startDate" date-picker-input ng-required="true">
                               <span class="input-group-addon">
 			           							<span class="glyphicon glyphicon-calendar"></span>
                               </span>
@@ -321,8 +320,8 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="contractNumber">End Date</label>
-                            <div class="input-group date" id="startDate" name="endDate" ng-model="ctrl.prvdr.refInsContracts[$index].contract.endDate" date1-picker>
-                              <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.refInsContracts[$index].contract.endDate" date-picker-input>
+                            <div class="input-group date" id="startDate" name="endDate" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.endDate" date1-picker>
+                              <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.endDate" date-picker-input ng-required="true">
                               <span class="input-group-addon">
 			           							<span class="glyphicon glyphicon-calendar"></span>
                               </span>
@@ -341,7 +340,7 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="pmpm">PMPM</label>
-                            <input type="text" ng-model="ctrl.prvdr.refContracts[1].contract.pmpm" name="pmpm" class="username form-control input-sm" placeholder="Enter PMPM" required ng-minlength="1" />
+                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.pmpm" name="pmpm" class="username form-control input-sm" placeholder="Enter PMPM" required ng-minlength="1" />
                             <div class="has-error" ng-show="myForm.$dirty">
                               <span ng-show="myForm.pmpm.$error.required">This is a required field</span>
                               <span ng-show="myForm.pmpm.$error.minlength">Minimum length required is 1</span>
@@ -353,7 +352,7 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="serviceFund">Average ServiceFund</label>
-                            <input type="text" ng-model="ctrl.prvdr.refInsContracts[$index].contract.avgServiceFund" name="avgServiceFund" class="username form-control input-sm" placeholder="Enter ServiceFund" required ng-minlength="1" />
+                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.avgServiceFund" name="avgServiceFund" class="username form-control input-sm" placeholder="Enter ServiceFund"  ng-minlength="1" />
                             <div class="has-error" ng-show="myForm.$dirty">
                               <span ng-show="myForm.serviceFund.$error.required">This is a required field</span>
                               <span ng-show="myForm.serviceFund.$error.minlength">Minimum length required is 1</span>
@@ -365,7 +364,7 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="serviceFund">Provider Number</label>
-                            <input type="text" ng-model="ctrl.prvdr.refInsContracts[$index].contract.pcpPrvdrNBR" name="pcpPrvdrNBR" class="username form-control input-sm" placeholder="Enter ServiceFund" required ng-minlength="1" />
+                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.pcpPrvdrNBR" name="pcpPrvdrNBR" class="username form-control input-sm" placeholder="Enter ServiceFund" required ng-minlength="1" />
                             <div class="has-error" ng-show="myForm.$dirty">
                               <span ng-show="myForm.pcpPrvdrNBR.$error.required">This is a required field</span>
                               <span ng-show="myForm.pcpPrvdrNBR.$error.minlength">Minimum length required is 1</span>
@@ -377,10 +376,12 @@
                         <div class="col-sm-3">
                           <div class="group col-sm-12">
                             <label for="file">File </label>
-                            <input class="col-sm-12  control-label form-control" name="fileUpload" type="file" file-model="ctrl.myFile" ng-model="ctrl.myFile" id="myFileField" ng-required="ctrl.consentFormSigned==='Y'" />
-                            <div class="has-error" ng-show="ctrl.consentFormSigned==='Y' && myForm.$dirty && !ctrl.myFile">
-                              <span ng-show="myForm.fileUpload.$error.required">This is a required field</span>
-                            </div>
+                            <input class="col-sm-12  control-label form-control" name="fileUpload" type="file" file-model="ctrl.prvdr.prvdrRefContracts[$index].myFile" ng-model="ctrl.prvdr.prvdrRefContracts[$index].myFile"  id="myFileField"  />
+                             <div class="group col-sm-1" ng-if="ctrl.prvdr.prvdrRefContracts[$index].contract.fileUpload.id">
+                                     	<a  ng-click="ctrl.readUploadedFile($index)" style="display:block;">
+          					                <span class="glyphicon glyphicon-file">{{ctrl.prvdr.prvdrRefContracts[$index].contract.fileUpload.fileName}}</span>
+        				                </a>
+                           </div>
                           </div>
                         </div>
                       </div>

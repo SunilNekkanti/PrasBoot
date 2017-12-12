@@ -10,31 +10,23 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 @Component
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class MembershipClaimsUnwanted implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private String claimType;
-	
-	
+
 	private String firstName;
- 
-	
+
 	private String lastName;
-	
-	
+
 	@Temporal(TemporalType.DATE)
 	private Date dob;
-	
-	
+
 	private Character gender;
-	
-	
+
 	private double unwantedClaims;
 
 	public String getClaimType() {
@@ -84,5 +76,5 @@ public class MembershipClaimsUnwanted implements Serializable {
 	public void setUnwantedClaims(double unwantedClaims) {
 		this.unwantedClaims = unwantedClaims;
 	}
-	
+
 }

@@ -54,7 +54,7 @@ public class FileType extends RecordDetails implements Serializable {
 
 	@Column(name = "entity_name", nullable = true)
 	private String entityClassName;
-	
+
 	/**
 	 * 
 	 */
@@ -148,7 +148,8 @@ public class FileType extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param entityClassName the entityClassName to set
+	 * @param entityClassName
+	 *            the entityClassName to set
 	 */
 	public void setEntityClassName(String entityClassName) {
 		this.entityClassName = entityClassName;

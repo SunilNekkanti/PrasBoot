@@ -20,8 +20,6 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -33,36 +31,29 @@ public class MembershipCapReport extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_cap_rpt_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "cap_pay_dt")
 	@Temporal(TemporalType.DATE)
 	private Date capPayDate;
 
-	
 	@Column(name = "cap_period", nullable = false)
 	private Integer capPeriod;
-	
-	
+
 	@Column(name = "payee_id", nullable = false)
 	private String payeeId;
-	
-	
+
 	@Column(name = "payee_name", nullable = false)
 	private String payeeName;
-	
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", nullable = false, referencedColumnName = "insurance_id")
 	private Insurance insId;
 
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "prvdr_id", nullable = false, referencedColumnName = "prvdr_id")
 	private Provider prvdr;
@@ -70,57 +61,44 @@ public class MembershipCapReport extends RecordDetails implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "mbr_id", nullable = false, referencedColumnName = "mbr_id")
 	private Membership mbr;
-	
-	
+
 	@Column(name = "eff_start_date")
 	@Temporal(TemporalType.DATE)
-	private Date effStartDate; 
-	
-	
+	private Date effStartDate;
+
 	@Column(name = "mbr_risk_pop", nullable = false)
 	private String mbrRiskPop;
-	
-	
+
 	@Column(name = "cap_key", nullable = false)
 	private String capKey;
-	
-	
+
 	@Column(name = "rate_tier", nullable = false)
 	private String rateTier;
-	
-	
+
 	@Column(name = "rec_type", nullable = false)
 	private String recType;
-	
-	
+
 	@Column(name = "fund_rate", nullable = false)
 	private String fundRate;
-	
-	
+
 	@Column(name = "fund_amt", nullable = false)
 	private String fundAmt;
-	
-	
+
 	@Column(name = "mm", nullable = false)
 	private String mm;
-	
-	
+
 	@Column(name = "fund_name", nullable = false)
 	private String fundName;
-	
-	
+
 	@Column(name = "lobd_id", nullable = false)
 	private String lobdId;
-	
-	
+
 	@Column(name = "product_desc", nullable = false)
 	private String productDesc;
- 
-	
+
 	@Column(name = "file_id", nullable = false)
 	private Integer fileId;
 
-	
 	/**
 	 * 
 	 */

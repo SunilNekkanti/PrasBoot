@@ -33,9 +33,6 @@ public class FileUpload extends RecordDetails implements Serializable {
 	@Column(name = "content_type")
 	private String contentType;
 
-	@Column(name = "file_data", nullable = false, columnDefinition = "mediumblob")
-	private byte[] data;
-
 	/**
 	 * 
 	 */
@@ -98,21 +95,6 @@ public class FileUpload extends RecordDetails implements Serializable {
 		this.fileName = fileName;
 	}
 
-	/**
-	 * @return the data
-	 */
-	public byte[] getData() {
-		return data;
-	}
-
-	/**
-	 * @param data
-	 *            the data to set
-	 */
-	public void setData(byte[] data) {
-		this.data = data;
-	}
-
 	@Override
 	public int hashCode() {
 		int hash = 0;
@@ -134,7 +116,7 @@ public class FileUpload extends RecordDetails implements Serializable {
 
 	@Override
 	public String toString() {
-		return "com.pfchoice.springboot.model.FilesUpload[ id=" + id + " ]";
+		return "com.pfchoice.springboot.model.FileUpload[ id=" + id + " ]";
 	}
 
 }

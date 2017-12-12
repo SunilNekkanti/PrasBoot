@@ -29,7 +29,7 @@ public class PlaceOfServiceServiceImpl implements PlaceOfServiceService {
 	public PlaceOfService findByCode(String code) {
 		return placeOfServiceRepository.findByCode(code);
 	}
-	
+
 	public void savePlaceOfService(PlaceOfService placeOfService) {
 		placeOfServiceRepository.save(placeOfService);
 	}

@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('ProblemController',
     ['ProblemService', 'InsuranceService', 'ICDMeasureService', '$scope', '$compile','$state','$stateParams','$filter','$modal','$log','$localStorage','DTOptionsBuilder', 'DTColumnBuilder', function( ProblemService,InsuranceService, ICDMeasureService, $scope,$compile, $state, $stateParams,$filter,$modal,$log, $localStorage,DTOptionsBuilder, DTColumnBuilder) {
@@ -195,6 +197,7 @@ app.controller('ProblemController',
                         self.problems = getAllInsurances();
                         self.problem={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating Problem');
@@ -215,7 +218,7 @@ app.controller('ProblemController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("problem");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating Problem');
@@ -283,12 +286,12 @@ app.controller('ProblemController',
             self.errorMessage='';
             self.problem={};
             self.display = false;
-            $state.go('problem');
+            $state.go('main.problem',{},{location: true,reload: false,notify: false});
         }
         
         function problemEdit(id) {
         	var params = {'problemDisplay':true};
-			var trans =  $state.go('problem.edit',params).transition;
+			var trans =  $state.go('main.problem.edit',params).transition;
 			trans.onSuccess({}, function() { editProblem(id);  }, { priority: -1 });
 			
         }
@@ -334,3 +337,4 @@ app.controller('ProblemController',
     
 
     ]);
+   })();

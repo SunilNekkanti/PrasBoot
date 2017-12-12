@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('PlanTypeController',
     ['PlanTypeService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( PlanTypeService,  $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -133,6 +135,7 @@ app.controller('PlanTypeController',
                         self.planTypes = getAllPlanTypes();
                         self.planType={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating PlanType');
@@ -153,7 +156,7 @@ app.controller('PlanTypeController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("planType");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating PlanType');
@@ -180,7 +183,6 @@ app.controller('PlanTypeController',
 
         function getAllPlanTypes(){
              self.planTypes = PlanTypeService.getAllPlanTypes();
-   
             return self.planTypes;
         }
         
@@ -192,7 +194,6 @@ app.controller('PlanTypeController',
             PlanTypeService.getPlanType(id).then(
                 function (planType) {
                     self.planType = planType;
-                   
                     self.display = true;
                 },
                 function (errResponse) {
@@ -213,12 +214,12 @@ app.controller('PlanTypeController',
             self.errorMessage='';
             self.planType={};
             self.display = false;
-            $state.go('planType');
+            $state.go('main.planType',{},{location: true,reload: false,notify: false});
         }
         
         function planTypeEdit(id) {
         	var params = {'planTypeDisplay':true};
-			var trans =  $state.go('planType.edit',params).transition;
+			var trans =  $state.go('main.planType.edit',params).transition;
 			trans.onSuccess({}, function() { editPlanType(id);  }, { priority: -1 });
 			
         }
@@ -234,3 +235,4 @@ app.controller('PlanTypeController',
     
 
     ]);
+})();

@@ -29,7 +29,7 @@ public class RiskReconController {
 
 	@Autowired
 	RiskReconService riskReconService; // Service which will do all data
-									// retrieval/manipulation work
+										// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// RiskRecons---------------------------------------------
@@ -55,7 +55,8 @@ public class RiskReconController {
 		RiskRecon riskRecon = riskReconService.findById(id);
 		if (riskRecon == null) {
 			logger.error("RiskRecon with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("RiskRecon with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("RiskRecon with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<RiskRecon>(riskRecon, HttpStatus.OK);
 	}
@@ -70,7 +71,8 @@ public class RiskReconController {
 		if (riskReconService.isRiskReconExist(riskRecon)) {
 			logger.error("Unable to create. A RiskRecon with name {} already exist", riskRecon.getName());
 			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A RiskRecon with name " + riskRecon.getName() + " already exist."),
+					new CustomErrorType(
+							"Unable to create. A RiskRecon with name " + riskRecon.getName() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
 		riskRecon.setCreatedBy("sarath");

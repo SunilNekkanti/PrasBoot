@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.controller('FacilityTypeController',
     ['FacilityTypeService', '$scope', '$compile','$state','DTOptionsBuilder', 'DTColumnBuilder',  function( FacilityTypeService, $scope, $compile, $state, DTOptionsBuilder, DTColumnBuilder) {
 
@@ -220,9 +221,10 @@ app.controller('FacilityTypeController',
             self.errorMessage='';
             self.facilityType={};
             self.display = false;
-            $state.go('facilityType');
+            $state.go('main.facilityType');
         }
     }
 
 
     ]);
+   })();

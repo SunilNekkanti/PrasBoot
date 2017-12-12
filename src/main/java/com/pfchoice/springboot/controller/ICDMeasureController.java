@@ -33,19 +33,19 @@ public class ICDMeasureController {
 
 	@Autowired
 	ICDMeasureService icdMeasureService; // Service which will do all data
-										// retrieval/manipulation work
+											// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// ICDMeasures---------------------------------------------
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/icdMeasure/", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllICDMeasures(@PageableDefault(page=0 ,size=20) Pageable pageRequest,
+	public ResponseEntity<?> listAllICDMeasures(@PageableDefault(page = 0, size = 20) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<ICDMeasure> spec = new ICDMeasureSpecifications( search);
+		Specification<ICDMeasure> spec = new ICDMeasureSpecifications(search);
 		Page<ICDMeasure> icdMeasures = icdMeasureService.findAllICDMeasuresByPage(spec, pageRequest);
-		
+
 		if (icdMeasures.getTotalElements() == 0) {
 			System.out.println("no icdMeasures");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);

@@ -36,19 +36,20 @@ public class AttPhysicianController {
 
 	@Autowired
 	AttPhysicianService attPhysicianService; // Service which will do all data
-								// retrieval/manipulation work
+	// retrieval/manipulation work
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	// -------------------Retrieve AttPhysicians as per page request
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/attPhysician/", method = RequestMethod.GET)
-	public ResponseEntity<Page<AttPhysician>> listAllAttPhysicians(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<AttPhysician>> listAllAttPhysicians(
+			@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<AttPhysician> spec = new AttPhysicianSpecifications(search);
 		Page<AttPhysician> attPhysicians = attPhysicianService.findAllAttPhysiciansByPage(spec, pageRequest);
-		
+
 		if (attPhysicians.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,14 +59,15 @@ public class AttPhysicianController {
 
 	// -------------------Retrieve Single
 	// AttPhysician------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/attPhysician/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getAttPhysician(@PathVariable("id") int id) {
 		logger.info("Fetching AttPhysician with id {}", id);
 		AttPhysician attPhysician = attPhysicianService.findById(id);
 		if (attPhysician == null) {
 			logger.error("AttPhysician with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("AttPhysician with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("AttPhysician with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<AttPhysician>(attPhysician, HttpStatus.OK);
 	}
@@ -81,10 +83,12 @@ public class AttPhysicianController {
 		if (attPhysicianService.isAttPhysicianExist(attPhysician)) {
 			logger.error("Unable to create. A AttPhysician with name {} already exist", attPhysician.getName());
 			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A AttPhysician with name " + attPhysician.getName() + " already exist."),
+					new CustomErrorType(
+							"Unable to create. A AttPhysician with name " + attPhysician.getName() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
-		// logger.info(" attPhysician.getRoles().size() :{} ", attPhysician.getRoles().size());
+		// logger.info(" attPhysician.getRoles().size() :{} ",
+		// attPhysician.getRoles().size());
 		attPhysician.setCreatedBy(username);
 		attPhysician.setUpdatedBy(username);
 		attPhysicianService.saveAttPhysician(attPhysician);
@@ -106,7 +110,8 @@ public class AttPhysicianController {
 
 		if (currentAttPhysician == null) {
 			logger.error("Unable to update. AttPhysician with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. AttPhysician with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. AttPhysician with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -127,7 +132,8 @@ public class AttPhysicianController {
 		AttPhysician attPhysician = attPhysicianService.findById(id);
 		if (attPhysician == null) {
 			logger.error("Unable to delete. AttPhysician with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. AttPhysician with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. AttPhysician with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		attPhysicianService.deleteAttPhysicianById(id);

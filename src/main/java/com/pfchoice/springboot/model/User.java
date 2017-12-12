@@ -50,13 +50,13 @@ public class User extends RecordDetails implements Serializable {
 	@JoinColumn(name = "language_id", referencedColumnName = "code")
 	private Language language;
 
-	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.LAZY)
 	@JoinTable(name = "user_insurances", joinColumns = {
 			@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "insurance_id", referencedColumnName = "insurance_id", nullable = false) })
-	private  Insurance insurance;
+	private Insurance insurance;
 
-	@OneToOne(cascade =    CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "user_contacts", joinColumns = {
 			@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "contact_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })
@@ -68,7 +68,7 @@ public class User extends RecordDetails implements Serializable {
 
 	@Column(name = "effective_year")
 	private Integer effectiveYear;
-	
+
 	/**
 	 * 
 	 */
@@ -181,7 +181,8 @@ public class User extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param insurance the insurance to set
+	 * @param insurance
+	 *            the insurance to set
 	 */
 	public void setInsurance(Insurance insurance) {
 		this.insurance = insurance;
@@ -210,7 +211,8 @@ public class User extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param effectiveYear the effectiveYear to set
+	 * @param effectiveYear
+	 *            the effectiveYear to set
 	 */
 	public void setEffectiveYear(Integer effectiveYear) {
 		this.effectiveYear = effectiveYear;

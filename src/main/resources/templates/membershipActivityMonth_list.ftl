@@ -1,11 +1,6 @@
 <div class="generic-container">
   <div class="panel panel-success" ng-if="!ctrl.display">
     <!-- Default panel contents -->
-    <div class="panel-heading"><span class="membership">List of Memberships </span>
-      <button type="button" ng-click="ctrl.addMembership()" ng-hide="ctrl.displayEditButton" class="btn btn-success btn-xs custom-width  floatRight"> Add </button>
-      <button type="button" ng-click="ctrl.editMembership(ctrl.membershipId)" ng-show="ctrl.displayEditButton" class="btn btn-primary  btn-xs custom-width floatRight">Edit</button>
-      <button type="button" ng-click="ctrl.removeMembership(ctrl.membershipId)" ng-show="ctrl.displayEditButton" class="btn btn-danger  btn-xs custom-width floatRight">Remove</button>
-    </div>
     <div class="table-responsive">
       <div class="panel-body">
         <div class="panel-body">
@@ -21,7 +16,7 @@
             <div class="col-sm-3">
               <div class="form-group col-sm-12">
                 <label for="plan">Provider</label>
-                <select class=" form-control" ng-model="ctrl.prvdr" ng-options="provider.name for provider in ctrl.prvdrs | filter:{refInsContracts:[{ins:{id:ctrl.insurance.id}}]} | orderBy:'name' track by provider.name"> </select>
+                <select class=" form-control" ng-model="ctrl.prvdr" ng-options="provider.name for provider in ctrl.prvdrs | providerFilter:ctrl.insurance.id | orderBy:'name' track by provider.name"> </select>
               </div>
             </div>
             

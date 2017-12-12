@@ -27,11 +27,11 @@ public class CPTMeasureServiceImpl implements CPTMeasureService {
 	public CPTMeasure findByCode(String code) {
 		return cptMeasureRepository.findByCode(code);
 	}
-	
+
 	public CPTMeasure findByDescription(String description) {
 		return cptMeasureRepository.findByDescription(description);
 	}
-	
+
 	public void saveCPTMeasure(CPTMeasure cptMeasure) {
 		cptMeasureRepository.save(cptMeasure);
 	}

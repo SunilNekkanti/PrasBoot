@@ -11,7 +11,7 @@ public interface PlaceOfServiceService {
 	PlaceOfService findById(Integer id);
 
 	PlaceOfService findByDescription(String description);
-	
+
 	PlaceOfService findByCode(String code);
 
 	void savePlaceOfService(PlaceOfService placeOfService);

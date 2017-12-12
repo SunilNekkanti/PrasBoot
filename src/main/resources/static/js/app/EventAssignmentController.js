@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app
 		.controller(
@@ -226,7 +228,7 @@ app
 													self.eventAssignment = {};
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
-							                        $state.go('eventAssignment');
+							                        $state.go('main.eventAssignment');
 												},
 												function(errResponse) {
 													console
@@ -253,7 +255,7 @@ app
 															.$setPristine();
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
-							                        $state.go('eventAssignment');
+							                        $state.go('main.eventAssignment');
 												},
 												function(errResponse) {
 													console
@@ -349,7 +351,7 @@ app
 								self.errorMessage = '';
 								self.eventAssignment = {};
 					            self.display  = false;
-					            $state.go('eventAssignment');
+					            $state.go('main.eventAssignment');
 					        }
 							
 							
@@ -618,7 +620,7 @@ app
 								  };
 
 						  function eventAssignmentEdit(id){
-							  $state.go('eventAssignment.edit'); 
+							  $state.go('main.eventAssignment.edit'); 
 									editEventAssignment(id);
 										
 						 }		  
@@ -674,3 +676,4 @@ app
 								  
 	} 
 ]);
+   })();

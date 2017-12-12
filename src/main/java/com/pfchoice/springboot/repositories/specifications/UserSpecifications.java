@@ -26,14 +26,14 @@ public class UserSpecifications implements Specification<User> {
 		Predicate p = cb.conjunction();
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions()
-			.add(cb.or(cb.like(cb.lower(root.get("name")), containsLikePattern),
-					cb.like(root.join("contact").get("mobilePhone"), containsLikePattern),
-					cb.like(root.join("contact").get("email"), containsLikePattern),
-					cb.like(root.join("role").get("role"), containsLikePattern)
+					.add(cb.or(cb.like(cb.lower(root.get("name")), containsLikePattern),
+							cb.like(root.join("contact").get("mobilePhone"), containsLikePattern),
+							cb.like(root.join("contact").get("email"), containsLikePattern),
+							cb.like(root.join("role").get("role"), containsLikePattern)
 
-	        ));
+			));
 		}
-		
+
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		return p;
 

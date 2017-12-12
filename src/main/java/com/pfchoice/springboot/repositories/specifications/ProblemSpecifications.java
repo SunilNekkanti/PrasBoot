@@ -12,11 +12,10 @@ import com.pfchoice.springboot.model.Problem;
 public class ProblemSpecifications implements Specification<Problem> {
 
 	private String searchTerm;
-	
+
 	private Integer insId;
-	
-    private Integer effectiveYear;
-    
+
+	private Integer effectiveYear;
 
 	public ProblemSpecifications(String searchTerm, Integer insId, Integer effectiveYear) {
 		super();
@@ -31,20 +30,19 @@ public class ProblemSpecifications implements Specification<Problem> {
 
 		cq.distinct(true);
 		Predicate p = cb.conjunction();
-		
+
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("firstName")), containsLikePattern),
-					cb.like(cb.lower(root.get("lastName")), containsLikePattern)
-			));
+					cb.like(cb.lower(root.get("lastName")), containsLikePattern)));
 		}
-		
-		if(insId != null){
+
+		if (insId != null) {
 			p.getExpressions().add(cb.and(cb.equal(root.join("insId").get("id"), insId)));
 		}
-		if(effectiveYear != null){
+		if (effectiveYear != null) {
 			p.getExpressions().add(cb.and(cb.equal(root.get("effectiveYear"), effectiveYear)));
 		}
-		
+
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		return p;
 

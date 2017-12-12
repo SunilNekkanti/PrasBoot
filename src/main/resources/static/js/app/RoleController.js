@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('RoleController',
     ['RoleService', '$scope', '$compile','$state','DTOptionsBuilder', 'DTColumnBuilder',  function( RoleService, $scope, $compile,$state,DTOptionsBuilder, DTColumnBuilder) {
@@ -215,9 +217,10 @@ app.controller('RoleController',
             self.errorMessage='';
             self.role={};
             self.display = false;
-            $state.go('role');
+            $state.go('main.role');
         }
     }
 
 
     ]);
+   })();

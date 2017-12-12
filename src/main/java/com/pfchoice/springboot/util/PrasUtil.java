@@ -24,72 +24,68 @@ import com.pfchoice.springboot.controller.FileUploadContentController;
 
 @Component
 public class PrasUtil {
-	
+
 	public static final Logger logger = LoggerFactory.getLogger(FileUploadContentController.class);
-	
+
 	@PersistenceContext
 	private EntityManager em;
-	
+
 	@Autowired
 	ConfigProperties configProperties;
-	
+
 	@Transactional
 	public Integer executeSqlScript(String sql, Map<String, Object> parameters, boolean singleResult) {
-		
-		Query query =   em.createNativeQuery(sql);
+
+		Query query = em.createNativeQuery(sql);
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-		    	   query.setParameter(entry.getKey(),entry.getValue());
-		 }
-		
-		if(singleResult){
-			return (Integer)query.getSingleResult();
-		}else{
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		if (singleResult) {
+			return (Integer) query.getSingleResult();
+		} else {
 			return query.executeUpdate();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Object[]> executeStoredProcedure(String spName, Map<String, Object> parameters) {
-		
-		StoredProcedureQuery query = em.createNamedStoredProcedureQuery(spName);
-		
-		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-	    	   query.setParameter(entry.getKey(),entry.getValue());
-	    }
-	
-		query.execute();
-		return (List<Object[]>)query.getResultList();
-		
-	}
-	
-	
 
-	
-	@Transactional
-	public Integer executeSqlScript(final String entityClassName, final String queryType, Map<String, Object> parameters) {
-		String sql  = getSQLQuery(entityClassName,queryType);
-	    Query query =   em.createNativeQuery(sql);
+		StoredProcedureQuery query = em.createNamedStoredProcedureQuery(spName);
+
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-		    	   query.setParameter(entry.getKey(),entry.getValue());
-		    	   logger.info("parameter key:" +entry.getKey() + " parameter value:"+entry.getValue() );
-		 }
-		logger.info("SQL query is " +sql);
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		query.execute();
+		return (List<Object[]>) query.getResultList();
+
+	}
+
+	@Transactional
+	public Integer executeSqlScript(final String entityClassName, final String queryType,
+			Map<String, Object> parameters) {
+		String sql = getSQLQuery(entityClassName, queryType);
+		Query query = em.createNativeQuery(sql);
+		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+			query.setParameter(entry.getKey(), entry.getValue());
+			logger.info("parameter key:" + entry.getKey() + " parameter value:" + entry.getValue());
+		}
 		return query.executeUpdate();
 	}
-	
+
 	/**
 	 * @param entityClassName
 	 * @param queryType
 	 * @return
 	 */
-	public  <T> String getSQLQuery(final String entityClassName, final String queryType) {
+	public <T> String getSQLQuery(final String entityClassName, final String queryType) {
 		String insertQuery = null;
-		
-		 
+
 		try {
-			Path path = FileSystems.getDefault()
-					.getPath(configProperties.getSqlDirectoryPath() + entityClassName + queryType + configProperties.getSqlQueryExtn());
+			Path path = FileSystems.getDefault().getPath(configProperties.getSqlDirectoryPath() + entityClassName
+					+ queryType + configProperties.getSqlQueryExtn());
 			insertQuery = new String(Files.readAllBytes(path.toAbsolutePath()), StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			logger.warn("exception " + e.getCause());

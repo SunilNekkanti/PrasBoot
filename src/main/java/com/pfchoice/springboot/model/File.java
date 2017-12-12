@@ -38,9 +38,9 @@ public class File extends RecordDetails implements Serializable {
 	private FileType fileType;
 
 	@OneToOne
-	@JoinColumn(name="file_upload_id", referencedColumnName="file_upload_id")
+	@JoinColumn(name = "file_upload_id", referencedColumnName = "file_upload_id")
 	private FileUpload fileUpload;
-			 
+
 	/**
 	 * 
 	 */
@@ -110,7 +110,8 @@ public class File extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param fileUpload the fileUpload to set
+	 * @param fileUpload
+	 *            the fileUpload to set
 	 */
 	public void setFileUpload(FileUpload fileUpload) {
 		this.fileUpload = fileUpload;

@@ -8,34 +8,26 @@ import javax.persistence.TemporalType;
 
 import org.springframework.stereotype.Component;
 
-
-
 /**
  *
  * @author sarath
  */
 @Component
-public class UnwantedClaim  extends RecordDetails implements Serializable {
+public class UnwantedClaim extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	private String firstName;
 
-	
 	private String lastName;
 
-	
 	private Character gender;
-	
-	
+
 	@Temporal(TemporalType.DATE)
 	private Date dob;
 
-	
 	private String claimType;
-	
-	
+
 	private Double unwantedClaims;
 
 	/**
@@ -44,7 +36,7 @@ public class UnwantedClaim  extends RecordDetails implements Serializable {
 	public UnwantedClaim() {
 		super();
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -93,5 +85,4 @@ public class UnwantedClaim  extends RecordDetails implements Serializable {
 		this.claimType = claimType;
 	}
 
-	
 }

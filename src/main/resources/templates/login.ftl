@@ -5,7 +5,6 @@
   <link data-require="bootstrap-css@3.3.1" data-semver="3.3.1" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
   
      
-  <script src="js/app/LoginController.js"></script>
 </head>
 
 

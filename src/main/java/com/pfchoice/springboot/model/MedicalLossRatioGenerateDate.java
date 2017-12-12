@@ -6,24 +6,18 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 @Component
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class MedicalLossRatioGenerateDate implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private Long count;
- 
-	
+
 	private Integer insId;
- 
-	
+
 	private Integer prvdrId;
-	
-	
+
 	private Integer reportMonth;
 
 	public Long getCount() {
@@ -34,7 +28,6 @@ public class MedicalLossRatioGenerateDate implements Serializable {
 		this.count = count;
 	}
 
-	
 	/**
 	 * @return the insId
 	 */
@@ -43,7 +36,8 @@ public class MedicalLossRatioGenerateDate implements Serializable {
 	}
 
 	/**
-	 * @param insId the insId to set
+	 * @param insId
+	 *            the insId to set
 	 */
 	public void setInsId(Integer insId) {
 		this.insId = insId;
@@ -57,7 +51,8 @@ public class MedicalLossRatioGenerateDate implements Serializable {
 	}
 
 	/**
-	 * @param prvdrId the prvdrId to set
+	 * @param prvdrId
+	 *            the prvdrId to set
 	 */
 	public void setPrvdrId(Integer prvdrId) {
 		this.prvdrId = prvdrId;
@@ -71,11 +66,11 @@ public class MedicalLossRatioGenerateDate implements Serializable {
 	}
 
 	/**
-	 * @param reportDate the reportDate to set
+	 * @param reportDate
+	 *            the reportDate to set
 	 */
 	public void setReportMonth(Integer reportMonth) {
 		this.reportMonth = reportMonth;
 	}
 
- 
 }

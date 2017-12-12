@@ -14,8 +14,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -27,20 +25,17 @@ public class HedisMeasureGroup extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "qlty_msr_group_id", nullable = false)
 	private Integer id;
 
-	
 	@NotNull
 	@Size(min = 2, max = 100, message = "The code must be between {min} and {max} characters long")
 	@Column(name = "code", nullable = false)
 	private String code;
 
-	
 	@NotNull
 	@Size(min = 5, max = 200, message = "The description must be between {min} and {max} characters long")
 	@Column(name = "description")

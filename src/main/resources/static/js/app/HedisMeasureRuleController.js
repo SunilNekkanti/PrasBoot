@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('HedisMeasureRuleController',
     ['HedisMeasureRuleService', 'InsuranceService', 'ICDMeasureService','ProblemService', 'HedisMeasureService', 'FrequencyTypeService', 'GenderService', '$scope', '$compile','$state','$stateParams','$filter','$modal','$log','$localStorage','DTOptionsBuilder', 'DTColumnBuilder', function( HedisMeasureRuleService,InsuranceService, ICDMeasureService,ProblemService,HedisMeasureService, FrequencyTypeService,GenderService,  $scope,$compile, $state, $stateParams,$filter,$modal,$log,$localStorage, DTOptionsBuilder, DTColumnBuilder) {
@@ -243,6 +245,7 @@ app.controller('HedisMeasureRuleController',
                         self.hedisMeasureRules = getAllInsurances();
                         self.hedisMeasureRule={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating HedisMeasureRule');
@@ -263,7 +266,7 @@ app.controller('HedisMeasureRuleController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("hedisMeasureRule");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating HedisMeasureRule');
@@ -348,12 +351,12 @@ app.controller('HedisMeasureRuleController',
             self.errorMessage='';
             self.hedisMeasureRule={};
             self.display = false;
-            $state.go('hedisMeasureRule');
+            $state.go('main.hedisMeasureRule',{},{location: true,reload: false,notify: false});
         }
         
         function hedisMeasureRuleEdit(id) {
         	var params = {'hedisMeasureRuleDisplay':true};
-			var trans =  $state.go('hedisMeasureRule.edit',params).transition;
+			var trans =  $state.go('main.hedisMeasureRule.edit',params).transition;
 			trans.onSuccess({}, function() { editHedisMeasureRule(id);  }, { priority: -1 });
 			
         }
@@ -426,3 +429,4 @@ app.controller('HedisMeasureRuleController',
     
 
     ]);
+})();

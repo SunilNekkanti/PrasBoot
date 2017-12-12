@@ -12,11 +12,10 @@ import com.pfchoice.springboot.model.MembershipClaim;
 public class MembershipClaimSpecifications implements Specification<MembershipClaim> {
 
 	private String searchTerm;
-	
+
 	private Integer insId;
-	
-    private Integer prvdrId;
-    
+
+	private Integer prvdrId;
 
 	public MembershipClaimSpecifications(String searchTerm, Integer insId, Integer prvdrId) {
 		super();
@@ -31,18 +30,17 @@ public class MembershipClaimSpecifications implements Specification<MembershipCl
 
 		cq.distinct(true);
 		Predicate p = cb.conjunction();
-		
+
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("firstName")), containsLikePattern),
-					cb.like(cb.lower(root.get("lastName")), containsLikePattern)
-			));
+					cb.like(cb.lower(root.get("lastName")), containsLikePattern)));
 		}
-		
-		if(insId != null){
+
+		if (insId != null) {
 			p.getExpressions().add(cb.and(cb.equal(root.join("ins").get("id"), insId)));
 		}
-		
-		if(prvdrId != null){
+
+		if (prvdrId != null) {
 			p.getExpressions().add(cb.and(cb.equal(root.join("prvdr").get("id"), prvdrId)));
 		}
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));

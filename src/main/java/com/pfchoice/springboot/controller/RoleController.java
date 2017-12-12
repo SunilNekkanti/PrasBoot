@@ -39,12 +39,12 @@ public class RoleController {
 	// Roles---------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/role/", method = RequestMethod.GET)
-	public ResponseEntity<Page<Role>> listAllRoles(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<Role>> listAllRoles(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<Role> spec = new RoleSpecifications(search);
 		Page<Role> roles = roleService.findAllRolesByPage(spec, pageRequest);
-		
+
 		if (roles.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND

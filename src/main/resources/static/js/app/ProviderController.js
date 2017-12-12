@@ -1,7 +1,9 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('ProviderController',
-    ['ProviderService', 'LanguageService', 'StateService', 'InsuranceService','$scope', '$compile','$state','$stateParams', '$filter' ,'DTOptionsBuilder', 'DTColumnBuilder', function( ProviderService,  LanguageService, StateService,InsuranceService, $scope,$compile,$state,$stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
+    ['ProviderService', 'LanguageService', 'StateService', 'InsuranceService','RefContractInsuranceService','FileUploadService', '$sce','$scope', '$compile','$state','$stateParams', '$filter' ,'DTOptionsBuilder', 'DTColumnBuilder', function( ProviderService,  LanguageService, StateService,InsuranceService, RefContractInsuranceService, FileUploadService, $sce,$scope,$compile,$state,$stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
         self.prvdr = {};
@@ -24,14 +26,17 @@ app.controller('ProviderController',
         self.getAllLanguages = getAllLanguages;
         self.getAllStates = getAllStates;
         self.getAllInsurances = getAllInsurances;
+        self.getAllRefContractInsurances = getAllRefContractInsurances;
         self.providerEdit = providerEdit;
         self.cancelEdit = cancelEdit;
+        self.readUploadedFile = readUploadedFile;
         self.successMessage = '';
         self.errorMessage = '';
         self.done = false;
         self.onlyIntegers = /^\d+$/;
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
         self.checkBoxChange = checkBoxChange;
+        self.providers=[];
         self.dtColumns = [
             
             DTColumnBuilder.newColumn('name').withTitle('PROVIDER').renderWith(
@@ -39,21 +44,24 @@ app.controller('ProviderController',
 							meta) {
 						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.providerEdit('+full.id+')">'+data+'</a>';
 					}).withClass("text-left"),
-			DTColumnBuilder.newColumn('code').withTitle('NPI').withOption('defaultContent', ''),
-            DTColumnBuilder.newColumn('refInsContracts').renderWith(function(data) {
+			DTColumnBuilder.newColumn('code').withTitle('NPI').withOption('defaultContent', '')
+           /* DTColumnBuilder.newColumn('prvdrInsContracts').renderWith(function(data) {
             	var insurances=[];
-            	if(data !== undefined && data !== null ){
-            		for(var i = 0, j = 0; i<data.length ; i++)
+            	var keys = Object.keys(data);
+            	console.log('keys'+JSON.stringify(keys));
+            	if(data !== undefined && keys !== null ){
+            		
+            		for(var i = 0, j = 0; i<keys.length ; i++)
                     {
-            			if(data[i] == null) continue;
-            			insurances[j++] = $filter('uppercase') (data[i].ins.name);
+            			if(keys[i] == null || keys[i].ins  == null ) continue;
+            			insurances[j++] = $filter('uppercase') (keys[i].ins.name);
             			
                     }
     					return insurances.join(', ');
             	}
             	return '';
                 
-			}) .withTitle('Insurance').withOption('defaultContent', '')
+			}) .withTitle('Insurance').withOption('defaultContent', '')*/
           ];
      
         
@@ -131,15 +139,56 @@ app.controller('ProviderController',
        
        
         function submit() {
-            console.log('Submitting');
-            if (self.prvdr.id === undefined || self.prvdr.id === null) {
-                console.log('Saving New Provider', self.prvdr);
-                createProvider(self.prvdr);
-            } else {
-                updateProvider(self.prvdr, self.prvdr.id);
-                console.log('Provider updated with id ', self.prvdr.id);
-            }
-            self.displayEditButton = false;
+        	 console.log('Submitting');
+        	 console.log('self.prvdr.prvdrRefContracts before '+JSON.stringify(self.prvdr.prvdrRefContracts));
+        	 var myFiles = self.prvdr.prvdrRefContracts.map(a => a.myFile );
+        	 console.log('myFiles',myFiles);
+             if(myFiles.length > 0){
+ 				var  promise = FileUploadService.uploadContractFileToUrl(myFiles);
+
+ 	            promise.then(function (response) {
+ 	            	
+ 	            	console.log('self.prvdr after '+JSON.stringify(self.prvdr));
+ 	            	  self.prvdr.prvdrRefContracts.forEach(function (refContract, idx){
+ 	            		  
+ 	            		 response.forEach(function (fileUpload,uploadidx) {
+ 	 	            	    console.log('fileUpload fetched values %d: %s', uploadidx, fileUpload);
+ 	 	            	    console.log('self.prvdr.prvdrRefContracts[idx].myFile', self.prvdr.prvdrRefContracts[idx].myFile);
+	 	            		 if(fileUpload && self.prvdr.prvdrRefContracts[idx].myFile ){
+	  	            	    	self.prvdr.prvdrRefContracts[idx].contract.fileUpload = fileUpload;
+	  	            	    	response.splice(uploadidx, 1);
+	  	            	     }
+ 	            	     });
+ 	            	  });
+ 	            	
+ 	            	 if (self.prvdr.id === undefined || self.prvdr.id === null) {
+ 							console.log('Saving New Provider');
+ 							createProvider(self.prvdr);
+ 							
+ 						} else {
+ 							updateProvider(self.prvdr, self.prvdr.id)	 
+ 							console.log('Provider updated with id ',
+ 									self.prvdr.id);
+ 						}
+ 						self.displayEditButton = false;
+ 						
+ 	             
+ 	            }, function () {
+ 	                self.serverResponse = 'An error has occurred';
+ 	            });
+ 			}else{
+ 				if (self.prvdr.id === undefined || self.prvdr.id === null) {
+ 					console.log('Saving New Provider');
+ 					createProvider(self.prvdr);
+ 					
+ 				} else {
+ 					updateProvider(self.prvdr, self.prvdr.id)	 
+ 					console.log('Provider updated with id ',
+ 							self.prvdr.id);
+ 				}
+ 				self.displayEditButton = false;
+ 				cancelEdit();
+ 			} 
         }
 
         function createProvider(prvdr) {
@@ -154,7 +203,7 @@ app.controller('ProviderController',
                         self.display =false;
                         self.prvdrs = getAllProviders();
                         self.prvdr={};
-                        $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating Provider');
@@ -166,7 +215,7 @@ app.controller('ProviderController',
 
 
         function updateProvider(prvdr, id){
-            console.log('About to update prvdr'+prvdr);
+            console.log('About to update prvdr'+ JSON.stringify(prvdr));
             ProviderService.updateProvider(prvdr, id)
                 .then(
                     function (response){
@@ -174,8 +223,9 @@ app.controller('ProviderController',
                         self.successMessage='Provider updated successfully';
                         self.errorMessage='';
                         self.done = true;
+                        self.prvdr = {};
                         self.display =false;
-                        $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating Provider');
@@ -219,6 +269,13 @@ app.controller('ProviderController',
 			return InsuranceService.getAllInsurances();
 		}
         
+        function getAllRefContractInsurances() {
+        	return  RefContractInsuranceService.getAllRefContractInsurances();
+			 
+			 
+		}
+        
+        
         function editProvider(id) {
             self.successMessage='';
             self.errorMessage='';
@@ -228,7 +285,7 @@ app.controller('ProviderController',
                     self.languages = getAllLanguages();
                     self.states = getAllStates();
                     self.insurances = getAllInsurances();
-                    console.log('self.languages ' +self.languages ) ;
+                    self.refContractInsurances = getAllRefContractInsurances();
                     self.display = true;
                 },
                 function (errResponse) {
@@ -239,7 +296,7 @@ app.controller('ProviderController',
         
         function providerEdit(id) {
         	var params = {'providerDisplay':true};
-			var trans =  $state.go('provider.edit',params).transition;
+			var trans =  $state.go('main.provider.edit',params).transition;
 			trans.onSuccess({}, function() { editProvider(id);  }, { priority: -1 });
 			
         }
@@ -254,22 +311,42 @@ app.controller('ProviderController',
         function cancelEdit(){
             self.successMessage='';
             self.errorMessage='';
-            self.provider={};
+            self.prvdr={};
+            $state.go('main.provider', {}, {location: true,reload: false,notify: false});
             self.display = false;
-            $state.go('provider');
         }
        
         function addProvider() {
             self.successMessage='';
             self.errorMessage='';
+            self.prvdr ={}
             self.languages = getAllLanguages();
             self.states = getAllStates();
             self.insurances = getAllInsurances();
+            self.refContractInsurances = getAllRefContractInsurances();
             self.display =true;
         }
         
-    
+        function readUploadedFile(index){
+			console.log('About to read consignment form');
+			FileUploadService.getFileUpload(self.prvdr.contracts[index].fileUpload.id).then(
+					function(response) {
+						self.errorMessage = '';
+						var file = new Blob([response], {type: self.prvdr.contracts[index].fileUpload.contentType});
+						 var fileURL = URL.createObjectURL(file);
+					    self.content = $sce.trustAsResourceUrl(fileURL); 
+					    
+					},
+					function(errResponse) {
+						console
+								.error('Error while reading consignment form');
+						self.errorMessage = 'Error while reading consignment form: '
+								+ errResponse.data.errorMessage;
+						self.successMessage = '';
+					}); 
+		}
+        
     }
-    
 
     ]);
+   })();

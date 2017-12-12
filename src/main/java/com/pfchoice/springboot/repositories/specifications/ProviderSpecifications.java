@@ -2,6 +2,7 @@ package com.pfchoice.springboot.repositories.specifications;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -24,15 +25,17 @@ public class ProviderSpecifications implements Specification<Provider> {
 
 		cq.distinct(true);
 		Predicate p = cb.conjunction();
-		
+
 		if (searchTerm != null && !"".equals(searchTerm)) {
-			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("name")), containsLikePattern),
-					                     cb.like(root.get("code").as(String.class), containsLikePattern),
-					                     cb.like(cb.lower(root.join("refInsContracts").join("ins").get("name")), containsLikePattern)
+			p.getExpressions()
+					.add(cb.or(cb.like(cb.lower(root.get("name")), containsLikePattern),
+							cb.like(root.get("code").as(String.class), containsLikePattern),
+							cb.like(cb.lower(root.join("prvdrRefContracts", JoinType.LEFT).join("ins").get("name")),
+									containsLikePattern)
 
 			));
 		}
-		
+
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		return p;
 

@@ -13,7 +13,7 @@ public interface HedisMeasureRuleService {
 	HedisMeasureRule findById(Integer id);
 
 	HedisMeasureRule findByDescription(String description);
-	
+
 	void saveHedisMeasureRule(HedisMeasureRule hedisMeasureRule);
 
 	void updateHedisMeasureRule(HedisMeasureRule hedisMeasureRule);

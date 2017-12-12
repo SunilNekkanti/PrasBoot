@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('HedisReportModalInstanceController',
     [  'MembershipHedisMeasureService', 'MembershipFollowupService',  '$scope', '$modalInstance','$compile','$filter' , 'mbrId' ,'hedisRules', 'DTOptionsBuilder', 'DTColumnBuilder',
@@ -151,3 +153,4 @@ app.controller('HedisReportModalInstanceController',
 		$scope.getAllMembershipFollowupsPerMbr(mbrId);
     }
     ]);
+   })();

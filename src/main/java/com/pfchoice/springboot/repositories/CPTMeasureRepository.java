@@ -13,6 +13,6 @@ public interface CPTMeasureRepository
 	public CPTMeasure findById(Integer id);
 
 	public CPTMeasure findByCode(String code);
-	
+
 	public CPTMeasure findByDescription(String description);
 }

@@ -23,8 +23,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -32,18 +30,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "membership_provider")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class MembershipProvider extends RecordDetails implements Serializable  {
+public class MembershipProvider extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_prvdr_id", nullable = false)
 	private Integer id;
 
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "prvdr_id", nullable = false, referencedColumnName = "prvdr_id")
 	@Where(clause = "active_ind ='Y'")
@@ -55,16 +51,14 @@ public class MembershipProvider extends RecordDetails implements Serializable  {
 	@Where(clause = "active_ind ='Y'")
 	private Membership mbr;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "eff_start_date")
 	private Date effStartDate;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "eff_end_date")
 	private Date effEndDate;
-	
+
 	/**
 	 * 
 	 */

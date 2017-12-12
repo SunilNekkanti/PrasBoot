@@ -33,19 +33,19 @@ public class CPTMeasureController {
 
 	@Autowired
 	CPTMeasureService cptMeasureService; // Service which will do all data
-										// retrieval/manipulation work
+											// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// CPTMeasures---------------------------------------------
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/cptMeasure/", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllCPTMeasures(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<?> listAllCPTMeasures(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<CPTMeasure> spec = new CPTMeasureSpecifications( search);
+		Specification<CPTMeasure> spec = new CPTMeasureSpecifications(search);
 		Page<CPTMeasure> cptMeasures = cptMeasureService.findAllCPTMeasuresByPage(spec, pageRequest);
-		
+
 		if (cptMeasures.getTotalElements() == 0) {
 			System.out.println("no cptMeasures");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);

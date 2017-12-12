@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.pfchoice.springboot.model.Hospital;
 
 @Repository
-public interface HospitalRepository extends PagingAndSortingRepository<Hospital, Integer>, JpaSpecificationExecutor<Hospital> {
+public interface HospitalRepository
+		extends PagingAndSortingRepository<Hospital, Integer>, JpaSpecificationExecutor<Hospital> {
 
 	Hospital findByName(String name);
 

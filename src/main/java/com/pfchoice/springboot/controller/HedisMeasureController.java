@@ -33,19 +33,19 @@ public class HedisMeasureController {
 
 	@Autowired
 	HedisMeasureService hedisMeasureService; // Service which will do all data
-										// retrieval/manipulation work
+	// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// HedisMeasures---------------------------------------------
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasure/", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllHedisMeasures(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<?> listAllHedisMeasures(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<HedisMeasure> spec = new HedisMeasureSpecifications( search);
+		Specification<HedisMeasure> spec = new HedisMeasureSpecifications(search);
 		Page<HedisMeasure> hedisMeasures = hedisMeasureService.findAllHedisMeasuresByPage(spec, pageRequest);
-		
+
 		if (hedisMeasures.getTotalElements() == 0) {
 			System.out.println("no hedisMeasures");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -73,7 +73,8 @@ public class HedisMeasureController {
 	// HedisMeasure-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasure/", method = RequestMethod.POST)
-	public ResponseEntity<?> createHedisMeasure(@RequestBody HedisMeasure hedisMeasure, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<?> createHedisMeasure(@RequestBody HedisMeasure hedisMeasure,
+			UriComponentsBuilder ucBuilder) {
 		logger.info("Creating HedisMeasure : {}", hedisMeasure);
 
 		if (hedisMeasureService.isHedisMeasureExist(hedisMeasure)) {
@@ -103,7 +104,8 @@ public class HedisMeasureController {
 
 		if (currentHedisMeasure == null) {
 			logger.error("Unable to update. HedisMeasure with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. HedisMeasure with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. HedisMeasure with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -124,7 +126,8 @@ public class HedisMeasureController {
 		HedisMeasure hedisMeasure = hedisMeasureService.findById(id);
 		if (hedisMeasure == null) {
 			logger.error("Unable to delete. HedisMeasure with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. HedisMeasure with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. HedisMeasure with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		hedisMeasureService.deleteHedisMeasureById(id);

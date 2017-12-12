@@ -13,7 +13,7 @@ public interface HedisMeasureGroupService {
 	HedisMeasureGroup findById(Integer id);
 
 	HedisMeasureGroup findByCode(String code);
-	
+
 	void saveHedisMeasureGroup(HedisMeasureGroup hedisMeasureGroup);
 
 	void updateHedisMeasureGroup(HedisMeasureGroup hedisMeasureGroup);

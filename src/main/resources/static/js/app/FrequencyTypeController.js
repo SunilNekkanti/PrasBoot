@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('FrequencyTypeController',
     ['FrequencyTypeService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( FrequencyTypeService,  $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -135,6 +137,7 @@ app.controller('FrequencyTypeController',
                         self.frequencyTypes = getAllFrequencyTypes();
                         self.frequencyType={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating FrequencyType');
@@ -155,7 +158,7 @@ app.controller('FrequencyTypeController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("frequencyType");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating FrequencyType');
@@ -215,12 +218,12 @@ app.controller('FrequencyTypeController',
             self.errorMessage='';
             self.frequencyType={};
             self.display = false;
-            $state.go('frequencyType');
+            $state.go('main.frequencyType', {}, {location: true,reload: false,notify: false});
         }
         
         function frequencyTypeEdit(id) {
         	var params = {'frequencyTypeDisplay':true};
-			var trans =  $state.go('frequencyType.edit',params).transition;
+			var trans =  $state.go('main.frequencyType.edit',params).transition;
 			trans.onSuccess({}, function() { editFrequencyType(id);  }, { priority: -1 });
 			
         }
@@ -230,9 +233,8 @@ app.controller('FrequencyTypeController',
             self.errorMessage='';
             self.display =true;
         }
-        
     
     }
-    
 
     ]);
+   })();

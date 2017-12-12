@@ -27,8 +27,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pfchoice.springboot.util.JsonDateDeserializer;
 import com.pfchoice.springboot.util.JsonDateSerializer;
 
-
-
 /**
  *
  * @author sarath
@@ -36,28 +34,23 @@ import com.pfchoice.springboot.util.JsonDateSerializer;
 @Entity(name = "membership_hedis_measure")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @NamedStoredProcedureQueries({
-	   @NamedStoredProcedureQuery(name = "hedis_report", 
-	                              procedureName = "HEDIS_REPORT",
-	                              parameters = {
-	                                 @StoredProcedureParameter( name = "reportMonth", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "insId", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "prvdrId", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "hedisRuleList", type = String.class),
-	                                 @StoredProcedureParameter( name = "roster", type = String.class),
-	                                 @StoredProcedureParameter( name = "cap", type = String.class),
-	                                 @StoredProcedureParameter( name = "sstatus", type = String.class),
-	                                 @StoredProcedureParameter( name = "sSearch", type = String.class),
-	                                 @StoredProcedureParameter( name = "startDate", type = String.class),
-	                                 @StoredProcedureParameter( name = "endDate", type = String.class),
-	                                 @StoredProcedureParameter( name = "pageSize", type = Integer.class),
-	                                 @StoredProcedureParameter( name = "pageNo", type = Integer.class),
-	                              })
-	})
+		@NamedStoredProcedureQuery(name = "hedis_report", procedureName = "HEDIS_REPORT", parameters = {
+				@StoredProcedureParameter(name = "reportMonth", type = Integer.class),
+				@StoredProcedureParameter(name = "insId", type = Integer.class),
+				@StoredProcedureParameter(name = "prvdrId", type = Integer.class),
+				@StoredProcedureParameter(name = "hedisRuleList", type = String.class),
+				@StoredProcedureParameter(name = "roster", type = String.class),
+				@StoredProcedureParameter(name = "cap", type = String.class),
+				@StoredProcedureParameter(name = "sstatus", type = String.class),
+				@StoredProcedureParameter(name = "sSearch", type = String.class),
+				@StoredProcedureParameter(name = "startDate", type = String.class),
+				@StoredProcedureParameter(name = "endDate", type = String.class),
+				@StoredProcedureParameter(name = "pageSize", type = Integer.class),
+				@StoredProcedureParameter(name = "pageNo", type = Integer.class), }) })
 public class MembershipHedisMeasure extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
@@ -70,28 +63,23 @@ public class MembershipHedisMeasure extends RecordDetails implements Serializabl
 	@Where(clause = "active_ind ='Y'")
 	private Membership mbr;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hedis_msr_rule_id", nullable = false, referencedColumnName = "hedis_msr_rule_id")
 	@Where(clause = "active_ind ='Y'")
 	private HedisMeasureRule hedisMeasureRule;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "due_date")
 	private Date dueDate;
 
-	
 	@JsonSerialize(using = JsonDateSerializer.class)
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	@Column(name = "date_of_service")
 	private Date dos;
 
-	
 	@Column(name = "follow_up_ind")
 	private Character followUpInd;
 
-	
 	/**
 	 * 
 	 */

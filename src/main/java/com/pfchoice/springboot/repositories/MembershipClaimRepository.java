@@ -15,9 +15,9 @@ public interface MembershipClaimRepository
 
 	public MembershipClaim findById(Integer id);
 
-	@Query(value= "select distinct cast(report_month as char)  from membership_claims order by report_month desc",nativeQuery = true)
+	@Query(value = "select distinct cast(report_month as char)  from membership_claims order by report_month desc", nativeQuery = true)
 	public List<String> findAllMembershipClaimReportMonths();
-	
-	@Query(value= "select distinct  risk_recon_cos_des  from membership_claim_details order by risk_recon_cos_des ",nativeQuery = true)
+
+	@Query(value = "select distinct  risk_recon_cos_des  from membership_claim_details order by risk_recon_cos_des ", nativeQuery = true)
 	public List<String> findAllMembershipClaimRiskCategories();
 }

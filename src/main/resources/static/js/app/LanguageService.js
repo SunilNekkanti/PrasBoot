@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('LanguageService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -31,7 +33,7 @@ app.service('LanguageService',
                     .then(
                         function (response) {
                             console.log('Fetched successfully all Languages');
-                            $localStorage.Languages = response.data.content;
+                            $localStorage.languages = response.data.content;
                             deferred.resolve(response);
                         },
                         function (errResponse) {
@@ -56,7 +58,7 @@ app.service('LanguageService',
             return     $http.get(urls.LANGUAGE_SERVICE_API,  config)
                     .then(
                         function (response) {
-                        	 $localStorage.Languages = response.data.content;
+                        	 $localStorage.languages = response.data.content;
                         	 deferred.resolve(response);
                             console.log('Fetched successfully  languages');
                          return     response ;
@@ -144,3 +146,4 @@ app.service('LanguageService',
 
         }
     ]);
+   })();

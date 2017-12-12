@@ -43,12 +43,12 @@ public class FileController {
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/file/", method = RequestMethod.GET)
-	public ResponseEntity<Page<File>> listAllFiles(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<File>> listAllFiles(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<File> spec = new FileSpecifications(search);
 		Page<File> files = fileService.findAllFilesByPage(spec, pageRequest);
-		
+
 		if (files.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,7 +58,7 @@ public class FileController {
 
 	// -------------------Retrieve Single
 	// File------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/file/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getFile(@PathVariable("id") int id) {
 		logger.info("Fetching File with id {}", id);
@@ -81,7 +81,8 @@ public class FileController {
 		if (fileService.isFileExist(file)) {
 			logger.error("Unable to create. A File with filename {} already exist", file.getFileName());
 			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A File with filename " + file.getFileName() + " already exist."),
+					new CustomErrorType(
+							"Unable to create. A File with filename " + file.getFileName() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
 		// logger.info(" file.getRoles().size() :{} ", file.getRoles().size());

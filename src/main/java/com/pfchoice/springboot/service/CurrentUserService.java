@@ -1,6 +1,5 @@
 package com.pfchoice.springboot.service;
 
-
 import com.pfchoice.springboot.model.CurrentUser;
 
 public interface CurrentUserService {

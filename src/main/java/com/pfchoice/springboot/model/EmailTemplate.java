@@ -34,18 +34,15 @@ public class EmailTemplate extends RecordDetails implements Serializable, FieldH
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "email_temp_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@Column(name = "template", length = 65535, columnDefinition = "TEXT")
 	private String template;
 
@@ -56,7 +53,7 @@ public class EmailTemplate extends RecordDetails implements Serializable, FieldH
 
 	@JsonIgnore
 	private FieldHandler fieldHandler;
-	
+
 	/**
 	 * 
 	 */
@@ -131,7 +128,6 @@ public class EmailTemplate extends RecordDetails implements Serializable, FieldH
 		this.emailTemplatePlacholderList = emailTemplatePlacholderList;
 	}
 
-	
 	/**
 	 * @return the fieldHandler
 	 */
@@ -140,7 +136,8 @@ public class EmailTemplate extends RecordDetails implements Serializable, FieldH
 	}
 
 	/**
-	 * @param fieldHandler the fieldHandler to set
+	 * @param fieldHandler
+	 *            the fieldHandler to set
 	 */
 	public void setFieldHandler(FieldHandler fieldHandler) {
 		this.fieldHandler = fieldHandler;

@@ -15,8 +15,6 @@ import javax.persistence.OneToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -27,30 +25,30 @@ public class ReferenceContact extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "ref_cnt_Id", nullable = false)
 	private Integer id;
-	
+
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "mbr_id", referencedColumnName = "mbr_id", nullable=true)
+	@JoinColumn(name = "mbr_id", referencedColumnName = "mbr_id", nullable = true)
 	private Membership mbr;
-	
-//	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "lead_Mbr_Id", referencedColumnName = "lead_Mbr_Id", nullable=true)
-//	private LeadMembership leadMbr;
+
+	// @OneToOne(fetch = FetchType.LAZY)
+	// @JoinColumn(name = "lead_Mbr_Id", referencedColumnName = "lead_Mbr_Id",
+	// nullable=true)
+	// private LeadMembership leadMbr;
 
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "insurance_id", referencedColumnName = "insurance_id", nullable=true)
+	@JoinColumn(name = "insurance_id", referencedColumnName = "insurance_id", nullable = true)
 	private Insurance ins;
 
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id", nullable=true)
+	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id", nullable = true)
 	private Provider prvdr;
 
 	@JsonIgnore
@@ -145,20 +143,21 @@ public class ReferenceContact extends RecordDetails implements Serializable {
 	public void setCnt(final Contact cnt) {
 		this.cnt = cnt;
 	}
-	
+
 	/**
 	 * @return
 	 */
-	/*public LeadMembership getLeadMbr() {
-		return leadMbr;
-	}*/
+	/*
+	 * public LeadMembership getLeadMbr() { return leadMbr; }
+	 */
 
 	/**
 	 * @param leadMbr
 	 */
-	/*public void setLeadMbr(LeadMembership leadMbr) {
-		this.leadMbr = leadMbr;
-	}*/
+	/*
+	 * public void setLeadMbr(LeadMembership leadMbr) { this.leadMbr = leadMbr;
+	 * }
+	 */
 
 	@Override
 	public int hashCode() {

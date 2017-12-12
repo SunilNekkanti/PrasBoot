@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app
 		.controller(
@@ -256,7 +258,7 @@ app
 													clearFiles();
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
-							                        $state.go('lead');
+							                        $state.go('main.lead');
 												},
 												function(errResponse) {
 													console
@@ -283,7 +285,7 @@ app
 													clearFiles();
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
-							                        $state.go('lead');
+							                        $state.go('main.lead');
 												},
 												function(errResponse) {
 													console
@@ -385,7 +387,7 @@ app
 					            self.errorMessage='';
 					            self.lead={};
 					            self.display = false;
-					            $state.go('lead');
+					            $state.go('main.lead');
 					        }
 
 							function uploadFile() {
@@ -581,7 +583,7 @@ app
 							
 							function leadEdit(id){
 								var params = {'leadDisplay':true};
-								var trans =  $state.go('lead.edit',params).transition;
+								var trans =  $state.go('main.lead.edit',params).transition;
 								trans.onSuccess({}, function() { editLead(id); }, { priority: -1 });
 								 
 							}
@@ -690,3 +692,4 @@ app
 								  }
 	} 
 ]);
+   })();

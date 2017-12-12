@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('MembershipClaimsService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -50,10 +52,10 @@ app.service('MembershipClaimsService',
             }
 
             
-            function loadMembershipClaims(insId, prvdrIds,mbrId,claimTypes,categories, reportMonth,activityMonth, caps,rosters ,levelNo) {
+            function loadMembershipClaims(insId, prvdrIds,mbrId,claimTypes,categories, reportMonth,activityMonth, caps,rosters ,levelNo, maxReportMonth) {
                 console.log('Fetching  MembershipClaims');
                 var pageable = {
-                		 insId:insId,prvdrIds:prvdrIds,mbrId:mbrId, reportMonth:reportMonth,activityMonth:activityMonth,categories:categories,claimTypes:claimTypes, inCap:caps,inRoster:rosters,levelNo:levelNo
+                		 insId:insId,prvdrIds:prvdrIds,mbrId:mbrId, reportMonth:reportMonth,activityMonth:activityMonth,categories:categories,claimTypes:claimTypes, inCap:caps,inRoster:rosters,levelNo:levelNo,maxReportMonth:maxReportMonth
                   		};
 
                   		var config = {
@@ -155,3 +157,4 @@ app.service('MembershipClaimsService',
            
         }
     ]);
+   })();

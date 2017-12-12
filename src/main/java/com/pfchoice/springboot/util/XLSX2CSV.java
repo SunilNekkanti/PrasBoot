@@ -66,8 +66,9 @@ import org.xml.sax.XMLReader;
  * {@link SheetContentsHandler} and no SAX code needed of your own!
  */
 public class XLSX2CSV {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(XLSX2CSV.class);
+
 	/**
 	 * Uses the XSSF Event SAX helpers to do most of the work of parsing the
 	 * Sheet XML, and outputs the contents as a (basic) CSV.
@@ -85,7 +86,7 @@ public class XLSX2CSV {
 				output.append('\n');
 			}
 		}
-		
+
 		@Override
 		public void startRow(int rowNum) {
 			// If there were gaps, output the missing rows
@@ -95,7 +96,7 @@ public class XLSX2CSV {
 			currentRow = rowNum;
 			currentCol = -1;
 		}
-		
+
 		@SuppressWarnings("unused")
 		public void endRow(int rowNum) {
 			// Ensure the minimum number of columns
@@ -132,40 +133,41 @@ public class XLSX2CSV {
 				Double.parseDouble(formattedValue);
 				output.append(formattedValue);
 			} catch (NumberFormatException e) {
-				try{
-					LocalDate localdate  = parseDateString(formattedValue);
-					if(localdate.isAfter(LocalDate.now())){
+				try {
+					LocalDate localdate = parseDateString(formattedValue);
+					if (localdate.isAfter(LocalDate.now())) {
 						localdate = localdate.plusYears(-100);
 					}
-					
+
 					DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-					String formattedDate  =   localdate.format(format); 
-					    output.append('"');
-						output.append(formattedDate);
-						output.append('"');
-				}catch (Exception ex) {
+					String formattedDate = localdate.format(format);
+					output.append('"');
+					output.append(formattedDate);
+					output.append('"');
+				} catch (Exception ex) {
 					output.append('"');
 					output.append(formattedValue);
 					output.append('"');
 				}
-				
+
 			}
-			
+
 		}
-		
-		LocalDate parseDateString(String dateString){
-			String[] dateFormats = {"M/d/yy", "M/dd/yy", "MM/d/yy","MM/dd/yy","MM/dd/yyyy","M/d/yyyy","M/dd/yyyy"};
+
+		LocalDate parseDateString(String dateString) {
+			String[] dateFormats = { "M/d/yy", "M/dd/yy", "MM/d/yy", "MM/dd/yy", "MM/dd/yyyy", "M/d/yyyy",
+					"M/dd/yyyy" };
 			LocalDate localDate = null;
-			for( String dateFormat : dateFormats ){
+			for (String dateFormat : dateFormats) {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
-				try{
+				try {
 					localDate = LocalDate.parse(dateString, formatter);
-				}catch (Exception e){
+				} catch (Exception e) {
 					LOG.warn(e.getCause().getMessage());
 				}
 			}
 			return localDate;
-			
+
 		}
 
 		@Override
@@ -179,7 +181,7 @@ public class XLSX2CSV {
 			output.append('\n');
 
 		}
-		
+
 	}
 
 	///////////////////////////////////////
@@ -237,7 +239,7 @@ public class XLSX2CSV {
 			ContentHandler handler = new XSSFSheetXMLHandler(styles, strings, sheetHandler, formatter, false);
 			sheetParser.setContentHandler(handler);
 			sheetParser.parse(sheetSource);
-		} catch (IOException| ParserConfigurationException| SAXException e) {
+		} catch (IOException | ParserConfigurationException | SAXException e) {
 			throw new RuntimeException("SAX parser appears to be broken - " + e.getMessage());
 		}
 	}
@@ -267,8 +269,7 @@ public class XLSX2CSV {
 
 	}
 
-	public static void xls(File inputFile, File outputFile)
-			throws InvalidFormatException,  IOException {
+	public static void xls(File inputFile, File outputFile) throws InvalidFormatException, IOException {
 		// For storing data into CSV files
 
 		if (!inputFile.exists()) {

@@ -19,19 +19,19 @@ public class HedisMeasureSpecifications implements Specification<HedisMeasure> {
 	}
 
 	public Predicate toPredicate(Root<HedisMeasure> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-		
+
 		String containsLikePattern = getContainsLikePattern(searchTerm);
 		cq.distinct(true);
 
 		Predicate p = cb.conjunction();
-		
+
 		if (searchTerm != null && !"".equals(searchTerm)) {
-			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("code")), containsLikePattern),
-			   cb.like(cb.lower(root.get("description")), containsLikePattern),
-			   cb.like(cb.lower(root.join("hedisMsrGrp").get("description")), containsLikePattern)
-					));
+			p.getExpressions()
+					.add(cb.or(cb.like(cb.lower(root.get("code")), containsLikePattern),
+							cb.like(cb.lower(root.get("description")), containsLikePattern),
+							cb.like(cb.lower(root.join("hedisMsrGrp").get("description")), containsLikePattern)));
 		}
-		
+
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		return p;
 

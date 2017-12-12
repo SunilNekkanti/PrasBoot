@@ -1,10 +1,13 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
    
     app.service('FileUploadService', ['$http', '$q', 'urls', function ($http, $q, urls) {
     	
     	 var factory = {
     			 getFileUpload : getFileUpload,
-    			 uploadFileToUrl: uploadFileToUrl
+    			 uploadFileToUrl: uploadFileToUrl,
+    			 uploadContractFileToUrl: uploadContractFileToUrl
              };
 
              return factory;
@@ -69,5 +72,36 @@
 
             return deffered.promise;
         }
+    	 
+    	 function uploadContractFileToUrl(files) {
+             //FormData, object of key/value pair for form fields and values
+         	
+     		
+             var fileFormData = new FormData();
+             if(files.length>0 ){
+             	   //  fileFormData.append('files', files);
+            	 $.each(files, function(i, file) {
+            		fileFormData.append('files', file);
+            	  });
+             }else{
+             	fileFormData.append('file', files);
+             }
+              
+             var deffered = $q.defer();
+              		
+             $http.post(urls.CONTRACT_FILE_UPLOADER, fileFormData, {
+                 transformRequest: angular.identity,
+                 headers: {'Content-Type': undefined}
+
+             }).success(function (response) {
+                 deffered.resolve(response);
+
+             }).error(function (response) {
+                 deffered.reject(response);
+             });
+
+             return deffered.promise;
+         }
    }
     ]);
+       })();

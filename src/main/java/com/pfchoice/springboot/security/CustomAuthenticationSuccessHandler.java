@@ -23,8 +23,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 	private List<String> leadHomePageRoles = Arrays.asList("ROLE_ADMIN", "ROLE_AGENT", "ROLE_CARE_COORDINATOR");
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-	 
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -36,7 +35,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		
+
 		handle(request, response, authentication);
 		clearAuthenticationAttributes(request);
 		clearAuthenticationAttributess(request);
@@ -44,79 +43,74 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 		// since we have created our custom success handler, its up to us to
 		// where
 		// we will redirect the user after successfully login
-		/*if (redirectUrl != null) {
-			response.sendRedirect(redirectUrl);
-		} else {
-			if (authUser.getAuthorities().stream().filter(auth -> leadHomePageRoles.contains(auth.getAuthority()))
-					.findAny().isPresent()) {
-				response.sendRedirect("home#/lead/");
-			} else {
-				response.sendRedirect("home#/event");
-			}
-
-		}*/
+		/*
+		 * if (redirectUrl != null) { response.sendRedirect(redirectUrl); } else
+		 * { if (authUser.getAuthorities().stream().filter(auth ->
+		 * leadHomePageRoles.contains(auth.getAuthority()))
+		 * .findAny().isPresent()) { response.sendRedirect("home#/lead/"); }
+		 * else { response.sendRedirect("home#/event"); }
+		 * 
+		 * }
+		 */
 
 	}
-	
-	protected void handle(HttpServletRequest request, 
-		      HttpServletResponse response, Authentication authentication)
-		      throws IOException {
-		  
-		        String targetUrl = determineTargetUrl(authentication);
-		    	HttpSession session = request.getSession();
-		 		User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-				session.setAttribute("username", authUser.getUsername());
-				session.setMaxInactiveInterval(30 * 60);
-				// set our response to OK status
-				response.setStatus(HttpServletResponse.SC_OK);
-		        if (response.isCommitted()) {
-		            logger.debug(
-		              "Response has already been committed. Unable to redirect to "
-		              + targetUrl);
-		            return;
-		        }
-		 
-		        redirectStrategy.sendRedirect(request, response, targetUrl);
-		    }
-		 
-		    protected String determineTargetUrl(Authentication authentication) {
-		        boolean isLead = false;
-		        boolean isEvent = false;
-		        
-		        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+			throws IOException {
 
-		        if (authUser.getAuthorities().stream().filter(auth -> leadHomePageRoles.contains(auth.getAuthority()))
-						.findAny().isPresent()) {
-		        	isLead = true;
-		        	isEvent = false;
-				} else {
-					isLead = false;
-					isEvent = true;
-				}
-		        
-		 
-		        if (isLead) {
-		            return "/home#/membership";
-		        } else if (isEvent) {
-		            return "/home#/event";
-		        } else {
-		            throw new IllegalStateException();
-		        }
-		    }
-		 
-		    protected void clearAuthenticationAttributess(HttpServletRequest request) {
-		        HttpSession session = request.getSession(false);
-		        if (session == null) {
-		            return;
-		        }
-		        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-		    }
-		 
-		    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-		        this.redirectStrategy = redirectStrategy;
-		    }
-		    protected RedirectStrategy getRedirectStrategy() {
-		        return redirectStrategy;
-		    }
+		String targetUrl = determineTargetUrl(authentication);
+		HttpSession session = request.getSession();
+		User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		session.setAttribute("username", authUser.getUsername());
+		session.setMaxInactiveInterval(30 * 60);
+		// set our response to OK status
+		response.setStatus(HttpServletResponse.SC_OK);
+		if (response.isCommitted()) {
+			logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+			return;
+		}
+
+		redirectStrategy.sendRedirect(request, response, targetUrl);
+	}
+
+	protected String determineTargetUrl(Authentication authentication) {
+		boolean isLead = false;
+		boolean isEvent = false;
+
+		User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (authUser.getAuthorities().stream().filter(auth -> leadHomePageRoles.contains(auth.getAuthority())).findAny()
+				.isPresent()) {
+			isLead = true;
+			isEvent = false;
+		} else {
+			isLead = false;
+			isEvent = true;
+		}
+
+		if (isLead) {
+			return "/home#/membership";
+		} else if (isEvent) {
+			return "/home#/event";
+		} else {
+			throw new IllegalStateException();
+		}
+	}
+
+	protected void clearAuthenticationAttributess(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return;
+		}
+		session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+	}
+
+	public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+		this.redirectStrategy = redirectStrategy;
+	}
+
+	protected RedirectStrategy getRedirectStrategy() {
+		return redirectStrategy;
+	}
 }

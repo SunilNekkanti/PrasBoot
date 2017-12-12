@@ -24,8 +24,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -36,14 +34,12 @@ public class MembershipHospitalization extends RecordDetails implements Serializ
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_hos_id", nullable = false)
 	private Integer id;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hos_id", referencedColumnName = "hos_id")
 	@Where(clause = "active_ind ='Y'")
@@ -64,36 +60,28 @@ public class MembershipHospitalization extends RecordDetails implements Serializ
 	@JoinColumn(name = "ins_id", referencedColumnName = "insurance_id")
 	private Insurance ins;
 
-	
 	@Column(name = "report")
 	private String report;
 
-	
 	@Column(name = "plan_desc")
 	private String planDesc;
 
-	
 	@Column(name = "authnum")
 	private String authNum;
 
-	
 	@Column(name = "prior_admits")
 	private Integer priorAdmits;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "admit_date")
 	protected Date admitDate;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "exp_dc_date")
 	protected Date expDisDate;
 
-	
 	@Column(name = "file_id")
 	private Integer fileId;
-
 
 	@Fetch(FetchMode.SELECT)
 	@OneToMany(mappedBy = "mbrHospitalization", fetch = FetchType.LAZY)

@@ -31,8 +31,9 @@ public class MembershipFollowupController {
 	public static final Logger logger = LoggerFactory.getLogger(MembershipFollowupController.class);
 
 	@Autowired
-	MembershipFollowupService membershipFollowupService; // Service which will do all data
-									// retrieval/manipulation work
+	MembershipFollowupService membershipFollowupService; // Service which will
+															// do all data
+	// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// MembershipFollowups---------------------------------------------
@@ -50,20 +51,22 @@ public class MembershipFollowupController {
 	}
 
 	// -------------------Retrieve All
-		// MembershipFollowups---------------------------------------------
+	// MembershipFollowups---------------------------------------------
 
-		@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
-		@RequestMapping(value = "/membershipFollowupDetails/{mbrId}", method = RequestMethod.GET)
-		public ResponseEntity<List<MembershipFollowup>> listAllMembershipFollowupsPerMbrId(@PathVariable("mbrId") int mbrId) {
-			List<MembershipFollowup> membershipFollowups = membershipFollowupService.findAllMembershipFollowupsByMbrId(mbrId);
-			if (membershipFollowups.isEmpty()) {
-				System.out.println("no membershipFollowups");
-				return new ResponseEntity(HttpStatus.NO_CONTENT);
-				// You many decide to return HttpStatus.NOT_FOUND
-			}
-			return new ResponseEntity<List<MembershipFollowup>>(membershipFollowups, HttpStatus.OK);
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@RequestMapping(value = "/membershipFollowupDetails/{mbrId}", method = RequestMethod.GET)
+	public ResponseEntity<List<MembershipFollowup>> listAllMembershipFollowupsPerMbrId(
+			@PathVariable("mbrId") int mbrId) {
+		List<MembershipFollowup> membershipFollowups = membershipFollowupService
+				.findAllMembershipFollowupsByMbrId(mbrId);
+		if (membershipFollowups.isEmpty()) {
+			System.out.println("no membershipFollowups");
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
 		}
-		
+		return new ResponseEntity<List<MembershipFollowup>>(membershipFollowups, HttpStatus.OK);
+	}
+
 	// -------------------Retrieve Single
 	// MembershipFollowup------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
@@ -73,7 +76,8 @@ public class MembershipFollowupController {
 		MembershipFollowup membershipFollowup = membershipFollowupService.findById(id);
 		if (membershipFollowup == null) {
 			logger.error("MembershipFollowup with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("MembershipFollowup with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("MembershipFollowup with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<MembershipFollowup>(membershipFollowup, HttpStatus.OK);
 	}
@@ -82,8 +86,8 @@ public class MembershipFollowupController {
 	// MembershipFollowup-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/membershipFollowup/", method = RequestMethod.POST)
-	public ResponseEntity<?> createMembershipFollowup(@RequestBody MembershipFollowup membershipFollowup, UriComponentsBuilder ucBuilder,
-			@ModelAttribute("username") String username) {
+	public ResponseEntity<?> createMembershipFollowup(@RequestBody MembershipFollowup membershipFollowup,
+			UriComponentsBuilder ucBuilder, @ModelAttribute("username") String username) {
 		logger.info("Creating MembershipFollowup : {}", membershipFollowup);
 
 		membershipFollowup.setCreatedBy(username);
@@ -91,7 +95,8 @@ public class MembershipFollowupController {
 		membershipFollowupService.saveMembershipFollowup(membershipFollowup);
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/membershipFollowup/{id}").buildAndExpand(membershipFollowup.getId()).toUri());
+		headers.setLocation(
+				ucBuilder.path("/api/membershipFollowup/{id}").buildAndExpand(membershipFollowup.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
@@ -99,14 +104,16 @@ public class MembershipFollowupController {
 	// ------------------------------------------------
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping(value = "/membershipFollowup/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateMembershipFollowup(@PathVariable("id") int id, @RequestBody MembershipFollowup membershipFollowup) {
+	public ResponseEntity<?> updateMembershipFollowup(@PathVariable("id") int id,
+			@RequestBody MembershipFollowup membershipFollowup) {
 		logger.info("Updating MembershipFollowup with id {}", id);
 
 		MembershipFollowup currentMembershipFollowup = membershipFollowupService.findById(id);
 
 		if (currentMembershipFollowup == null) {
 			logger.error("Unable to update. MembershipFollowup with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. MembershipFollowup with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. MembershipFollowup with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -124,14 +131,16 @@ public class MembershipFollowupController {
 		MembershipFollowup membershipFollowup = membershipFollowupService.findById(id);
 		if (membershipFollowup == null) {
 			logger.error("Unable to delete. MembershipFollowup with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. MembershipFollowup with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. MembershipFollowup with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		membershipFollowupService.deleteMembershipFollowupById(id);
 		return new ResponseEntity<MembershipFollowup>(HttpStatus.NO_CONTENT);
 	}
 
-	// ------------------- Delete All MembershipFollowups-----------------------------
+	// ------------------- Delete All
+	// MembershipFollowups-----------------------------
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping(value = "/membershipFollowup/", method = RequestMethod.DELETE)
 	public ResponseEntity<MembershipFollowup> deleteAllMembershipFollowups() {

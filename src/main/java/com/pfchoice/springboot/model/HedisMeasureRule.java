@@ -30,8 +30,6 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -44,36 +42,29 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "hedis_msr_rule_Id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@Column(name = "short_description")
 	private String shortDescription;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@Where(clause = "active_ind ='Y'")
 	@JoinColumn(name = "ins_id", referencedColumnName = "Insurance_Id")
 	private Insurance insId;
 
-	
 	@Column(name = "problem_flag")
 	private Character problemFlag;
 
-	
 	@Column(name = "cpt_or_icd")
 	private Byte cptOrIcd;
 
-	
 	@OneToOne
 	@JoinColumn(name = "hedis_id", referencedColumnName = "qlty_msr_id")
 	@Where(clause = "active_ind ='Y'")
@@ -87,7 +78,6 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	@Where(clause = "active_ind ='Y'")
 	private Set<CPTMeasure> cptCodes;
 
-	
 	@Fetch(FetchMode.SELECT)
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "hedis_icd_measure", joinColumns = {
@@ -96,119 +86,93 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	@Where(clause = "active_ind ='Y'")
 	private Set<ICDMeasure> icdCodes;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "gender_id", referencedColumnName = "gender_id")
 	@Where(clause = "active_ind ='Y'")
 	private Gender genderId;
 
-	
 	@Column(nullable = true, name = "lower_age_limit")
 	private BigDecimal lowerAgeLimit;
 
-	
 	@Column(nullable = true, name = "upper_age_limit")
 	private BigDecimal upperAgeLimit;
-	
-	
+
 	@Column(name = "dose_count")
 	private Integer doseCount;
 
 	@Column(name = "dose_1")
 	private Integer dose1;
-	
-	
+
 	@Column(name = "dose_2")
 	private Integer dose2;
-	
-	
+
 	@Column(name = "dose_3")
 	private Integer dose3;
-	
-	
+
 	@Column(name = "dose_4")
 	private Integer dose4;
-	
-	
+
 	@Column(name = "dose_5")
 	private Integer dose5;
-	
-	
+
 	@Column(name = "dose_6")
 	private Integer dose6;
-	
-	
+
 	@Column(name = "datepart_1")
 	private String datepart1;
-	
-	
+
 	@Column(name = "datepart_2")
 	private String datepart2;
-	
-	
+
 	@Column(name = "datepart_3")
 	private String datepart3;
-	
-	
+
 	@Column(name = "datepart_4")
 	private String datepart4;
-	
-	
+
 	@Column(name = "datepart_5")
 	private String datepart5;
-	
-	
+
 	@Column(name = "datepart_6")
 	private String datepart6;
-	
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "frequency_type_code", referencedColumnName = "code")
 	private FrequencyType frequencyType;
 
-	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(nullable = true, name = "problem_id", referencedColumnName = "pbm_Id")
 	private Problem pbm;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = true, name = "age_effective_from")
 	private Date ageEffectiveFrom;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = true, name = "age_effective_to")
 	private Date ageEffectiveTo;
 
-	
 	@Column(name = "effective_year")
 	private Integer effectiveYear;
 
-	
 	@Transient
 	private String hedisMeasureCode;
 
-	
 	@Transient
 	private String cptMeasureCode;
 
-	
 	@Transient
 	private String icdMeasureCode;
 
-	
 	@Transient
 	private String genderDescription;
 
-	
 	@Transient
 	private String problemDescription;
-	
-	
+
 	@Transient
 	private List<String> dateparts;
-	
+
 	/**
 	 * 
 	 */
@@ -441,7 +405,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dose1 the dose1 to set
+	 * @param dose1
+	 *            the dose1 to set
 	 */
 	public void setDose1(Integer dose1) {
 		this.dose1 = dose1;
@@ -455,7 +420,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dose2 the dose2 to set
+	 * @param dose2
+	 *            the dose2 to set
 	 */
 	public void setDose2(Integer dose2) {
 		this.dose2 = dose2;
@@ -469,7 +435,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dose3 the dose3 to set
+	 * @param dose3
+	 *            the dose3 to set
 	 */
 	public void setDose3(Integer dose3) {
 		this.dose3 = dose3;
@@ -483,7 +450,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dose4 the dose4 to set
+	 * @param dose4
+	 *            the dose4 to set
 	 */
 	public void setDose4(Integer dose4) {
 		this.dose4 = dose4;
@@ -497,7 +465,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dose5 the dose5 to set
+	 * @param dose5
+	 *            the dose5 to set
 	 */
 	public void setDose5(Integer dose5) {
 		this.dose5 = dose5;
@@ -647,8 +616,7 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	public void setHedisMeasureCode(String hedisMeasureCode) {
 		this.hedisMeasureCode = hedisMeasureCode;
 	}
-	
-	
+
 	/**
 	 * @return the cptMeasureCode
 	 */
@@ -717,7 +685,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dose6 the dose6 to set
+	 * @param dose6
+	 *            the dose6 to set
 	 */
 	public void setDose6(Integer dose6) {
 		this.dose6 = dose6;
@@ -731,7 +700,8 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param datepart6 the datepart6 to set
+	 * @param datepart6
+	 *            the datepart6 to set
 	 */
 	public void setDatepart6(String datepart6) {
 		this.datepart6 = datepart6;
@@ -745,12 +715,12 @@ public class HedisMeasureRule extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param dateparts the dateparts to set
+	 * @param dateparts
+	 *            the dateparts to set
 	 */
 	public void setDateparts(List<String> dateparts) {
 		this.dateparts = dateparts;
 	}
-
 
 	@Override
 	public int hashCode() {

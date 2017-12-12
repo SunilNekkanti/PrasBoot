@@ -12,8 +12,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -25,46 +23,36 @@ public class Pharmacy extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "pharmacy_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "name")
 	private String name;
 
-	
 	@Column(name = "pharmacy_number")
 	private String pharmacyNumber;
-	
-	
+
 	@Column(name = "address_1")
 	private String address1;
-	
-	
+
 	@Column(name = "address_2")
 	private String address2;
-	
-	
+
 	@Column(name = "city")
 	private String city;
-	
-	
+
 	@Column(name = "state_code")
 	private String stateCode;
-	
-	
+
 	@Column(name = "phone_number")
 	private String phoneNumber;
-	
-	
+
 	@Column(name = "ncp_dpn_number")
 	private String ncpDpnNumber;
-	
-	
+
 	@Column(name = "npi_number")
 	private String npiNumber;
 
@@ -111,7 +99,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -125,7 +114,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param pharmacyNumber the pharmacyNumber to set
+	 * @param pharmacyNumber
+	 *            the pharmacyNumber to set
 	 */
 	public void setPharmacyNumber(String pharmacyNumber) {
 		this.pharmacyNumber = pharmacyNumber;
@@ -139,7 +129,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param address1 the address1 to set
+	 * @param address1
+	 *            the address1 to set
 	 */
 	public void setAddress1(String address1) {
 		this.address1 = address1;
@@ -153,7 +144,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param address2 the address2 to set
+	 * @param address2
+	 *            the address2 to set
 	 */
 	public void setAddress2(String address2) {
 		this.address2 = address2;
@@ -167,7 +159,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param city the city to set
+	 * @param city
+	 *            the city to set
 	 */
 	public void setCity(String city) {
 		this.city = city;
@@ -181,7 +174,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param stateCode the stateCode to set
+	 * @param stateCode
+	 *            the stateCode to set
 	 */
 	public void setStateCode(String stateCode) {
 		this.stateCode = stateCode;
@@ -195,7 +189,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param phoneNumber the phoneNumber to set
+	 * @param phoneNumber
+	 *            the phoneNumber to set
 	 */
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
@@ -209,7 +204,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param ncpDpnNumber the ncpDpnNumber to set
+	 * @param ncpDpnNumber
+	 *            the ncpDpnNumber to set
 	 */
 	public void setNcpDpnNumber(String ncpDpnNumber) {
 		this.ncpDpnNumber = ncpDpnNumber;
@@ -223,7 +219,8 @@ public class Pharmacy extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param npiNumber the npiNumber to set
+	 * @param npiNumber
+	 *            the npiNumber to set
 	 */
 	public void setNpiNumber(String npiNumber) {
 		this.npiNumber = npiNumber;

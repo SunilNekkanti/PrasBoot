@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('ModalInstanceController',
     [  'ICDMeasureService', 'CPTMeasureService', '$scope', '$modalInstance','$compile', 'items' ,'popType', 'DTOptionsBuilder', 'DTColumnBuilder',function (ICDMeasureService, CPTMeasureService, $scope, $modalInstance,$compile,items,popType, DTOptionsBuilder, DTColumnBuilder) {
@@ -154,3 +156,4 @@ app.controller('ModalInstanceController',
 		
     }
     ]);
+   })();

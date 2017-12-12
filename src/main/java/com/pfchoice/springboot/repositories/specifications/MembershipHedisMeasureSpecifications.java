@@ -15,18 +15,17 @@ import com.pfchoice.springboot.model.MembershipHedisMeasure;
 public class MembershipHedisMeasureSpecifications implements Specification<MembershipHedisMeasure> {
 
 	private String searchTerm;
-	
-	private Integer mbrId;
-    
-    private List<Integer> hedisRules ;
-    
 
-	public MembershipHedisMeasureSpecifications(String searchTerm, Integer mbrId,  List<Integer> hedisRules) {
+	private Integer mbrId;
+
+	private List<Integer> hedisRules;
+
+	public MembershipHedisMeasureSpecifications(String searchTerm, Integer mbrId, List<Integer> hedisRules) {
 		super();
 		this.searchTerm = searchTerm;
 		this.mbrId = mbrId;
 		this.hedisRules = hedisRules;
-		
+
 	}
 
 	public Predicate toPredicate(Root<MembershipHedisMeasure> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -35,22 +34,20 @@ public class MembershipHedisMeasureSpecifications implements Specification<Membe
 
 		cq.distinct(true);
 		Predicate p = cb.conjunction();
-		
+
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("firstName")), containsLikePattern),
-					cb.like(cb.lower(root.get("lastName")), containsLikePattern)
-			));
+					cb.like(cb.lower(root.get("lastName")), containsLikePattern)));
 		}
-		
-		if(mbrId != null){
+
+		if (mbrId != null) {
 			p.getExpressions().add(cb.and(cb.equal(root.join("mbr").get("id"), mbrId)));
 		}
-		
-		
-		if(mbrId != null && !"".equals(mbrId)){
-			p.getExpressions().add(cb.and( root.join("hedisMeasureRule").get("id").in(hedisRules)));
+
+		if (hedisRules != null && hedisRules.size() > 0) {
+			p.getExpressions().add(cb.and(root.join("hedisMeasureRule").get("id").in(hedisRules)));
 		}
-		
+
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		return p;
 

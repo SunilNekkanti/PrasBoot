@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('LanguageController',
     [ 'LanguageService',  '$scope', '$compile','DTOptionsBuilder', 'DTColumnBuilder', function(   LanguageService, $scope,$compile,  DTOptionsBuilder, DTColumnBuilder) {
@@ -223,3 +225,4 @@ app.controller('LanguageController',
     
 
     ]);
+   })();

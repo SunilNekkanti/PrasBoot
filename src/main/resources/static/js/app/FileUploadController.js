@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.controller('FileUploadController',
     ['FileUploadService','InsuranceService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( FileUploadService, InsuranceService, $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
 
@@ -220,12 +221,12 @@ app.controller('FileUploadController',
             self.errorMessage='';
             self.fileUpload={};
             self.display = false;
-            $state.go('fileUpload');
+            $state.go('main.fileUpload');
         }
         
         function fileUploadEdit(id) {
         	var params = {'fileUploadDisplay':true};
-			var trans =  $state.go('fileUpload.edit',params).transition;
+			var trans =  $state.go('main.fileUpload.edit',params).transition;
 			trans.onSuccess({}, function() { editFileUpload(id);  }, { priority: -1 });
 			
         }
@@ -242,3 +243,4 @@ app.controller('FileUploadController',
     
 
     ]);
+   })();

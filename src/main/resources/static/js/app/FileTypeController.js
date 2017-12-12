@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('FileTypeController',
     ['FileTypeService','InsuranceService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( FileTypeService, InsuranceService, $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -137,6 +139,7 @@ app.controller('FileTypeController',
                         self.fileTypes = getAllFileTypes();
                         self.fileType={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating FileType');
@@ -157,7 +160,7 @@ app.controller('FileTypeController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("fileType");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating FileType');
@@ -220,12 +223,12 @@ app.controller('FileTypeController',
             self.errorMessage='';
             self.fileType={};
             self.display = false;
-            $state.go('fileType');
+            $state.go('main.fileType', {}, {location: true,reload: false,notify: false});
         }
         
         function fileTypeEdit(id) {
         	var params = {'fileTypeDisplay':true};
-			var trans =  $state.go('fileType.edit',params).transition;
+			var trans =  $state.go('main.fileType.edit',params).transition;
 			trans.onSuccess({}, function() { editFileType(id);  }, { priority: -1 });
 			
         }
@@ -236,9 +239,8 @@ app.controller('FileTypeController',
             self.insurances = getAllInsurances();
             self.display =true;
         }
-        
     
     }
-    
 
     ]);
+   })();

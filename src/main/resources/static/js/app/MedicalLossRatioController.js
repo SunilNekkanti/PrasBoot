@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('MedicalLossRatioController',
     ['MedicalLossRatioService','ProviderService', 'InsuranceService','RiskReconService', '$scope', '$compile','$state','$stateParams', '$filter' ,'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', function(MedicalLossRatioService, ProviderService,  InsuranceService, RiskReconService, $scope,$compile,$state,$stateParams, $filter, DTOptionsBuilder, DTColumnBuilder,DTColumnDefBuilder) {
@@ -86,7 +88,7 @@ app.controller('MedicalLossRatioController',
      								
                                 	angular.forEach(resultData, function(value1, key1){
    										var resultData1 = value1.reduce(function(result1, item, index, array) {
-   		  								  result1[index] = item; //a, b, c
+   										result1[index] = item; //a, b, c
    		  								  return result1;
    		  								}, {});
    										finalData.push(resultData1);
@@ -96,12 +98,12 @@ app.controller('MedicalLossRatioController',
      									       if(key <2){
      									    	 self.dtColumns.push( DTColumnBuilder.newColumn(key).withTitle(value).notVisible());
      									    	self.dt1Columns.push( DTColumnBuilder.newColumn(key).withTitle(value).notVisible());
-    									       }else if(key >= 2 && k <= 4) {
+    									       }else if(key >= 2 && key <= 4) {
     									    	  self.dtColumns.push( DTColumnBuilder.newColumn(key).withTitle(value).withClass('text-center'));
     									    	  self.dt1Columns.push( DTColumnBuilder.newColumn(key).withTitle(value).withClass('text-center'));
     									       }else {
-    									    	  self.dtColumns.push( DTColumnBuilder.newColumn(key).withTitle(value).withClass('text-center').renderWith(level2LinkHTML));
-    									    	  self.dt1Columns.push( DTColumnBuilder.newColumn(key).withTitle(value).withClass('text-center').renderWith(level2LinkHTML));
+    									    	  self.dtColumns.push( DTColumnBuilder.newColumn(key).withTitle(value).withClass('text-center'));
+    									    	  self.dt1Columns.push( DTColumnBuilder.newColumn(key).withTitle(value).withClass('text-center'));
     									       }
      										  if(key >4){
      	 									      angular.forEach(self.selectedCategories, function(categoryValue, categoryKey){
@@ -198,11 +200,11 @@ app.controller('MedicalLossRatioController',
             self.errorMessage='';
             self.provider={};
             self.display = false;
-            $state.go('medicalLossRatio');
+            $state.go('main.medicalLossRatio', {}, {location: true,reload: false,notify: false});
         }
        
         function setProviders(insId){
-        	self.providers =   $filter('filter')(self.prvdrs, {refInsContracts:[{ins:{id:self.insurance.id}}]});
+        	self.providers =   $filter('providerFilter')(self.prvdrs, self.insurance.id);
         	self.providers =   $filter('orderBy')(self.providers, 'name');
         }
     
@@ -215,3 +217,4 @@ app.controller('MedicalLossRatioController',
     
 
     ]);
+   })();

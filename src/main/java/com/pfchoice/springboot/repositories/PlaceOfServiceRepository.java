@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.pfchoice.springboot.model.PlaceOfService;
 
 @Repository
-public interface PlaceOfServiceRepository extends PagingAndSortingRepository<PlaceOfService, Integer>, JpaSpecificationExecutor<PlaceOfService> {
+public interface PlaceOfServiceRepository
+		extends PagingAndSortingRepository<PlaceOfService, Integer>, JpaSpecificationExecutor<PlaceOfService> {
 
 	PlaceOfService findByDescription(String description);
 

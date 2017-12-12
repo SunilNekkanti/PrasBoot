@@ -24,14 +24,12 @@ public class ClaimType extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	
 	@Size(min = 2, max = 50, message = "The code must be between {min} and {max} characters long")
 	@Column(name = "name")
 	private String name;
@@ -82,7 +80,6 @@ public class ClaimType extends RecordDetails implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	@Override
 	public int hashCode() {

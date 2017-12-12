@@ -17,8 +17,6 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -29,7 +27,6 @@ public class MembershipHospitalizationDetails extends RecordDetails implements S
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
@@ -40,42 +37,33 @@ public class MembershipHospitalizationDetails extends RecordDetails implements S
 	@JoinColumn(name = "mbr_hos_id", referencedColumnName = "mbr_hos_id")
 	private MembershipHospitalization mbrHospitalization;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "att_phy_id", referencedColumnName = "att_phy_id")
 	private AttPhysician attPhysician;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "room_type_code", referencedColumnName = "code")
 	private PlaceOfService roomType;
 
-	
 	@Column(name = "adm_dx")
 	private String admDx;
 
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "exp_dc_dt")
 	protected Date expDisDate;
 
-	
 	@Column(name = "auth_days")
 	private Integer authDays;
 
-	
 	@Column(name = "cm_pri_user")
 	private String cmPriUser;
 
-	
 	@Column(name = "disease_cohort")
 	private String diseaseCohort;
 
-	
 	@Column(name = "comorbidities")
 	private String comorbidities;
 
-	
 	@Column(name = "file_id")
 	private Integer fileId;
 

@@ -2,7 +2,6 @@ package com.pfchoice.springboot.repositories.specifications;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -20,18 +19,18 @@ public class InsuranceSpecifications implements Specification<Insurance> {
 	}
 
 	public Predicate toPredicate(Root<Insurance> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-		
+
 		String containsLikePattern = getContainsLikePattern(searchTerm);
 		cq.distinct(true);
 
 		Predicate p = cb.conjunction();
-		
+
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("name")), containsLikePattern)));
 		}
-		
+
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
-		p.getExpressions().add(cb.and(cb.isNull(root.join("contract").join("referenceContract").join("prvdr",JoinType.LEFT).get("id"))));
+		// p.getExpressions().add(cb.and(cb.isNull(root.join("contract").join("referenceContract").get("prvdr"))));
 		return p;
 
 	}

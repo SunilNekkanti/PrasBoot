@@ -36,19 +36,19 @@ public class FileTypeController {
 
 	@Autowired
 	FileTypeService fileTypeService; // Service which will do all data
-								// retrieval/manipulation work
+	// retrieval/manipulation work
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	// -------------------Retrieve FileTypes as per page request
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/fileType/", method = RequestMethod.GET)
-	public ResponseEntity<Page<FileType>> listAllFileTypes(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<FileType>> listAllFileTypes(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<FileType> spec = new FileTypeSpecifications(search);
 		Page<FileType> fileTypes = fileTypeService.findAllFileTypesByPage(spec, pageRequest);
-		
+
 		if (fileTypes.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,14 +58,15 @@ public class FileTypeController {
 
 	// -------------------Retrieve Single
 	// FileType------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/fileType/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getFileType(@PathVariable("id") int id) {
 		logger.info("Fetching FileType with id {}", id);
 		FileType fileType = fileTypeService.findById(id);
 		if (fileType == null) {
 			logger.error("FileType with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("FileType with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("FileType with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<FileType>(fileType, HttpStatus.OK);
 	}
@@ -80,11 +81,12 @@ public class FileTypeController {
 
 		if (fileTypeService.isFileTypeExist(fileType)) {
 			logger.error("Unable to create. A FileType with description {} already exist", fileType.getDescription());
-			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A FileType with description " + fileType.getDescription() + " already exist."),
+			return new ResponseEntity(new CustomErrorType(
+					"Unable to create. A FileType with description " + fileType.getDescription() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
-		// logger.info(" fileType.getRoles().size() :{} ", fileType.getRoles().size());
+		// logger.info(" fileType.getRoles().size() :{} ",
+		// fileType.getRoles().size());
 		fileType.setCreatedBy(username);
 		fileType.setUpdatedBy(username);
 		fileTypeService.saveFileType(fileType);

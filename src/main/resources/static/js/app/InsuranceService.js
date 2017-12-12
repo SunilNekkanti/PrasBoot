@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('InsuranceService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -24,6 +26,7 @@ app.service('InsuranceService',
                         function (response) {
                             console.log('Fetched successfully all insurances');
                             $localStorage.insurances = response.data.content;
+                            
                             deferred.resolve(response);
                         },
                         function (errResponse) {
@@ -133,3 +136,4 @@ app.service('InsuranceService',
 
         }
     ]);
+   })();

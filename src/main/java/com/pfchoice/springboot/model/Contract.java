@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,9 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -44,7 +41,7 @@ public class Contract extends RecordDetails implements Serializable {
 	@Column(name = "pcp_provider_nbr")
 	private String pcpPrvdrNBR;
 
-	@Column(name = "PMPM")
+	@Column(name = "pmpm")
 	private Double pmpm;
 
 	@Column(nullable = true, name = "avg_service_fund")
@@ -60,17 +57,13 @@ public class Contract extends RecordDetails implements Serializable {
 	@Column(name = "end_date")
 	private Date endDate;
 
-	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "ref_contract_id", referencedColumnName = "ref_contract_id")
-	private ReferenceContract referenceContract;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	/*
+	 * @OneToOne( mappedBy ="contract" , fetch = FetchType.LAZY) private
+	 * InsuranceReferenceContract referenceContract ;
+	 */
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "file_upload_id", referencedColumnName = "file_upload_id")
-	private FileUpload filesUpload;
-
-	@Transient
-	private Integer insId;
+	private FileUpload fileUpload;
 
 	/**
 	 * 
@@ -192,48 +185,26 @@ public class Contract extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @return the referenceContract
+	 * @param fileUpload
+	 *            the fileUpload to set
 	 */
-	public ReferenceContract getReferenceContract() {
-		return referenceContract;
-	}
-
-	/**
-	 * @param referenceContract
-	 *            the referenceContract to set
-	 */
-	public void setReferenceContract(final ReferenceContract referenceContract) {
-		this.referenceContract = referenceContract;
+	public void setFileUpload(FileUpload fileUpload) {
+		this.fileUpload = fileUpload;
 	}
 
 	/**
 	 * @return the filesUpload
 	 */
-	public FileUpload getFilesUpload() {
-		return filesUpload;
+	public FileUpload getFileUpload() {
+		return fileUpload;
 	}
 
 	/**
 	 * @param filesUpload
 	 *            the filesUpload to set
 	 */
-	public void setFilesUpload(FileUpload filesUpload) {
-		this.filesUpload = filesUpload;
-	}
-
-	/**
-	 * @return the insId
-	 */
-	public Integer getInsId() {
-		return insId;
-	}
-
-	/**
-	 * @param insId
-	 *            the insId to set
-	 */
-	public void setInsId(Integer insId) {
-		this.insId = insId;
+	public void setFilesUpload(FileUpload fileUpload) {
+		this.fileUpload = fileUpload;
 	}
 
 	@Override

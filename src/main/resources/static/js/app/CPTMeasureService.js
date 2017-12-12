@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.service('CPTMeasureService',
     ['$localStorage', '$http', '$q', 'urls',
         function ($localStorage, $http, $q, urls) {
@@ -132,3 +133,4 @@ app.service('CPTMeasureService',
 
         }
     ]);
+   })();

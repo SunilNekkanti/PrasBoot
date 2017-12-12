@@ -23,8 +23,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author SarathGandluri
@@ -36,7 +34,6 @@ public class MembershipProblem extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
@@ -49,30 +46,25 @@ public class MembershipProblem extends RecordDetails implements Serializable {
 	@Where(clause = "active_ind ='Y'")
 	private Membership mbr;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@NotNull(message = "Select Problem")
 	@JoinColumn(name = "pbm_id", nullable = false, referencedColumnName = "pbm_id")
 	@Where(clause = "active_ind ='Y'")
 	private Problem pbm;
 
-	
 	@Column(name = "start_date", nullable = false)
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	private Date startDate;
 
-	
 	@Column(name = "resolved_date", nullable = true)
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	private Date resolvedDate;
 
-	
 	@Column(name = "file_id")
 	private Integer fileId;
-	
-	
+
 	/**
 	 * 
 	 */

@@ -39,50 +39,49 @@ public class MembershipController {
 	public static final Logger logger = LoggerFactory.getLogger(MembershipController.class);
 
 	@Value("classpath:static/sql/membership_load.sql")
-    private Resource membershipLoadResource;
-	
+	private Resource membershipLoadResource;
+
 	@Value("classpath:static/sql/membership_insert.sql")
-    private Resource membershipInsertResource;
-	
+	private Resource membershipInsertResource;
+
 	@Value("classpath:static/sql/membershipCapReport_load.sql")
-    private Resource membershipCapReportLoadResource;
-	
+	private Resource membershipCapReportLoadResource;
+
 	@Value("classpath:static/sql/membershipCapReport_insert.sql")
-    private Resource membershipCapReportInsertResource;
-	
+	private Resource membershipCapReportInsertResource;
+
 	@Value("classpath:static/sql/truncateTable.sql")
-    private Resource truncateTable;
-	
+	private Resource truncateTable;
+
 	@Autowired
 	MembershipService membershipService; // Service which will do all data
-										// retrieval/manipulation work
+											// retrieval/manipulation work
 
 	@Autowired
 	FileTypeService fileTypeService;
-	
+
 	@Autowired
 	FileService fileService;
-	
+
 	@Autowired
 	PrasUtil prasUtil;
-	
-	
+
 	// -------------------Retrieve All
 	// Memberships---------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/membership/", method = RequestMethod.GET)
 	public ResponseEntity<Page<Membership>> listAllMemberships(
-			@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+			@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "insId", required = false) Integer insId,
 			@RequestParam(value = "prvdrId", required = false) Integer prvdrId,
 			@RequestParam(value = "effectiveYear", required = false) Integer effectiveYear,
 			@RequestParam(value = "problemIds", required = false) List<Integer> problemIds,
 			@RequestParam(value = "search", required = false) String search) {
 
-		
-		Specification<Membership> spec   = new MembershipSpecifications(search, insId, prvdrId, effectiveYear,problemIds);
+		Specification<Membership> spec = new MembershipSpecifications(search, insId, prvdrId, effectiveYear,
+				problemIds);
 		Page<Membership> memberships = membershipService.findAllMembershipsByPage(spec, pageRequest);
-		
+
 		if (memberships.getTotalElements() == 0) {
 			System.out.println("no memberships");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -115,9 +114,8 @@ public class MembershipController {
 
 		if (membershipService.isMembershipExist(membership)) {
 			logger.error("Unable to create. A Membership with name {} already exist", membership.getFirstName());
-			return new ResponseEntity(
-					new CustomErrorType(
-							"Unable to create. A Membership with name " + membership.getFirstName() + " already exist."),
+			return new ResponseEntity(new CustomErrorType(
+					"Unable to create. A Membership with name " + membership.getFirstName() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
 
@@ -179,5 +177,5 @@ public class MembershipController {
 		membershipService.deleteAllMemberships();
 		return new ResponseEntity<Membership>(HttpStatus.NO_CONTENT);
 	}
-	
+
 }

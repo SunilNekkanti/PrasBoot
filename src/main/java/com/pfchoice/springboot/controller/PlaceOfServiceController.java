@@ -35,20 +35,22 @@ public class PlaceOfServiceController {
 	public static final Logger logger = LoggerFactory.getLogger(PlaceOfServiceController.class);
 
 	@Autowired
-	PlaceOfServiceService placeOfServiceService; // Service which will do all data
-								// retrieval/manipulation work
+	PlaceOfServiceService placeOfServiceService; // Service which will do all
+													// data
+	// retrieval/manipulation work
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	// -------------------Retrieve PlaceOfServices as per page request
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/placeOfService/", method = RequestMethod.GET)
-	public ResponseEntity<Page<PlaceOfService>> listAllPlaceOfServices(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<PlaceOfService>> listAllPlaceOfServices(
+			@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<PlaceOfService> spec = new PlaceOfServiceSpecifications(search);
 		Page<PlaceOfService> placeOfServices = placeOfServiceService.findAllPlaceOfServicesByPage(spec, pageRequest);
-		
+
 		if (placeOfServices.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,14 +60,15 @@ public class PlaceOfServiceController {
 
 	// -------------------Retrieve Single
 	// PlaceOfService------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/placeOfService/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getPlaceOfService(@PathVariable("id") int id) {
 		logger.info("Fetching PlaceOfService with id {}", id);
 		PlaceOfService placeOfService = placeOfServiceService.findById(id);
 		if (placeOfService == null) {
 			logger.error("PlaceOfService with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("PlaceOfService with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("PlaceOfService with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<PlaceOfService>(placeOfService, HttpStatus.OK);
 	}
@@ -74,17 +77,18 @@ public class PlaceOfServiceController {
 	// PlaceOfService-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER", "ROLE_CARE_COORDINATOR" })
 	@RequestMapping(value = "/placeOfService/", method = RequestMethod.POST)
-	public ResponseEntity<?> createPlaceOfService(@RequestBody PlaceOfService placeOfService, UriComponentsBuilder ucBuilder,
-			@ModelAttribute("username") String username) {
+	public ResponseEntity<?> createPlaceOfService(@RequestBody PlaceOfService placeOfService,
+			UriComponentsBuilder ucBuilder, @ModelAttribute("username") String username) {
 		logger.info("Creating PlaceOfService : {}", placeOfService);
 
 		if (placeOfServiceService.isPlaceOfServiceExist(placeOfService)) {
-			logger.error("Unable to create. A PlaceOfService with description {} already exist", placeOfService.getDescription());
-			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A PlaceOfService with description " + placeOfService.getDescription() + " already exist."),
-					HttpStatus.CONFLICT);
+			logger.error("Unable to create. A PlaceOfService with description {} already exist",
+					placeOfService.getDescription());
+			return new ResponseEntity(new CustomErrorType("Unable to create. A PlaceOfService with description "
+					+ placeOfService.getDescription() + " already exist."), HttpStatus.CONFLICT);
 		}
-		// logger.info(" placeOfService.getRoles().size() :{} ", placeOfService.getRoles().size());
+		// logger.info(" placeOfService.getRoles().size() :{} ",
+		// placeOfService.getRoles().size());
 		placeOfService.setCreatedBy(username);
 		placeOfService.setUpdatedBy(username);
 		placeOfServiceService.savePlaceOfService(placeOfService);
@@ -98,15 +102,16 @@ public class PlaceOfServiceController {
 	// ------------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/placeOfService/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updatePlaceOfService(@PathVariable("id") int id, @RequestBody PlaceOfService placeOfService,
-			@ModelAttribute("username") String username) {
+	public ResponseEntity<?> updatePlaceOfService(@PathVariable("id") int id,
+			@RequestBody PlaceOfService placeOfService, @ModelAttribute("username") String username) {
 		logger.info("Updating PlaceOfService with id {}", id);
 
 		PlaceOfService currentPlaceOfService = placeOfServiceService.findById(id);
 
 		if (currentPlaceOfService == null) {
 			logger.error("Unable to update. PlaceOfService with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. PlaceOfService with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. PlaceOfService with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -127,14 +132,16 @@ public class PlaceOfServiceController {
 		PlaceOfService placeOfService = placeOfServiceService.findById(id);
 		if (placeOfService == null) {
 			logger.error("Unable to delete. PlaceOfService with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. PlaceOfService with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. PlaceOfService with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		placeOfServiceService.deletePlaceOfServiceById(id);
 		return new ResponseEntity<PlaceOfService>(HttpStatus.NO_CONTENT);
 	}
 
-	// ------------------- Delete All PlaceOfServices-----------------------------
+	// ------------------- Delete All
+	// PlaceOfServices-----------------------------
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping(value = "/placeOfService/", method = RequestMethod.DELETE)
 	public ResponseEntity<PlaceOfService> deleteAllPlaceOfServices() {

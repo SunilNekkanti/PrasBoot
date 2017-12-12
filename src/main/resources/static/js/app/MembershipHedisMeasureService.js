@@ -1,7 +1,7 @@
+(function(){
 'use strict';
-
-app
-		.service(
+var app = angular.module('my-app');
+app.service(
 				'MembershipHedisMeasureService',
 				[
 						'$localStorage',
@@ -111,3 +111,4 @@ app
 				            }
 
 						} ]);
+})();

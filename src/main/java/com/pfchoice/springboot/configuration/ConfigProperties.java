@@ -6,39 +6,38 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("envProperties")
 public class ConfigProperties {
-	
-	 private String filesUploadDirectory;
-	 private String sqlDirectoryPath;
-	 private String queryTypeFetch; 
-	 private String queryTypeStopLoss ;
-	 private String queryTypeInsert; 
-	 private String queryTypeBHInsert; 
-	 private String queryTypeLoad ;
-	 private String queryTypeBHLoad;
-	 private String queryTypeUpdate;
-	 private String queryTypeBHUpdate;
-	 private String queryTypeUnload;
-	 private String queryTypeCount;
-     private String sqlQueryExtn;
-     private String sqlFollowupTypeHedis;
-     private String followupTypeHospitalization;
-     private String followupTypeClaim;
-     private String fileTypeAMGMBRHospitalization;
-     private String fileTypeAMGMBRClaim;
-     private String fileTypeBHMBRClaim;
-     private String fileTypeAMGMBRRoster;
-     private String  fileTypeAMGCapReport;
-     private String fileTypeBHMBRRoster;
-     private Integer filterByProcessingDate;
-     private Integer filterByHospitalizationDate;
-     private Integer All ;
-     private Integer claim;
-     private Integer hospitalization;
-     private Integer acceptableClaim;
-     private Integer unacceptableClaim;
-     private String queryTypeInsertLevel2;
-	 
-	 
+
+	private String filesUploadDirectory;
+	private String sqlDirectoryPath;
+	private String queryTypeFetch;
+	private String queryTypeStopLoss;
+	private String queryTypeInsert;
+	private String queryTypeBHInsert;
+	private String queryTypeLoad;
+	private String queryTypeBHLoad;
+	private String queryTypeUpdate;
+	private String queryTypeBHUpdate;
+	private String queryTypeUnload;
+	private String queryTypeCount;
+	private String sqlQueryExtn;
+	private String sqlFollowupTypeHedis;
+	private String followupTypeHospitalization;
+	private String followupTypeClaim;
+	private String fileTypeAMGMBRHospitalization;
+	private String fileTypeAMGMBRClaim;
+	private String fileTypeBHMBRClaim;
+	private String fileTypeAMGMBRRoster;
+	private String fileTypeAMGCapReport;
+	private String fileTypeBHMBRRoster;
+	private Integer filterByProcessingDate;
+	private Integer filterByHospitalizationDate;
+	private Integer All;
+	private Integer claim;
+	private Integer hospitalization;
+	private Integer acceptableClaim;
+	private Integer unacceptableClaim;
+	private String queryTypeInsertLevel2;
+
 	/**
 	 * @return the filesUploadDirectory
 	 */
@@ -47,7 +46,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param filesUploadDirectory the filesUploadDirectory to set
+	 * @param filesUploadDirectory
+	 *            the filesUploadDirectory to set
 	 */
 	public void setFilesUploadDirectory(String filesUploadDirectory) {
 		this.filesUploadDirectory = filesUploadDirectory;
@@ -61,7 +61,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param sqlDirectoryPath the sqlDirectoryPath to set
+	 * @param sqlDirectoryPath
+	 *            the sqlDirectoryPath to set
 	 */
 	public void setSqlDirectoryPath(String sqlDirectoryPath) {
 		this.sqlDirectoryPath = sqlDirectoryPath;
@@ -75,7 +76,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeFetch the queryTypeFetch to set
+	 * @param queryTypeFetch
+	 *            the queryTypeFetch to set
 	 */
 	public void setQueryTypeFetch(String queryTypeFetch) {
 		this.queryTypeFetch = queryTypeFetch;
@@ -89,7 +91,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeStopLoss the queryTypeStopLoss to set
+	 * @param queryTypeStopLoss
+	 *            the queryTypeStopLoss to set
 	 */
 	public void setQueryTypeStopLoss(String queryTypeStopLoss) {
 		this.queryTypeStopLoss = queryTypeStopLoss;
@@ -103,7 +106,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeInsert the queryTypeInsert to set
+	 * @param queryTypeInsert
+	 *            the queryTypeInsert to set
 	 */
 	public void setQueryTypeInsert(String queryTypeInsert) {
 		this.queryTypeInsert = queryTypeInsert;
@@ -117,7 +121,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeBHInsert the queryTypeBHInsert to set
+	 * @param queryTypeBHInsert
+	 *            the queryTypeBHInsert to set
 	 */
 	public void setQueryTypeBHInsert(String queryTypeBHInsert) {
 		this.queryTypeBHInsert = queryTypeBHInsert;
@@ -131,7 +136,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeLoad the queryTypeLoad to set
+	 * @param queryTypeLoad
+	 *            the queryTypeLoad to set
 	 */
 	public void setQueryTypeLoad(String queryTypeLoad) {
 		this.queryTypeLoad = queryTypeLoad;
@@ -145,7 +151,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeBHLoad the queryTypeBHLoad to set
+	 * @param queryTypeBHLoad
+	 *            the queryTypeBHLoad to set
 	 */
 	public void setQueryTypeBHLoad(String queryTypeBHLoad) {
 		this.queryTypeBHLoad = queryTypeBHLoad;
@@ -159,7 +166,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeUpdate the queryTypeUpdate to set
+	 * @param queryTypeUpdate
+	 *            the queryTypeUpdate to set
 	 */
 	public void setQueryTypeUpdate(String queryTypeUpdate) {
 		this.queryTypeUpdate = queryTypeUpdate;
@@ -173,7 +181,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeBHUpdate the queryTypeBHUpdate to set
+	 * @param queryTypeBHUpdate
+	 *            the queryTypeBHUpdate to set
 	 */
 	public void setQueryTypeBHUpdate(String queryTypeBHUpdate) {
 		this.queryTypeBHUpdate = queryTypeBHUpdate;
@@ -187,7 +196,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeUnload the queryTypeUnload to set
+	 * @param queryTypeUnload
+	 *            the queryTypeUnload to set
 	 */
 	public void setQueryTypeUnload(String queryTypeUnload) {
 		this.queryTypeUnload = queryTypeUnload;
@@ -201,7 +211,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeCount the queryTypeCount to set
+	 * @param queryTypeCount
+	 *            the queryTypeCount to set
 	 */
 	public void setQueryTypeCount(String queryTypeCount) {
 		this.queryTypeCount = queryTypeCount;
@@ -215,7 +226,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param sqlQueryExtn the sqlQueryExtn to set
+	 * @param sqlQueryExtn
+	 *            the sqlQueryExtn to set
 	 */
 	public void setSqlQueryExtn(String sqlQueryExtn) {
 		this.sqlQueryExtn = sqlQueryExtn;
@@ -229,7 +241,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param sqlFollowupTypeHedis the sqlFollowupTypeHedis to set
+	 * @param sqlFollowupTypeHedis
+	 *            the sqlFollowupTypeHedis to set
 	 */
 	public void setSqlFollowupTypeHedis(String sqlFollowupTypeHedis) {
 		this.sqlFollowupTypeHedis = sqlFollowupTypeHedis;
@@ -243,7 +256,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param followupTypeHospitalization the followupTypeHospitalization to set
+	 * @param followupTypeHospitalization
+	 *            the followupTypeHospitalization to set
 	 */
 	public void setFollowupTypeHospitalization(String followupTypeHospitalization) {
 		this.followupTypeHospitalization = followupTypeHospitalization;
@@ -257,7 +271,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param followupTypeClaim the followupTypeClaim to set
+	 * @param followupTypeClaim
+	 *            the followupTypeClaim to set
 	 */
 	public void setFollowupTypeClaim(String followupTypeClaim) {
 		this.followupTypeClaim = followupTypeClaim;
@@ -271,7 +286,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param fileTypeAMGMBRHospitalization the fileTypeAMGMBRHospitalization to set
+	 * @param fileTypeAMGMBRHospitalization
+	 *            the fileTypeAMGMBRHospitalization to set
 	 */
 	public void setFileTypeAMGMBRHospitalization(String fileTypeAMGMBRHospitalization) {
 		this.fileTypeAMGMBRHospitalization = fileTypeAMGMBRHospitalization;
@@ -285,7 +301,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param fileTypeAMGMBRClaim the fileTypeAMGMBRClaim to set
+	 * @param fileTypeAMGMBRClaim
+	 *            the fileTypeAMGMBRClaim to set
 	 */
 	public void setFileTypeAMGMBRClaim(String fileTypeAMGMBRClaim) {
 		this.fileTypeAMGMBRClaim = fileTypeAMGMBRClaim;
@@ -299,7 +316,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param fileTypeBHMBRClaim the fileTypeBHMBRClaim to set
+	 * @param fileTypeBHMBRClaim
+	 *            the fileTypeBHMBRClaim to set
 	 */
 	public void setFileTypeBHMBRClaim(String fileTypeBHMBRClaim) {
 		this.fileTypeBHMBRClaim = fileTypeBHMBRClaim;
@@ -313,7 +331,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param fileTypeAMGMBRRoster the fileTypeAMGMBRRoster to set
+	 * @param fileTypeAMGMBRRoster
+	 *            the fileTypeAMGMBRRoster to set
 	 */
 	public void setFileTypeAMGMBRRoster(String fileTypeAMGMBRRoster) {
 		this.fileTypeAMGMBRRoster = fileTypeAMGMBRRoster;
@@ -327,7 +346,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param fileTypeAMGCapReport the fileTypeAMGCapReport to set
+	 * @param fileTypeAMGCapReport
+	 *            the fileTypeAMGCapReport to set
 	 */
 	public void setFileTypeAMGCapReport(String fileTypeAMGCapReport) {
 		this.fileTypeAMGCapReport = fileTypeAMGCapReport;
@@ -341,7 +361,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param fileTypeBHMBRRoster the fileTypeBHMBRRoster to set
+	 * @param fileTypeBHMBRRoster
+	 *            the fileTypeBHMBRRoster to set
 	 */
 	public void setFileTypeBHMBRRoster(String fileTypeBHMBRRoster) {
 		this.fileTypeBHMBRRoster = fileTypeBHMBRRoster;
@@ -355,7 +376,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param filterByProcessingDate the filterByProcessingDate to set
+	 * @param filterByProcessingDate
+	 *            the filterByProcessingDate to set
 	 */
 	public void setFilterByProcessingDate(Integer filterByProcessingDate) {
 		this.filterByProcessingDate = filterByProcessingDate;
@@ -369,7 +391,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param filterByHospitalizationDate the filterByHospitalizationDate to set
+	 * @param filterByHospitalizationDate
+	 *            the filterByHospitalizationDate to set
 	 */
 	public void setFilterByHospitalizationDate(Integer filterByHospitalizationDate) {
 		this.filterByHospitalizationDate = filterByHospitalizationDate;
@@ -383,7 +406,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param all the all to set
+	 * @param all
+	 *            the all to set
 	 */
 	public void setAll(Integer all) {
 		All = all;
@@ -397,7 +421,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param claim the claim to set
+	 * @param claim
+	 *            the claim to set
 	 */
 	public void setClaim(Integer claim) {
 		this.claim = claim;
@@ -411,7 +436,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param hospitalization the hospitalization to set
+	 * @param hospitalization
+	 *            the hospitalization to set
 	 */
 	public void setHospitalization(Integer hospitalization) {
 		this.hospitalization = hospitalization;
@@ -425,7 +451,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param acceptableClaim the acceptableClaim to set
+	 * @param acceptableClaim
+	 *            the acceptableClaim to set
 	 */
 	public void setAcceptableClaim(Integer acceptableClaim) {
 		this.acceptableClaim = acceptableClaim;
@@ -439,7 +466,8 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param unacceptableClaim the unacceptableClaim to set
+	 * @param unacceptableClaim
+	 *            the unacceptableClaim to set
 	 */
 	public void setUnacceptableClaim(Integer unacceptableClaim) {
 		this.unacceptableClaim = unacceptableClaim;
@@ -453,12 +481,11 @@ public class ConfigProperties {
 	}
 
 	/**
-	 * @param queryTypeInsertLevel2 the queryTypeInsertLevel2 to set
+	 * @param queryTypeInsertLevel2
+	 *            the queryTypeInsertLevel2 to set
 	 */
 	public void setQueryTypeInsertLevel2(String queryTypeInsertLevel2) {
 		this.queryTypeInsertLevel2 = queryTypeInsertLevel2;
 	}
-	 
-	 
-	 
+
 }

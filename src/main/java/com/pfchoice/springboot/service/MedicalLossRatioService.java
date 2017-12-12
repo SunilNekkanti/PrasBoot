@@ -18,5 +18,4 @@ public interface MedicalLossRatioService {
 
 	List<MedicalLossRatio> findAllMedicalLossRatios(Specification<MedicalLossRatio> spec);
 
-
 }

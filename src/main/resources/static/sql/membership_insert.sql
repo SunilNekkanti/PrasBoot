@@ -240,7 +240,8 @@ update membership_activity_month mam
 join 
 (select  mi.mbr_id from  membership_insurance mi 
 left join temp_membership tm  on  mi.SRC_SYS_MBR_NBR=tm.SBSB_ID  
-where tm.SBSB_ID  is null and mi.ins_id=:insId 
+where  -- tm.SBSB_ID  is null and 
+  mi.ins_id=:insId 
 )missingRoster  on  max_mam.mbr_id=missingRoster.mbr_id  
 set roster_flag='Y';
 

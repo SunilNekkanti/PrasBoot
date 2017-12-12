@@ -32,22 +32,24 @@ public class HedisMeasureRuleController {
 	public static final Logger logger = LoggerFactory.getLogger(HedisMeasureRuleController.class);
 
 	@Autowired
-	HedisMeasureRuleService hedisMeasureRuleService; // Service which will do all data
-										// retrieval/manipulation work
+	HedisMeasureRuleService hedisMeasureRuleService; // Service which will do
+														// all data
+	// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// Problems---------------------------------------------
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasureRule/", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllProblems(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<?> listAllProblems(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "insId", required = false) Integer insId,
 			@RequestParam(value = "effectiveYear", required = false) Integer effectiveYear) {
 
 		Specification<HedisMeasureRule> spec = new HedisMeasureRuleSpecifications(search, insId, effectiveYear);
-		Page<HedisMeasureRule> hedisMeasureRules = hedisMeasureRuleService.findAllHedisMeasureRulesByPage(spec, pageRequest);
-		
+		Page<HedisMeasureRule> hedisMeasureRules = hedisMeasureRuleService.findAllHedisMeasureRulesByPage(spec,
+				pageRequest);
+
 		if (hedisMeasureRules.getTotalElements() == 0) {
 			System.out.println("no hedisMeasureRules");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -75,14 +77,14 @@ public class HedisMeasureRuleController {
 	// HedisMeasureRule-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hedisMeasureRule/", method = RequestMethod.POST)
-	public ResponseEntity<?> createProblem(@RequestBody HedisMeasureRule hedisMeasureRule, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<?> createProblem(@RequestBody HedisMeasureRule hedisMeasureRule,
+			UriComponentsBuilder ucBuilder) {
 		logger.info("Creating HedisMeasureRule : {}", hedisMeasureRule);
 
 		if (hedisMeasureRuleService.isHedisMeasureRuleExist(hedisMeasureRule)) {
 			logger.error("Unable to create. A HedisMeasureRule with name {} already exist", hedisMeasureRule.getId());
-			return new ResponseEntity(
-					new CustomErrorType(
-							"Unable to create. A HedisMeasureRule with name " + hedisMeasureRule.getId() + " already exist."),
+			return new ResponseEntity(new CustomErrorType(
+					"Unable to create. A HedisMeasureRule with name " + hedisMeasureRule.getId() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
 		hedisMeasureRule.setCreatedBy("sarath");
@@ -90,7 +92,8 @@ public class HedisMeasureRuleController {
 		hedisMeasureRuleService.saveHedisMeasureRule(hedisMeasureRule);
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/hedisMeasureRule/{id}").buildAndExpand(hedisMeasureRule.getId()).toUri());
+		headers.setLocation(
+				ucBuilder.path("/api/hedisMeasureRule/{id}").buildAndExpand(hedisMeasureRule.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
@@ -105,7 +108,8 @@ public class HedisMeasureRuleController {
 
 		if (currentProblem == null) {
 			logger.error("Unable to update. HedisMeasureRule with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. HedisMeasureRule with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. HedisMeasureRule with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -129,7 +133,8 @@ public class HedisMeasureRuleController {
 		HedisMeasureRule hedisMeasureRule = hedisMeasureRuleService.findById(id);
 		if (hedisMeasureRule == null) {
 			logger.error("Unable to delete. HedisMeasureRule with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. HedisMeasureRule with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. HedisMeasureRule with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		hedisMeasureRuleService.deleteHedisMeasureRuleById(id);

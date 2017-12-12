@@ -93,14 +93,15 @@ public class JpaConfiguration {
 	 */
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
-		properties.put("hibernate.dialect",
-				environment.getRequiredProperty("datasource.pras.hibernate.dialect"));
+		properties.put("hibernate.dialect", environment.getRequiredProperty("datasource.pras.hibernate.dialect"));
 		properties.put("hibernate.hbm2ddl.auto",
 				environment.getRequiredProperty("datasource.pras.hibernate.hbm2ddl.method"));
-		properties.put("hibernate.show_sql",
-				environment.getRequiredProperty("datasource.pras.hibernate.show_sql"));
-		properties.put("hibernate.format_sql",
-				environment.getRequiredProperty("datasource.pras.hibernate.format_sql"));
+		properties.put("hibernate.show_sql", environment.getRequiredProperty("datasource.pras.hibernate.show_sql"));
+		properties.put("hibernate.format_sql", environment.getRequiredProperty("datasource.pras.hibernate.format_sql"));
+		properties.put("hibernate.hikari.idleTimeout",
+				environment.getRequiredProperty("datasource.pras.hibernate.hikari.idleTimeout"));
+		properties.put("hibernate.hikari.maxLifeTime",
+				environment.getRequiredProperty("datasource.pras.hibernate.hikari.maxLifeTime"));
 		if (StringUtils.isNotEmpty(environment.getRequiredProperty("datasource.pras.defaultSchema"))) {
 			properties.put("hibernate.default_schema", environment.getRequiredProperty("datasource.v.defaultSchema"));
 		}

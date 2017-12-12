@@ -27,7 +27,7 @@ public class HedisMeasureServiceImpl implements HedisMeasureService {
 	public HedisMeasure findByCode(String code) {
 		return hedisMeasureRepository.findByCode(code);
 	}
-	
+
 	public void saveHedisMeasure(HedisMeasure hedisMeasure) {
 		hedisMeasureRepository.save(hedisMeasure);
 	}

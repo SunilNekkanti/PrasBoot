@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.controller('HedisMeasureGroupController',
     ['HedisMeasureGroupService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( HedisMeasureGroupService,   $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
 
@@ -130,6 +131,7 @@ app.controller('HedisMeasureGroupController',
                         self.hedisMeasureGroups = getAllHedisMeasureGroups();
                         self.hedisMeasureGroup={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating HedisMeasureGroup');
@@ -150,7 +152,7 @@ app.controller('HedisMeasureGroupController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("hedisMeasureGroup");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating HedisMeasureGroup');
@@ -209,12 +211,12 @@ app.controller('HedisMeasureGroupController',
             self.errorMessage='';
             self.hedisMeasureGroup={};
             self.display = false;
-            $state.go('hedisGroup');
+            $state.go('main.hedisGroup',{},{location: true,reload: false,notify: false});
         }
         
         function hedisMeasureGroupEdit(id) {
         	var params = {'hedisGroupDisplay':true};
-			var trans =  $state.go('hedisGroup.edit',params).transition;
+			var trans =  $state.go('main.hedisGroup.edit',params).transition;
 			trans.onSuccess({}, function() { editHedisMeasureGroup(id);  }, { priority: -1 });
 			
         }
@@ -230,3 +232,4 @@ app.controller('HedisMeasureGroupController',
     
 
     ]);
+   })();

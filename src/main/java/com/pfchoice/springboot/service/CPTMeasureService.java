@@ -13,7 +13,7 @@ public interface CPTMeasureService {
 	CPTMeasure findById(Integer id);
 
 	CPTMeasure findByCode(String code);
-	
+
 	CPTMeasure findByDescription(String description);
 
 	void saveCPTMeasure(CPTMeasure cptMeasure);

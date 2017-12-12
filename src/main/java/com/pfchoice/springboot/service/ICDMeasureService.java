@@ -13,7 +13,7 @@ public interface ICDMeasureService {
 	ICDMeasure findById(Integer id);
 
 	ICDMeasure findByCode(String code);
-	
+
 	void saveICDMeasure(ICDMeasure icdMeasure);
 
 	void updateICDMeasure(ICDMeasure icdMeasure);

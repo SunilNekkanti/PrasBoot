@@ -53,7 +53,7 @@ public class InsuranceServiceImpl implements InsuranceService {
 	}
 
 	public boolean isInsuranceExist(Insurance insurance) {
-		return findById(insurance.getId()) != null;
+		return findByName(insurance.getName()) != null;
 	}
 
 }

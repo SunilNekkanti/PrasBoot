@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('HedisMeasureService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -132,3 +134,4 @@ app.service('HedisMeasureService',
 
         }
     ]);
+   })();

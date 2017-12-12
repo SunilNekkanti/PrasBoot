@@ -26,26 +26,21 @@ public class EmailTemplatePlaceholder extends RecordDetails implements Serializa
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@Column(name = "sql_script", length = 65535, columnDefinition = "TEXT")
 	private String sqlScript;
 
-	
 	@Column(name = "attachment_flag", insertable = false)
 	private Character attachmentFlag;
 
-	
 	@Column(name = "order_no")
 	private Integer orderNo;
 

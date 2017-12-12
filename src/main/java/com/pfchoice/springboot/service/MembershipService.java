@@ -14,9 +14,9 @@ public interface MembershipService {
 	Membership findById(Integer id);
 
 	Membership findByFirstName(String name);
-	
+
 	Membership findByLastName(String name);
-	
+
 	Membership findByDob(Date dob);
 
 	void saveMembership(Membership membership);
@@ -32,9 +32,9 @@ public interface MembershipService {
 	Page<Membership> findAllMembershipsByPage(Specification<Membership> spec, Pageable pageable);
 
 	boolean isMembershipExist(Membership membership);
-	
-	int  unloadCSV2Table();
-	
+
+	int unloadCSV2Table();
+
 	boolean isDataExistsInTable(String tableName);
-	
+
 }

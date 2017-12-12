@@ -45,7 +45,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new MailProperties();
 	}
 
-	
 	@Bean
 	public JavaMailSender getMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -81,9 +80,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"ROLE_MANAGER")
 				.anyRequest().authenticated().and().formLogin().loginPage("/").usernameParameter("username")
 				.passwordParameter("password").loginProcessingUrl("/loginform.do").failureUrl("/login?error")
-				.successHandler( customAuthenticationSuccessHandler()).and()
-				.logout().addLogoutHandler(customLogoutHandler())   
-                .logoutRequestMatcher(new AntPathRequestMatcher("/login")).and()
+				.successHandler(customAuthenticationSuccessHandler()).and().logout()
+				.addLogoutHandler(customLogoutHandler()).logoutRequestMatcher(new AntPathRequestMatcher("/login")).and()
 				.exceptionHandling().accessDeniedPage("/403").and()
 
 				.csrf().disable()
@@ -105,14 +103,14 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(authenticationService).passwordEncoder(encoder);
 		auth.userDetailsService(authenticationService);
 	}
-	
+
 	@Bean
 	public CustomLogoutHandler customLogoutHandler() {
-	    return new CustomLogoutHandler();
+		return new CustomLogoutHandler();
 	}
-	
+
 	@Bean
 	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-	    return new CustomAuthenticationSuccessHandler();
+		return new CustomAuthenticationSuccessHandler();
 	}
 }

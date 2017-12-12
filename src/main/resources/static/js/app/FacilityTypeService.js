@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('FacilityTypeService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -136,3 +138,4 @@ app.service('FacilityTypeService',
 
         }
     ]);
+   })();

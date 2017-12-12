@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('MembershipProblemController',
     ['MembershipService','ProviderService',  'InsuranceService','ProblemService', '$scope', '$compile','$state','$stateParams', '$filter' ,'$localStorage','DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, ProviderService,  InsuranceService,ProblemService, $scope,$compile,$state,$stateParams, $filter,$localStorage, DTOptionsBuilder, DTColumnBuilder) {
@@ -178,7 +180,6 @@ app.controller('MembershipProblemController',
 							'data' : result.data.content||{}
 								};
   								
-						console.log('records'+JSON.stringify(records));
 			self.dtOptions = DTOptionsBuilder.newOptions()
 		     							        .withOption('data', records) 
 		     							        .withDisplayLength(20)
@@ -238,7 +239,7 @@ app.controller('MembershipProblemController',
         
         function membershipEdit(id) {
         	var params = {'membershipDisplay':true};
-			var trans =  $state.go('membership.edit',params).transition;
+			var trans =  $state.go('main.membership.edit',params).transition;
 			trans.onSuccess({}, function() { editMembership(id)}, { priority: -1 });
 			
 			
@@ -256,7 +257,7 @@ app.controller('MembershipProblemController',
             self.errorMessage='';
             self.provider={};
             self.display = false;
-            $state.go('membership');
+            $state.go('main.membership');
         }
        
        function getEffectiveYears(){
@@ -277,7 +278,6 @@ app.controller('MembershipProblemController',
        function   problemDisplayHTML(data, type, full, meta ) {
     	  var problemDesc =  meta.col.sTitle;
 		       var  mbrProblemList  =    $filter('filter')(data, { pbm:{description: problemDesc}  });
-		       console.log('mbrProblemList'+JSON.stringify(mbrProblemList));
 		           if(mbrProblemList !== undefined && mbrProblemList.length > 0 )
 		        	   return 'Y';
 		           else 
@@ -296,3 +296,4 @@ app.controller('MembershipProblemController',
     }
 
     ]);
+   })();

@@ -65,12 +65,11 @@ public class Contact extends RecordDetails implements Serializable, FieldHandled
 
 	@Column(name = "city")
 	private String city;
-	
+
 	@LazyToOne(LazyToOneOption.NO_PROXY)
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "ref_cnt_id", referencedColumnName = "ref_cnt_id")
 	private ReferenceContact refContact;
-	
 
 	@LazyToOne(LazyToOneOption.NO_PROXY)
 	@OneToOne(fetch = FetchType.LAZY)
@@ -337,7 +336,8 @@ public class Contact extends RecordDetails implements Serializable, FieldHandled
 	}
 
 	/**
-	 * @param refContact the refContact to set
+	 * @param refContact
+	 *            the refContact to set
 	 */
 	public void setRefContact(ReferenceContact refContact) {
 		this.refContact = refContact;

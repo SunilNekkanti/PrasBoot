@@ -42,7 +42,8 @@ public class MembershipStatusServiceImpl implements MembershipStatusService {
 		leadStatusRepository.deleteAll();
 	}
 
-	public Page<MembershipStatus> findAllMembershipStatusesByPage(Specification<MembershipStatus> spec, Pageable pageable) {
+	public Page<MembershipStatus> findAllMembershipStatusesByPage(Specification<MembershipStatus> spec,
+			Pageable pageable) {
 		return leadStatusRepository.findAll(spec, pageable);
 	}
 

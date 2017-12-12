@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('PlaceOfServiceController',
     ['PlaceOfServiceService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( PlaceOfServiceService,  $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -135,6 +137,7 @@ app.controller('PlaceOfServiceController',
                         self.placeOfServices = getAllPlaceOfServices();
                         self.placeOfService={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating PlaceOfService');
@@ -155,7 +158,7 @@ app.controller('PlaceOfServiceController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("placeOfService");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating PlaceOfService');
@@ -215,12 +218,12 @@ app.controller('PlaceOfServiceController',
             self.errorMessage='';
             self.placeOfService={};
             self.display = false;
-            $state.go('roomType');
+            $state.go('main.roomType', {}, {location: true,reload: false,notify: false});
         }
         
         function placeOfServiceEdit(id) {
         	var params = {'placeOfServiceDisplay':true};
-			var trans =  $state.go('roomType.edit',params).transition;
+			var trans =  $state.go('main.roomType.edit',params).transition;
 			trans.onSuccess({}, function() { editPlaceOfService(id);  }, { priority: -1 });
 			
         }
@@ -236,3 +239,4 @@ app.controller('PlaceOfServiceController',
     
 
     ]);
+   })();

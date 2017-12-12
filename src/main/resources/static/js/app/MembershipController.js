@@ -1,9 +1,12 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('MembershipController',
     ['MembershipService','ProviderService', 'GenderService', 'StateService', 'InsuranceService','MembershipStatusService','$scope', '$compile','$state','$stateParams', '$filter' ,'DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, ProviderService,  GenderService, StateService,InsuranceService,MembershipStatusService, $scope,$compile,$state,$stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
+        $scope.localNavbar = true;
         self.membership = {};
         self.memberships = [];
         self.prvdrs=[];
@@ -53,6 +56,7 @@ app.controller('MembershipController',
         self.dt5InstanceCallback = dt5InstanceCallback;
         self.dt6InstanceCallback = dt6InstanceCallback;
         self.dt7InstanceCallback = dt7InstanceCallback;
+        self.setProviders = setProviders;
         
         function dt1InstanceCallback(dt1Instance) {
 	        self.dt1Instance = dt1Instance;
@@ -404,6 +408,7 @@ app.controller('MembershipController',
                         self.memberships = getAllMemberships();
                         self.membership={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function (errResponse) {
                         console.error('Error while creating Membership');
@@ -425,6 +430,7 @@ app.controller('MembershipController',
                         self.done = true;
                         self.display =false;
                         $scope.myForm.$setPristine();
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating Membership');
@@ -498,7 +504,7 @@ app.controller('MembershipController',
         
         function membershipEdit(id) {
         	var params = {'membershipDisplay':true};
-			var trans =  $state.go('membership.edit',params).transition;
+			var trans =  $state.go('main.membership.edit',params).transition;
 			trans.onSuccess({}, function() { editMembership(id)}, { priority: -1 });
 			
 			
@@ -516,7 +522,7 @@ app.controller('MembershipController',
             self.errorMessage='';
             self.provider={};
             self.display = false;
-            $state.go('membership');
+            $state.go('main.membership', {}, {location: true,reload: false,notify: false});
         }
        
         function addMembership() {
@@ -529,8 +535,13 @@ app.controller('MembershipController',
             self.display =true;
         }
         
+        function setProviders(){
+        	self.providers = $filter('filter')(self.prvdrs, {prvdrRefContracts:[{ins:{id:self.insurance.id}}]},true);
+        	
+        }
     
     }
     
 
     ]);
+   })();

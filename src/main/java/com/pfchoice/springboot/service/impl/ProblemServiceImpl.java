@@ -27,7 +27,7 @@ public class ProblemServiceImpl implements ProblemService {
 	public Problem findByDescription(String description) {
 		return problemRepository.findByDescription(description);
 	}
-	
+
 	public void saveProblem(Problem problem) {
 		problemRepository.save(problem);
 	}

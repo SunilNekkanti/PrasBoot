@@ -13,8 +13,6 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author sarath
@@ -26,30 +24,24 @@ public class ICDMeasure extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "icd_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "code", nullable = false)
 	private String code;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@Transient
 	private String codeAndDescription;
 
-	
 	@Column(name = "hcc")
 	private String hcc;
 
-	
 	@Column(name = "rxhcc")
 	private String rxhcc;
 

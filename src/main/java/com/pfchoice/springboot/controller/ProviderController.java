@@ -1,5 +1,7 @@
 package com.pfchoice.springboot.controller;
 
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.pfchoice.springboot.model.Provider;
+import com.pfchoice.springboot.model.ProviderReferenceContract;
 import com.pfchoice.springboot.repositories.specifications.ProviderSpecifications;
 import com.pfchoice.springboot.service.ProviderService;
 import com.pfchoice.springboot.util.CustomErrorType;
@@ -39,13 +42,12 @@ public class ProviderController {
 	// Providers---------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/provider/", method = RequestMethod.GET)
-	public ResponseEntity<Page<Provider>> listAllProviders(
-			@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<Provider>> listAllProviders(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<Provider> spec  = new ProviderSpecifications(search);
+		Specification<Provider> spec = new ProviderSpecifications(search);
 		Page<Provider> providers = providerService.findAllProvidersByPage(spec, pageRequest);
-		
+
 		if (providers.getTotalElements() == 0) {
 			System.out.println("no providers");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -83,7 +85,6 @@ public class ProviderController {
 							"Unable to create. A Provider with name " + provider.getName() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
-
 		logger.info("Creating Provider : before save");
 		providerService.saveProvider(provider);
 		logger.info("Creating Provider : after save");
@@ -109,8 +110,14 @@ public class ProviderController {
 		}
 
 		currentProvider.setName(provider.getName());
-		currentProvider.getLanguages().clear();
-		currentProvider.setLanguages(provider.getLanguages());
+		// currentProvider.getLanguages().clear();
+		// currentProvider.setLanguages(provider.getLanguages());
+		currentProvider.setCode(provider.getCode());
+		currentProvider.setContact(provider.getContact());
+		currentProvider.getPrvdrRefContracts().clear();
+		Set<ProviderReferenceContract> refContracts = provider.getPrvdrRefContracts();
+		refContracts.forEach(refContract -> refContract.setPrvdr(currentProvider));
+		currentProvider.setPrvdrRefContracts(refContracts);
 
 		providerService.updateProvider(currentProvider);
 		return new ResponseEntity<Provider>(currentProvider, HttpStatus.OK);

@@ -27,7 +27,7 @@ public class HedisMeasureGroupServiceImpl implements HedisMeasureGroupService {
 	public HedisMeasureGroup findByCode(String code) {
 		return hedisMeasureGroupRepository.findByCode(code);
 	}
-	
+
 	public void saveHedisMeasureGroup(HedisMeasureGroup hedisMeasureGroup) {
 		hedisMeasureGroupRepository.save(hedisMeasureGroup);
 	}
@@ -48,7 +48,8 @@ public class HedisMeasureGroupServiceImpl implements HedisMeasureGroupService {
 		return (List<HedisMeasureGroup>) hedisMeasureGroupRepository.findAll();
 	}
 
-	public Page<HedisMeasureGroup> findAllHedisMeasureGroupsByPage(Specification<HedisMeasureGroup> spec, Pageable pageable) {
+	public Page<HedisMeasureGroup> findAllHedisMeasureGroupsByPage(Specification<HedisMeasureGroup> spec,
+			Pageable pageable) {
 		return hedisMeasureGroupRepository.findAll(spec, pageable);
 	}
 

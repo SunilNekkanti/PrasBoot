@@ -10,8 +10,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author SarathGandluri
@@ -23,14 +21,12 @@ public class MembershipStatus extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "code", nullable = false)
 	private Byte id;
 
-	
 	@Column(name = "description")
 	private String description;
 

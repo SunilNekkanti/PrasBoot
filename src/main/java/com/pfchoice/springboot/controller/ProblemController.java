@@ -33,21 +33,21 @@ public class ProblemController {
 
 	@Autowired
 	ProblemService problemService; // Service which will do all data
-										// retrieval/manipulation work
+									// retrieval/manipulation work
 
 	// -------------------Retrieve All
 	// Problems---------------------------------------------
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/problem/", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllProblems(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<?> listAllProblems(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "insId", required = false) Integer insId,
 			@RequestParam(value = "effectiveYear", required = false) Integer effectiveYear) {
 
 		Specification<Problem> spec = new ProblemSpecifications(search, insId, effectiveYear);
 		Page<Problem> problems = problemService.findAllProblemsByPage(spec, pageRequest);
-		
+
 		if (problems.getTotalElements() == 0) {
 			System.out.println("no problems");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -81,8 +81,7 @@ public class ProblemController {
 		if (problemService.isProblemExist(problem)) {
 			logger.error("Unable to create. A Problem with name {} already exist", problem.getId());
 			return new ResponseEntity(
-					new CustomErrorType(
-							"Unable to create. A Problem with name " + problem.getId() + " already exist."),
+					new CustomErrorType("Unable to create. A Problem with name " + problem.getId() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
 		problem.setCreatedBy("sarath");

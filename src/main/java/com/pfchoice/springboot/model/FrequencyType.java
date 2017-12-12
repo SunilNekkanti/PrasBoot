@@ -25,26 +25,22 @@ public class FrequencyType extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "code", nullable = false)
 	private Integer id;
 
-	
 	@NotNull
 	@Size(min = 3, max = 150, message = "The description must be between {min} and {max} characters long")
 	@Column(name = "description")
 	private String description;
 
-	
 	@NotNull
 	@Size(min = 3, max = 50, message = "The Short must be between {min} and {max} characters long")
 	@Column(name = "shortName")
 	private String shortName;
-	
-	
+
 	@Column(name = "noOfDays")
 	private Integer numberOfDays;
 
@@ -107,7 +103,7 @@ public class FrequencyType extends RecordDetails implements Serializable {
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
-	
+
 	/**
 	 * @return the numberOfDays
 	 */
@@ -116,7 +112,8 @@ public class FrequencyType extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param numberOfDays the numberOfDays to set
+	 * @param numberOfDays
+	 *            the numberOfDays to set
 	 */
 	public void setNumberOfDays(Integer numberOfDays) {
 		this.numberOfDays = numberOfDays;

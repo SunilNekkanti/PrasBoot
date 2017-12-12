@@ -24,19 +24,16 @@ public class AttPhysician extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "att_phy_id", nullable = false)
 	private Integer id;
 
-	
 	@Size(min = 1, max = 20, message = "The code must be between {min} and {max} characters long")
 	@Column(name = "code")
 	private String code;
 
-	
 	@Size(min = 1, max = 100, message = "The name must be between {min} and {max} characters long")
 	@Column(name = "name")
 	private String name;

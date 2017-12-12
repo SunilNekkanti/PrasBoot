@@ -1,18 +1,21 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 var loginapp = angular.module('login-app', ['ui.bootstrap','ui.router','ngStorage','datatables','ngAnimate', 'ngSanitize']);
 
 loginapp.controller('LoginController',
-    [ '$scope', '$window', function(  $scope, $window) {
+    [ '$scope', '$window', ' $rootScope',function(  $scope, $window, $rootScope) {
 
     	 $window.localStorage.clear();
          
         var self = this;
         self.login = {};
         self.headerDisplay = false;
+        $rootScope.displayNavbar =false;
         self.display =false;
         self.submit = submit;
         self.reset = reset;
+        
 
         self.errorMessage = '';
 
@@ -42,3 +45,4 @@ loginapp.controller('LoginController',
 
 
     ]);
+   })();

@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.controller('AttPhysicianController',
     ['AttPhysicianService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( AttPhysicianService,  $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
 
@@ -154,7 +155,7 @@ app.controller('AttPhysicianController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("attPhysician");
+                        $state.go("main.attPhysician");
                     },
                     function(errResponse){
                         console.error('Error while updating AttPhysician');
@@ -213,13 +214,13 @@ app.controller('AttPhysicianController',
             self.successMessage='';
             self.errorMessage='';
             self.attPhysician={};
-            self.display = false;
-            $state.go('attPhysician');
+            self.display = false;     
+            $state.go('main.attPhysician', {}, {reload: false});
         }
         
         function attPhysicianEdit(id) {
         	var params = {'attPhysicianDisplay':true};
-			var trans =  $state.go('attPhysician.edit',params).transition;
+			var trans =  $state.go('main.attPhysician.edit',params).transition;
 			trans.onSuccess({}, function() { editAttPhysician(id);  }, { priority: -1 });
 			
         }
@@ -230,8 +231,9 @@ app.controller('AttPhysicianController',
             self.display =true;
         }
         
-    
     }
     
 
     ]);
+    
+    })();

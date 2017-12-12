@@ -19,8 +19,6 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author SarathGandluri
@@ -32,14 +30,12 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_act_mnth_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "activity_month")
 	private Integer activityMonth;
 
@@ -48,35 +44,30 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	@JoinColumn(name = "mbr_id", nullable = false, referencedColumnName = "mbr_id")
 	private Membership mbr;
 
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "prvdr_id", nullable = false, referencedColumnName = "prvdr_id")
 	private Provider prvdr;
 
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", nullable = false, referencedColumnName = "insurance_id")
 	private Insurance ins;
 
-	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "file_id", nullable = false, referencedColumnName = "file_id")
 	private File file;
 
-	
 	@Column(name = "is_roster")
 	private Character isRoster;
-	
-	
+
 	@Column(name = "is_cap")
 	private Character isCap;
-	
+
 	@Transient
 	private String mbrFullName;
-	
+
 	@Transient
 	private String prvdrName;
-	
+
 	/**
 	 * 
 	 */
@@ -213,11 +204,12 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	 * @return the mbrFullName
 	 */
 	public String getMbrFullName() {
-		return mbr.getLastName()+','+ mbr.getFirstName();
+		return mbr.getLastName() + ',' + mbr.getFirstName();
 	}
 
 	/**
-	 * @param mbrFullName the mbrFullName to set
+	 * @param mbrFullName
+	 *            the mbrFullName to set
 	 */
 	public void setMbrFullName(String mbrFullName) {
 		this.mbrFullName = mbrFullName;
@@ -231,7 +223,8 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	}
 
 	/**
-	 * @param prvdrName the prvdrName to set
+	 * @param prvdrName
+	 *            the prvdrName to set
 	 */
 	public void setPrvdrName(String prvdrName) {
 		this.prvdrName = prvdrName;

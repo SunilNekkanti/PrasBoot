@@ -52,11 +52,11 @@ public class MembershipClaimServiceImpl implements MembershipClaimService {
 		return findById(membershipClaim.getId()) != null;
 	}
 
-	public List<String> findAllMembershipClaimReportMonths(){
+	public List<String> findAllMembershipClaimReportMonths() {
 		return membershipClaimRepository.findAllMembershipClaimReportMonths();
 	}
 
-	public List<String> findAllMembershipClaimRiskCategories(){
+	public List<String> findAllMembershipClaimRiskCategories() {
 		return membershipClaimRepository.findAllMembershipClaimRiskCategories();
 	}
 }

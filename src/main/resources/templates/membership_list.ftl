@@ -21,7 +21,7 @@
             <div class="col-sm-3">
               <div class="form-group col-sm-12">
                 <label for="plan">Provider</label>
-                <select class=" form-control" ng-model="ctrl.prvdr" ng-options="provider.name for provider in ctrl.prvdrs | filter:{refInsContracts:[{ins:{id:ctrl.insurance.id}}]} | orderBy:'name' track by provider.name"> </select>
+                <select class=" form-control" ng-model="ctrl.prvdr" ng-options="provider.name for provider in ctrl.prvdrs  | providerFilter: ctrl.insurance.id | orderBy:'name' track by provider.name"> </select>
               </div>
             </div>
             <div class=" col-sm-6">

@@ -16,7 +16,6 @@ public class LoginForm {
 	private Integer userId;
 	private Integer insuranceId;
 	private Integer effectiveYear;
-	
 
 	/**
 	 * @return the username
@@ -101,7 +100,8 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param insuranceId the insuranceId to set
+	 * @param insuranceId
+	 *            the insuranceId to set
 	 */
 	public void setInsuranceId(Integer insuranceId) {
 		this.insuranceId = insuranceId;
@@ -115,7 +115,8 @@ public class LoginForm {
 	}
 
 	/**
-	 * @param effectiveYear the effectiveYear to set
+	 * @param effectiveYear
+	 *            the effectiveYear to set
 	 */
 	public void setEffectiveYear(Integer effectiveYear) {
 		this.effectiveYear = effectiveYear;

@@ -43,12 +43,12 @@ public class UserController {
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/user/", method = RequestMethod.GET)
-	public ResponseEntity<Page<User>> listAllUsers(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<User>> listAllUsers(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<User> spec = new UserSpecifications(search);
 		Page<User> users = userService.findAllUsersByPage(spec, pageRequest);
-		
+
 		if (users.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,7 +58,7 @@ public class UserController {
 
 	// -------------------Retrieve Single
 	// User------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@PathVariable("id") int id) {
 		logger.info("Fetching User with id {}", id);

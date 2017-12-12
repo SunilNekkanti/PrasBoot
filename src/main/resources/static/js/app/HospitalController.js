@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('HospitalController',
     ['HospitalService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( HospitalService,  $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -214,12 +216,12 @@ app.controller('HospitalController',
             self.errorMessage='';
             self.hospital={};
             self.display = false;
-            $state.go('hospital');
+            $state.go('main.hospital');
         }
         
         function hospitalEdit(id) {
         	var params = {'hospitalDisplay':true};
-			var trans =  $state.go('hospital.edit',params).transition;
+			var trans =  $state.go('main.hospital.edit',params).transition;
 			trans.onSuccess({}, function() { editHospital(id);  }, { priority: -1 });
 			
         }
@@ -235,3 +237,4 @@ app.controller('HospitalController',
     
 
     ]);
+   })();

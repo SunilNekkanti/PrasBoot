@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('UserService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -58,7 +60,6 @@ app.service('UserService',
                     .then(
                         function (response) {
                             console.log('Fetched successfully  users');
-                            console.log('user list'+JSON.stringify(response));
                             if (localStorage.getItem("users") === null) {
                             $localStorage.users = response.data.content;
                             }else{
@@ -174,3 +175,4 @@ app.service('UserService',
 
         }
     ]);
+   })();

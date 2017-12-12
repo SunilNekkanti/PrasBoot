@@ -36,19 +36,19 @@ public class HospitalController {
 
 	@Autowired
 	HospitalService hospitalService; // Service which will do all data
-								// retrieval/manipulation work
+	// retrieval/manipulation work
 
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	// -------------------Retrieve Hospitals as per page request
 	// ---------------------------------------------
 
 	@RequestMapping(value = "/hospital/", method = RequestMethod.GET)
-	public ResponseEntity<Page<Hospital>> listAllHospitals(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<Hospital>> listAllHospitals(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Specification<Hospital> spec = new HospitalSpecifications(search);
 		Page<Hospital> hospitals = hospitalService.findAllHospitalsByPage(spec, pageRequest);
-		
+
 		if (hospitals.getTotalElements() == 0) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
@@ -58,14 +58,15 @@ public class HospitalController {
 
 	// -------------------Retrieve Single
 	// Hospital------------------------------------------
-	@Secured({ "ROLE_ADMIN",  "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/hospital/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getHospital(@PathVariable("id") int id) {
 		logger.info("Fetching Hospital with id {}", id);
 		Hospital hospital = hospitalService.findById(id);
 		if (hospital == null) {
 			logger.error("Hospital with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Hospital with id " + id + " not found"), HttpStatus.NOT_FOUND);
+			return new ResponseEntity(new CustomErrorType("Hospital with id " + id + " not found"),
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Hospital>(hospital, HttpStatus.OK);
 	}
@@ -81,10 +82,12 @@ public class HospitalController {
 		if (hospitalService.isHospitalExist(hospital)) {
 			logger.error("Unable to create. A Hospital with name {} already exist", hospital.getName());
 			return new ResponseEntity(
-					new CustomErrorType("Unable to create. A Hospital with name " + hospital.getName() + " already exist."),
+					new CustomErrorType(
+							"Unable to create. A Hospital with name " + hospital.getName() + " already exist."),
 					HttpStatus.CONFLICT);
 		}
-		// logger.info(" hospital.getRoles().size() :{} ", hospital.getRoles().size());
+		// logger.info(" hospital.getRoles().size() :{} ",
+		// hospital.getRoles().size());
 		hospital.setCreatedBy(username);
 		hospital.setUpdatedBy(username);
 		hospitalService.saveHospital(hospital);

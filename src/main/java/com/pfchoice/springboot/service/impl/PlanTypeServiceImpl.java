@@ -51,7 +51,7 @@ public class PlanTypeServiceImpl implements PlanTypeService {
 	public Page<PlanType> findAllPlanTypesByPage(Specification<PlanType> spec, Pageable pageable) {
 		return planTypeRepository.findAll(spec, pageable);
 	}
-	
+
 	public boolean isPlanTypeExist(PlanType planType) {
 		return findByDescription(planType.getDescription()) != null;
 	}

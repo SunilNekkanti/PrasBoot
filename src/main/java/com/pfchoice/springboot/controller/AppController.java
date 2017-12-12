@@ -37,7 +37,7 @@ public class AppController {
 	 */
 	@RequestMapping(value = { "/", "/login" })
 	String login(ModelMap modal) {
-		modal.addAttribute("title", "CRUD Example");
+		modal.addAttribute("title", "PRAS");
 		LoginForm loginForm = new LoginForm();
 		modal.addAttribute("loginForm", loginForm);
 		return "login";
@@ -49,12 +49,12 @@ public class AppController {
 	 */
 	@RequestMapping("/home")
 	String home(HttpSession session, ModelMap modal, @ModelAttribute("username") String username) {
-		LoginForm loginForm ;
+		LoginForm loginForm;
 		if (!modal.containsAttribute("username")) {
 			modal.addAttribute("username", username);
 		}
 		CurrentUser user = currentUserService.findByCurrentUsername(username);
-		
+
 		if (user != null && !modal.containsAttribute("userId")) {
 			loginForm = new LoginForm();
 			loginForm.setUsername(username);
@@ -66,12 +66,11 @@ public class AppController {
 			loginForm.setRoleName(role.getRole());
 			loginForm.setRoleId(role.getId());
 			loginForm.setEffectiveYear(user.getEffectiveYear());
-			if(user.getInsurance() != null)
+			if (user.getInsurance() != null)
 				loginForm.setInsuranceId(user.getInsurance().getId());
 			modal.addAttribute("loginUser", loginForm);
 			session.setAttribute("loginUser", loginForm);
 		}
-		
 
 		return "home";
 	}
@@ -113,10 +112,10 @@ public class AppController {
 			new SecurityContextLogoutHandler().logout(request, response, null);
 		}
 		new CookieClearingLogoutHandler(AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY)
-        .logout(request, response, null);
+				.logout(request, response, null);
 
 		return "redirect:/login";// You can redirect wherever you want,
-										// but generally it's a good practice to
-										// show login screen again.
+									// but generally it's a good practice to
+									// show login screen again.
 	}
 }

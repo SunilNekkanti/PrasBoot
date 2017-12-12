@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.controller('MembershipProblemController',
     ['MembershipService','ProviderService',  'InsuranceService','ProblemService', '$scope', '$compile','$state','$stateParams', '$filter' ,'$localStorage','DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, ProviderService,  InsuranceService,ProblemService, $scope,$compile,$state,$stateParams, $filter,$localStorage, DTOptionsBuilder, DTColumnBuilder) {
 
@@ -161,7 +162,7 @@ app.controller('MembershipProblemController',
         
         function membershipEdit(id) {
         	var params = {'membershipDisplay':true};
-			var trans =  $state.go('membership.edit',params).transition;
+			var trans =  $state.go('main.membership.edit',params).transition;
 			trans.onSuccess({}, function() { editMembership(id)}, { priority: -1 });
 			
 			
@@ -179,7 +180,7 @@ app.controller('MembershipProblemController',
             self.errorMessage='';
             self.provider={};
             self.display = false;
-            $state.go('membership');
+            $state.go('main.membership');
         }
        
        function getEffectiveYears(){
@@ -232,3 +233,4 @@ app.controller('MembershipProblemController',
     }
 
     ]);
+   })();

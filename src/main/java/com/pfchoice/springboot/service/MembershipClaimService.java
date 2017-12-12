@@ -25,8 +25,8 @@ public interface MembershipClaimService {
 	Page<MembershipClaim> findAllMembershipClaimsByPage(Specification<MembershipClaim> spec, Pageable pageable);
 
 	boolean isMembershipClaimExist(MembershipClaim membership);
-	
+
 	List<String> findAllMembershipClaimReportMonths();
-	
+
 	List<String> findAllMembershipClaimRiskCategories();
 }

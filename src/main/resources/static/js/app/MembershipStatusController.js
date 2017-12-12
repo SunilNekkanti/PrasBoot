@@ -1,5 +1,6 @@
+(function(){
 'use strict';
-
+var app = angular.module('my-app');
 app.controller('MembershipStatusController',
     ['MembershipStatusService','$scope', '$compile','$state','DTOptionsBuilder', 'DTColumnBuilder', function( MembershipStatusService,  $scope,$compile, $state, DTOptionsBuilder, DTColumnBuilder) {
 
@@ -188,7 +189,7 @@ app.controller('MembershipStatusController',
             self.errorMessage='';
             self.membershipStatus={};
             self.display = false;
-            $state.go('membershipStatus');
+            $state.go('main.membershipStatus');
         }
         
         function addMembershipStatus() {
@@ -202,3 +203,4 @@ app.controller('MembershipStatusController',
     
 
     ]);
+   })();

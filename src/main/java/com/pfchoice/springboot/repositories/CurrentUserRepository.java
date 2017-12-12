@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.pfchoice.springboot.model.CurrentUser;
 
 @Repository
-public interface CurrentUserRepository extends PagingAndSortingRepository<CurrentUser, Integer>, JpaSpecificationExecutor<CurrentUser> {
+public interface CurrentUserRepository
+		extends PagingAndSortingRepository<CurrentUser, Integer>, JpaSpecificationExecutor<CurrentUser> {
 
 	CurrentUser findByUsername(String name);
 

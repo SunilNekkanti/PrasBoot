@@ -22,12 +22,13 @@ public interface MembershipHedisMeasureService {
 
 	List<MembershipHedisMeasure> findAllMembershipHedisMeasures();
 
-	Page<MembershipHedisMeasure> findAllMembershipHedisMeasuresByPage(Specification<MembershipHedisMeasure> spec, Pageable pageable);
+	Page<MembershipHedisMeasure> findAllMembershipHedisMeasuresByPage(Specification<MembershipHedisMeasure> spec,
+			Pageable pageable);
 
 	boolean isMembershipHedisMeasureExist(MembershipHedisMeasure membershipHedisMeasure);
-	
-	int  unloadCSV2Table();
-	
+
+	int unloadCSV2Table();
+
 	boolean isDataExistsInTable(String tableName);
-	
+
 }

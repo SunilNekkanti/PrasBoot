@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('MembershipClaimsController',
     ['MembershipClaimsService','ProviderService',  'InsuranceService', 'RiskReconService', 'MedicalLossRatioService','$scope', '$compile','$state','$stateParams', '$filter' ,'$localStorage','DTOptionsBuilder', 'DTColumnBuilder', function(MembershipClaimsService, ProviderService,  InsuranceService, RiskReconService,MedicalLossRatioService, $scope,$compile,$state,$stateParams, $filter,$localStorage, DTOptionsBuilder, DTColumnBuilder) {
@@ -58,6 +60,7 @@ app.controller('MembershipClaimsController',
         self.dt1Instance = {};
         self.dt2Instance = {};
         self.dt3Instance = {};
+        self.maxReportMonth = (self.reportMonths && self.reportMonths.length >0)? self.reportMonths[0]:null;
         
         self.dtInstanceCallback = dtInstanceCallback;
         self.dt1InstanceCallback = dt1InstanceCallback;
@@ -115,7 +118,7 @@ app.controller('MembershipClaimsController',
     			// Then just call your service to get the
     			// records from server side
     			MembershipClaimsService
-    					.loadMembershipClaims( insId, prvdrIdss, mbrId ,claimTypess,categoriess, self.selectedReportMonth, self.activityMonth,capss,rosterss ,self.levelNo)
+    					.loadMembershipClaims( insId, prvdrIdss, mbrId ,claimTypess,categoriess, self.selectedReportMonth, self.activityMonth,capss,rosterss ,self.levelNo,self.maxReportMonth)
     					.then(
     							function(result) {
     								self.finalData[self.levelNo -1] = [];
@@ -250,7 +253,7 @@ app.controller('MembershipClaimsController',
         	self.selectedProviders = [];
             self.selectedClaimss = [];
              
-        	self.providers =   $filter('filter')(self.prvdrs, {refInsContracts:[{ins:{id:self.insurance.id}}]});
+        	self.providers =   $filter('providerFilter')(self.prvdrs, self.insurance.id);
         	self.providers =   $filter('orderBy')(self.providers, 'name');
         	
         	self.Claimss =   $filter('filter')(self.pbms, {insId:{id:self.insurance.id}});
@@ -268,7 +271,7 @@ app.controller('MembershipClaimsController',
         
         function membershipEdit(id) {
         	var params = {'membershipDisplay':true};
-			var trans =  $state.go('membership.edit',params).transition;
+			var trans =  $state.go('main.membership.edit',params).transition;
 			trans.onSuccess({}, function() { editMembership(id)}, { priority: -1 });
 			
 			
@@ -294,7 +297,7 @@ app.controller('MembershipClaimsController',
             self.errorMessage='';
             self.provider={};
             self.display = false;
-            $state.go('membership');
+            $state.go('main.membership');
         }
        
        function getAllRiskCategories() {
@@ -382,3 +385,4 @@ app.controller('MembershipClaimsController',
     }
 
     ]);
+   })();

@@ -15,4 +15,3 @@ public interface MembershipFollowupRepository extends JpaRepository<MembershipFo
 	@Query("select mf from membership_followup mf where mbr_id= :mbrId order by created_date desc")
 	public List<MembershipFollowup> findAllMembershipFollowupsByMbrId(@Param("mbrId") Integer mbrId);
 }
-

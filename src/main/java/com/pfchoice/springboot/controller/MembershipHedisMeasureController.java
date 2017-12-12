@@ -37,33 +37,36 @@ public class MembershipHedisMeasureController {
 	public static final Logger logger = LoggerFactory.getLogger(MembershipHedisMeasureController.class);
 
 	@Autowired
-	MembershipHedisMeasureService membershipHedisMeasureService; // Service which will do all data
-										// retrieval/manipulation work
+	MembershipHedisMeasureService membershipHedisMeasureService; // Service
+																	// which
+																	// will do
+																	// all data
+	// retrieval/manipulation work
 
 	@Autowired
 	FileTypeService fileTypeService;
-	
+
 	@Autowired
 	FileService fileService;
-	
+
 	@Autowired
 	PrasUtil prasUtil;
-	
-	
+
 	// -------------------Retrieve All
 	// Memberships---------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/membershipHedisMeasure/", method = RequestMethod.GET)
 	public ResponseEntity<Page<MembershipHedisMeasure>> listAllMemberships(
-			@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+			@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "mbrId", required = false) Integer mbrId,
 			@RequestParam(value = "hedisRules", required = false) List<Integer> hedisRules,
 			@RequestParam(value = "search", required = false) String search) {
 
-		
-		Specification<MembershipHedisMeasure> spec   = new MembershipHedisMeasureSpecifications(search, mbrId, hedisRules);
-		Page<MembershipHedisMeasure> membershipHedisMeasures = membershipHedisMeasureService.findAllMembershipHedisMeasuresByPage(spec, pageRequest);
-		
+		Specification<MembershipHedisMeasure> spec = new MembershipHedisMeasureSpecifications(search, mbrId,
+				hedisRules);
+		Page<MembershipHedisMeasure> membershipHedisMeasures = membershipHedisMeasureService
+				.findAllMembershipHedisMeasuresByPage(spec, pageRequest);
+
 		if (membershipHedisMeasures.getTotalElements() == 0) {
 			System.out.println("no memberships");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -91,15 +94,15 @@ public class MembershipHedisMeasureController {
 	// MembershipHedisMeasure-------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/membershipHedisMeasure/", method = RequestMethod.POST)
-	public ResponseEntity<?> createMembership(@RequestBody MembershipHedisMeasure membershipHedisMeasure, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<?> createMembership(@RequestBody MembershipHedisMeasure membershipHedisMeasure,
+			UriComponentsBuilder ucBuilder) {
 		logger.info("Creating MembershipHedisMeasure : {}", membershipHedisMeasure);
 
 		if (membershipHedisMeasureService.isMembershipHedisMeasureExist(membershipHedisMeasure)) {
-			logger.error("Unable to create. A MembershipHedisMeasure with name {} already exist", membershipHedisMeasure.getId());
-			return new ResponseEntity(
-					new CustomErrorType(
-							"Unable to create. A MembershipHedisMeasure with name " + membershipHedisMeasure.getId() + " already exist."),
-					HttpStatus.CONFLICT);
+			logger.error("Unable to create. A MembershipHedisMeasure with name {} already exist",
+					membershipHedisMeasure.getId());
+			return new ResponseEntity(new CustomErrorType("Unable to create. A MembershipHedisMeasure with name "
+					+ membershipHedisMeasure.getId() + " already exist."), HttpStatus.CONFLICT);
 		}
 
 		logger.info("Creating MembershipHedisMeasure : before save");
@@ -107,7 +110,8 @@ public class MembershipHedisMeasureController {
 		logger.info("Creating MembershipHedisMeasure : after save");
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(ucBuilder.path("/api/membershipHedisMeasure/{id}").buildAndExpand(membershipHedisMeasure.getId()).toUri());
+		headers.setLocation(ucBuilder.path("/api/membershipHedisMeasure/{id}")
+				.buildAndExpand(membershipHedisMeasure.getId()).toUri());
 		return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	}
 
@@ -115,14 +119,16 @@ public class MembershipHedisMeasureController {
 	// ------------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/membershipHedisMeasure/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateMembership(@PathVariable("id") int id, @RequestBody MembershipHedisMeasure membershipHedisMeasure) {
+	public ResponseEntity<?> updateMembership(@PathVariable("id") int id,
+			@RequestBody MembershipHedisMeasure membershipHedisMeasure) {
 		logger.info("Updating MembershipHedisMeasure with id {}", id);
 
 		MembershipHedisMeasure currentMembershipHedisMeasure = membershipHedisMeasureService.findById(id);
 
 		if (currentMembershipHedisMeasure == null) {
 			logger.error("Unable to update. MembershipHedisMeasure with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to upate. MembershipHedisMeasure with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to upate. MembershipHedisMeasure with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 
@@ -142,7 +148,8 @@ public class MembershipHedisMeasureController {
 		MembershipHedisMeasure membershipHedisMeasure = membershipHedisMeasureService.findById(id);
 		if (membershipHedisMeasure == null) {
 			logger.error("Unable to delete. MembershipHedisMeasure with id {} not found.", id);
-			return new ResponseEntity(new CustomErrorType("Unable to delete. MembershipHedisMeasure with id " + id + " not found."),
+			return new ResponseEntity(
+					new CustomErrorType("Unable to delete. MembershipHedisMeasure with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
 		membershipHedisMeasureService.deleteMembershipHedisMeasureById(id);
@@ -158,5 +165,5 @@ public class MembershipHedisMeasureController {
 		membershipHedisMeasureService.deleteAllMembershipHedisMeasures();
 		return new ResponseEntity<MembershipHedisMeasure>(HttpStatus.NO_CONTENT);
 	}
-	
+
 }

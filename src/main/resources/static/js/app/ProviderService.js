@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('ProviderService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -15,18 +17,18 @@ app.service('ProviderService',
             };
 
             return factory;
-
+            
             function loadAllProviders() {
                 console.log('Fetching all providers');
                 var deferred = $q.defer();
                 var pageable = {
-                 		 page:0, size:1000
-                 		};
+                		page:0, size:200
+                  		};
 
-                 		var config = {
-                 		 params: pageable,
-                 		 headers : {'Accept' : 'application/json'}
-                 		};
+                  		var config = {
+                  		 params: pageable,
+                  		 headers : {'Accept' : 'application/json'}
+                  		};
                 $http.get(urls.PROVIDER_SERVICE_API, config )
                     .then(
                         function (response) {
@@ -56,6 +58,7 @@ app.service('ProviderService',
                     .then(
                         function (response) {
                             console.log('Fetched successfully  providers');
+                            $localStorage.providers = response.data.content;
                          return     response ;
                         },
                         function (errResponse) {
@@ -87,13 +90,13 @@ app.service('ProviderService',
                 return deferred.promise;
             }
 
-            function createProvider(user) {
+            function createProvider(prvdr) {
                 console.log('Creating Provider');
                 var deferred = $q.defer();
-                $http.post(urls.PROVIDER_SERVICE_API, user)
+                $http.post(urls.PROVIDER_SERVICE_API, prvdr)
                     .then(
                         function (response) {
-                            loadAllProviders();
+                            loadProviders(0,20,'',null);
                             deferred.resolve(response.data);
                         },
                         function (errResponse) {
@@ -104,13 +107,13 @@ app.service('ProviderService',
                 return deferred.promise;
             }
 
-            function updateProvider(user, id) {
+            function updateProvider(prvdr, id) {
                 console.log('Updating Provider with id '+id);
                 var deferred = $q.defer();
-                $http.put(urls.PROVIDER_SERVICE_API + id, user)
+                $http.put(urls.PROVIDER_SERVICE_API + id, prvdr )
                     .then(
                         function (response) {
-                            loadAllProviders();
+                        	 loadProviders(0,20,'',null);
                             deferred.resolve(response.data);
                         },
                         function (errResponse) {
@@ -140,3 +143,4 @@ app.service('ProviderService',
 
         }
     ]);
+   })();

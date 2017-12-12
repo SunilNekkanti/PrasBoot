@@ -23,8 +23,6 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
-
 /**
  *
  * @author SarathGandluri
@@ -32,28 +30,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "problems")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Problem extends RecordDetails implements Serializable  {
+public class Problem extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "pbm_id", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", referencedColumnName = "Insurance_Id")
 	@Where(clause = "active_ind ='Y'")
 	private Insurance insId;
 
-	
 	@Column(name = "effective_year")
 	private Integer effectiveYear;
 
@@ -65,7 +59,6 @@ public class Problem extends RecordDetails implements Serializable  {
 	@Where(clause = "active_ind ='Y'")
 	private Set<ICDMeasure> icdCodes;
 
-	
 	/**
 	 * 
 	 */

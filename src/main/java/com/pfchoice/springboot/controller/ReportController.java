@@ -29,14 +29,13 @@ public class ReportController {
 	public static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
 	@Autowired
-	MedicalLossRatioService medicalLossRatioService; // Service which will do all data
-										// retrieval/manipulation work
+	MedicalLossRatioService medicalLossRatioService; // Service which will do
+														// all data
+	// retrieval/manipulation work
 
 	@Autowired
 	PrasUtil prasUtil;
-	
 
-	
 	// -------------------Retrieve All
 	// MedicalLossRatios---------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
@@ -47,26 +46,26 @@ public class ReportController {
 			@RequestParam(value = "reportMonths", required = true) String reportMonths,
 			@RequestParam(value = "categories", required = true) String categories,
 			@ModelAttribute("roleName") String roleName, @ModelAttribute("username") String username) {
-		
-		final char adminRole = ("ADMIN".equals(roleName))?'Y':'N';
-		logger.info(insId + " prvdrIds  "+  prvdrIds + " reportMonths "+reportMonths+ " categories "+categories+ " "+username + " adminRole"+adminRole);
-		Map<String,Object> params = new HashMap<>();
+
+		final char adminRole = ("ADMIN".equals(roleName)) ? 'Y' : 'N';
+		logger.info(insId + " prvdrIds  " + prvdrIds + " reportMonths " + reportMonths + " categories " + categories
+				+ " " + username + " adminRole" + adminRole);
+		Map<String, Object> params = new HashMap<>();
 		params.put("insId", insId);
 		params.put("prvdrIds", prvdrIds);
 		params.put("repMonths", reportMonths);
 		params.put("categories", categories);
 		params.put("adminRole", adminRole);
-		params.put("tableName", username+"_MedicalLossRatio");
-		
-		
-		List<Object[]> entities =  prasUtil.executeStoredProcedure("mlr_report" , params);
+		params.put("tableName", username + "_MedicalLossRatio");
+
+		List<Object[]> entities = prasUtil.executeStoredProcedure("mlr_report", params);
 
 		if (entities.isEmpty()) {
 			System.out.println("no data in medicalLossRatio");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
 		}
-		logger.info("size"+entities.size());
+		logger.info("size" + entities.size());
 		return new ResponseEntity<List<Object[]>>(entities, HttpStatus.OK);
 	}
 
@@ -88,10 +87,11 @@ public class ReportController {
 			@RequestParam(value = "statuses", required = false) String statuses,
 			@RequestParam(value = "search", required = false) String search,
 			@ModelAttribute("roleName") String roleName, @ModelAttribute("username") String username) {
-		
-		logger.info(insId + " prvdrId  "+  prvdrId + " reportMonth "+reportMonth+ " hedisRules "+hedisRules+ " "+username + " startDate"+startDate+ 
-				   " endDate"+endDate+ " statuses"+statuses+" rosters"+rosters+ " caps"+caps+ "page"+page+ "size"+size);
-		Map<String,Object> params = new HashMap<>();
+
+		logger.info(insId + " prvdrId  " + prvdrId + " reportMonth " + reportMonth + " hedisRules " + hedisRules + " "
+				+ username + " startDate" + startDate + " endDate" + endDate + " statuses" + statuses + " rosters"
+				+ rosters + " caps" + caps + "page" + page + "size" + size);
+		Map<String, Object> params = new HashMap<>();
 		params.put("insId", insId);
 		params.put("prvdrId", prvdrId);
 		params.put("reportMonth", reportMonth);
@@ -104,16 +104,15 @@ public class ReportController {
 		params.put("sSearch", search);
 		params.put("pageSize", size);
 		params.put("pageNo", page);
-		
-		
-		List<Object[]> entities =  prasUtil.executeStoredProcedure("hedis_report" , params);
+
+		List<Object[]> entities = prasUtil.executeStoredProcedure("hedis_report", params);
 
 		if (entities.isEmpty()) {
 			System.out.println("no data in membershipHedisReport");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
 		}
-		logger.info("size"+entities.size());
+		logger.info("size" + entities.size());
 		return new ResponseEntity<List<Object[]>>(entities, HttpStatus.OK);
 	}
 

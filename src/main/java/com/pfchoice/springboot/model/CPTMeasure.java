@@ -24,26 +24,21 @@ public class CPTMeasure extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "cpt_id", nullable = false, unique = true)
 	private Integer id;
 
-	
 	@Column(name = "code", nullable = false)
 	private String code;
 
-	
 	@Column(name = "short_description")
 	private String shortDescription;
 
-	
 	@Transient
 	private String codeAndDescription;
 
-	
 	@Column(name = "description")
 	private String description;
 

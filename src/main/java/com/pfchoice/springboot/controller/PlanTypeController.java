@@ -39,13 +39,12 @@ public class PlanTypeController {
 	// PlanTypes---------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/planType/", method = RequestMethod.GET)
-	public ResponseEntity<Page<PlanType>> listAllPlanTypes(@PageableDefault(page=0 ,size=100) Pageable pageRequest,
+	public ResponseEntity<Page<PlanType>> listAllPlanTypes(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
 			@RequestParam(value = "search", required = false) String search) {
-		
-		Specification<PlanType> spec = new PlanTypeSpecifications( search);
+
+		Specification<PlanType> spec = new PlanTypeSpecifications(search);
 		Page<PlanType> planTypes = planTypeService.findAllPlanTypesByPage(spec, pageRequest);
 
-		
 		if (planTypes.getTotalElements() == 0) {
 			System.out.println("no planTypes");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);

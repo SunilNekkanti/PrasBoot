@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('CPTMeasureController',
     ['CPTMeasureService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( CPTMeasureService,   $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
@@ -135,6 +137,8 @@ app.controller('CPTMeasureController',
                         self.cptMeasures = getAllCPTMeasures();
                         self.cptMeasure={};
                         $scope.myForm.$setPristine();
+                        cancelEdit();
+                        
                     },
                     function (errResponse) {
                         console.error('Error while creating CPTMeasure');
@@ -155,7 +159,7 @@ app.controller('CPTMeasureController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $state.go("cptMeasure");
+                        cancelEdit();
                     },
                     function(errResponse){
                         console.error('Error while updating CPTMeasure');
@@ -214,12 +218,12 @@ app.controller('CPTMeasureController',
             self.errorMessage='';
             self.cptMeasure={};
             self.display = false;
-            $state.go('cpt');
+            $state.go('main.cpt', {}, {location: true,reload: false,notify: false});
         }
         
         function cptMeasureEdit(id) {
         	var params = {'cptMeasureDisplay':true};
-			var trans =  $state.go('cpt.edit',params).transition;
+			var trans =  $state.go('main.cpt.edit',params).transition;
 			trans.onSuccess({}, function() { editCPTMeasure(id);  }, { priority: -1 });
 			
         }
@@ -235,3 +239,4 @@ app.controller('CPTMeasureController',
     
 
     ]);
+   })();

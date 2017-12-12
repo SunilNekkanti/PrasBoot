@@ -1,7 +1,9 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.controller('UserController',
-    ['UserService', 'RoleService', 'LanguageService', 'StateService', 'InsuranceService', 'CountyService', '$scope', '$compile','$location','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( UserService, RoleService, LanguageService, StateService, InsuranceService,CountyService, $scope,$compile,$location,$state, $stateParams, DTOptionsBuilder, DTColumnBuilder) {
+    ['UserService', 'roles', 'languages', 'states', 'insurances',  '$scope', '$compile','$location','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( UserService, roles, languages, states, insurances, $scope,$compile,$location,$state, $stateParams, DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
       //$location.url('/');
@@ -10,11 +12,11 @@ app.controller('UserController',
         self.display =  $stateParams.userDisplay||false;
         self.displayEditButton = false;
         self.submit = submit;
-        self.roles=[];
-        self.languages=[];
+        self.roles=roles;
+        self.languages=languages;
         self.counties=[];
-        self.states = [];
-        self.insurances = [];
+        self.states = states;
+        self.insurances = insurances;
         self.getAllUsers = getAllUsers;
         self.createUser = createUser;
         self.updateUser = updateUser;
@@ -24,17 +26,12 @@ app.controller('UserController',
         self.reset = reset;
         self.userEdit = userEdit;
         self.cancelEdit = cancelEdit;
-        self.getAllLanguages = getAllLanguages;
-        self.getAllCounties = getAllCounties;
-        self.getAllInsurances =getAllInsurances;
-        self.getAllStates = getAllStates;
         self.addUser = addUser;
         self.successMessage = '';
         self.errorMessage = '';
         self.done = false;
         self.onlyIntegers = /^\d+$/;
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
-        self.roles = RoleService.getAllRoles();
         self.dtInstance = {};
         
         self.checkBoxChange = checkBoxChange;
@@ -152,7 +149,7 @@ app.controller('UserController',
                         $scope.myForm.$setPristine();
                         self.dtInstance.reloadData();
                         self.dtInstance.rerender();
-                        $state.go('user');
+                        $state.go('main.user');
                     },
                     function (errResponse) {
                         console.error('Error while creating User');
@@ -175,7 +172,7 @@ app.controller('UserController',
                         self.display =false;
                         self.dtInstance.reloadData();
                         self.dtInstance.rerender();
-                        $state.go('user');
+                        $state.go('main.user');
                     },
                     function(errResponse){
                         console.error('Error while updating User');
@@ -208,38 +205,12 @@ app.controller('UserController',
             return self.users;
         }
 
-        function getAllRoles(){
-            return RoleService.getAllRoles();
-        }
-        
-        function getAllCounties(){
-            return CountyService.getAllCounties();
-        }
-        
-        function getAllLanguages(){
-        	return  LanguageService.getAllLanguages();
-        }
-        
-        function getAllStates() {
-			return StateService.getAllStates();
-		}
-        
-        
-        function getAllInsurances(){
-        	return  InsuranceService.getAllInsurances();
-        }
-        
         function editUser(id) {
             self.successMessage='';
             self.errorMessage='';
             UserService.getUser(id).then(
                 function (user) {
                     self.user = user;
-                    self.roles = getAllRoles();
-                    self.languages = getAllLanguages();
-                    self.counties = getAllCounties();
-                    self.insurances = getAllInsurances();
-                    self.states = getAllStates();
                     self.display = true;
                 },
                 function (errResponse) {
@@ -260,20 +231,15 @@ app.controller('UserController',
             self.errorMessage='';
             self.user={};
             self.display = false;
-            $state.go('user');
+            $state.go('main.user');
         }
        
         function addUser() {
         	var params = {'userDisplay':true};
-			var trans =  $state.go('user.edit',params).transition;
+			var trans =  $state.go('main.user.edit',params).transition;
 			trans.onSuccess({}, function() { 
 				   self.successMessage='';
 		            self.errorMessage='';
-		            self.languages = getAllLanguages();
-		            self.roles = getAllRoles();
-		            self.counties = getAllCounties();
-		            self.insurances = getAllInsurances();
-		            self.states = getAllStates();
 		            self.display =true;
 			}, { priority: -1 });
 			
@@ -283,7 +249,7 @@ app.controller('UserController',
         function userEdit(id){
         	
         	var params = {'userDisplay':true};
-			var trans =  $state.go('user.edit',params).transition;
+			var trans =  $state.go('main.user.edit',params).transition;
 			trans.onSuccess({}, function() { editUser(id); }, { priority: -1 });
 			 
 		}
@@ -291,3 +257,4 @@ app.controller('UserController',
     
 
     ]);
+   })();

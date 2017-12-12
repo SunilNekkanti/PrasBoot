@@ -1,4 +1,6 @@
+(function(){
 'use strict';
+var app = angular.module('my-app');
 
 app.service('MembershipHedisService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -60,3 +62,4 @@ app.service('MembershipHedisService',
            
         }
     ]);
+})();

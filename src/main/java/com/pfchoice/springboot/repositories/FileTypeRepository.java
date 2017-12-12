@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.pfchoice.springboot.model.FileType;
 
 @Repository
-public interface FileTypeRepository extends PagingAndSortingRepository<FileType, Integer>, JpaSpecificationExecutor<FileType> {
+public interface FileTypeRepository
+		extends PagingAndSortingRepository<FileType, Integer>, JpaSpecificationExecutor<FileType> {
 
 	FileType findByDescription(String description);
 

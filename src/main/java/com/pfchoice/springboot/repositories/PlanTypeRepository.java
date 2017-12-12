@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.pfchoice.springboot.model.PlanType;
 
 @Repository
-public interface PlanTypeRepository extends  PagingAndSortingRepository<PlanType, Integer>, JpaSpecificationExecutor<PlanType> {
+public interface PlanTypeRepository
+		extends PagingAndSortingRepository<PlanType, Integer>, JpaSpecificationExecutor<PlanType> {
 
 	public PlanType findById(Integer id);
 

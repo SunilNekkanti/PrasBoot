@@ -23,18 +23,15 @@ public class BillType extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "code", nullable = false)
 	private Integer id;
 
-	
 	@Column(name = "description")
 	private String description;
 
-	
 	@Column(name = "shortName")
 	private String shortName;
 

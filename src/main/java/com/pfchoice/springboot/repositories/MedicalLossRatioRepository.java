@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.pfchoice.springboot.model.MedicalLossRatio;
 
 @Repository
-public interface MedicalLossRatioRepository extends JpaRepository<MedicalLossRatio, Integer> , JpaSpecificationExecutor<MedicalLossRatio>{
-
+public interface MedicalLossRatioRepository
+		extends JpaRepository<MedicalLossRatio, Integer>, JpaSpecificationExecutor<MedicalLossRatio> {
 
 }
