@@ -4,7 +4,7 @@
 
 	<groupId>com.pfchoice.springboot</groupId>
 	<artifactId>Pras</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.34.8</version>
 	<packaging>jar</packaging>
 
 	<name>Pras</name>
@@ -18,6 +18,9 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<h2.version>1.4.187</h2.version>
+		<basedir>C:\Softwares\mavenproject\PrasBoot </basedir>
+		<project.build.directory>C:\Softwares\mavenproject\PrasBoot\target</project.build.directory>
+		<project.build.finalName>Pras-1.0.34.8</project.build.finalName>
 	</properties>
 
 	<dependencies>
@@ -43,12 +46,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-
-		<!-- Add Groovy support -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-groovy-templates</artifactId>
 		</dependency>
 
 		<!-- Add JPA support -->
@@ -123,6 +120,34 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
 				</plugin>
+				<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+                <execution>
+                    <id>prepare</id>
+                    <phase>package</phase>
+                    <configuration>
+                        <tasks>
+                            <mkdir dir="${project.build.directory}/${project.build.finalName}"/>
+                            <copy todir="${project.build.directory}/${project.build.finalName}/" overwrite="false">
+                                <fileset dir="./" includes=".ebextensions/**"/>      
+                            </copy>
+                            <copy todir="${project.build.directory}/${project.build.finalName}/" overwrite="false">
+                                <fileset dir="${project.build.directory}/" includes="*.jar"/>      
+                            </copy>
+                            
+                            <zip compress="false" destfile="${project.build.directory}/${project.build.finalName}.zip" basedir="${project.build.directory}/${project.build.finalName}"/>
+                        </tasks>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
 			</plugins>
+         
 	</build>
 </project>
