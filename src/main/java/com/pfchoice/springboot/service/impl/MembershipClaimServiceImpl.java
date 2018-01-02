@@ -1,10 +1,14 @@
 package com.pfchoice.springboot.service.impl;
 
+import com.pfchoice.springboot.configuration.ConfigProperties;
 import com.pfchoice.springboot.model.MembershipClaim;
 import com.pfchoice.springboot.repositories.MembershipClaimRepository;
 import com.pfchoice.springboot.service.MembershipClaimService;
+import com.pfchoice.springboot.util.PrasUtil;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +24,13 @@ public class MembershipClaimServiceImpl implements MembershipClaimService {
 	@Autowired
 	private MembershipClaimRepository membershipClaimRepository;
 
+	@Autowired
+	ConfigProperties configProperties;
+
+	@Autowired
+	PrasUtil prasUtil;
+
+	
 	public MembershipClaim findById(Integer id) {
 		return membershipClaimRepository.findOne(id);
 	}
@@ -58,5 +69,9 @@ public class MembershipClaimServiceImpl implements MembershipClaimService {
 
 	public List<String> findAllMembershipClaimRiskCategories() {
 		return membershipClaimRepository.findAllMembershipClaimRiskCategories();
+	}
+	
+	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipClaimRepository,parameters, configProperties.getQueryTypeInsert() );
 	}
 }

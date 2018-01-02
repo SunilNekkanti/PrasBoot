@@ -1,5 +1,6 @@
 package com.pfchoice.springboot.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.pfchoice.springboot.util.XLSX2CSV;
 import com.pfchoice.springboot.configuration.ConfigProperties;
+import com.pfchoice.springboot.model.FileType;
 import com.pfchoice.springboot.model.FileUpload;
 import com.pfchoice.springboot.model.FileUploadContent;
 import com.pfchoice.springboot.service.FileService;
@@ -48,6 +51,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 @RestController
 @RequestMapping("/api")
 @SuppressWarnings({ "unchecked", "rawtypes" })
+@SessionAttributes({ "username", "roleId", "userId", "roleName" })
 public class FileUploadContentController implements ResourceLoaderAware {
 
 	public static final Logger logger = LoggerFactory.getLogger(FileUploadContentController.class);
@@ -178,14 +182,14 @@ public class FileUploadContentController implements ResourceLoaderAware {
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
 	@RequestMapping(value = { "/contractFileUpload/fileProcessing.do" }, method = RequestMethod.POST)
 	public List<FileUpload> uploadFileProcessing(@RequestParam MultipartFile[] files) throws IOException {
-		logger.info("started file processsing" + files.toString());
+		logger.info("started file processsing" );
 		logger.info("fileUploadContent.length:" + files.length);
 		List<FileUploadContent> fileUploadContenters = new ArrayList<>();
 		List<FileUpload> fileUploaders = new ArrayList<>();
 
 		for (MultipartFile fileUploadContent : files) {
 			logger.info("fileUploadContent.getOriginalFilename() :" + fileUploadContent.getOriginalFilename());
-			if (fileUploadContent != null && !"".equals(fileUploadContent.getOriginalFilename())) {
+			if ( !"".equals(fileUploadContent.getOriginalFilename())) {
 
 				String fileName = fileUploadContent.getOriginalFilename();
 
@@ -220,17 +224,14 @@ public class FileUploadContentController implements ResourceLoaderAware {
 	@RequestMapping(value = { "/fileUpload/fileProcessing.do" }, method = RequestMethod.POST)
 	public void uploadFileProcessing(@ModelAttribute("username") String username,
 			@RequestParam(required = true, value = "insId") Integer insId,
-			@RequestParam(required = false, value = "claimOrHospital") Integer claimOrHospital,
 			@RequestParam(required = false, value = "fileTypeCode") Integer fileTypeId,
 			@RequestParam(required = false, value = "activityMonth") Integer activityMonth,
-			@RequestParam(required = false, value = "pharmacyClaim") Integer pharmacyClaim,
 			@RequestParam(required = false, value = "cap") Integer capReport, @RequestParam MultipartFile file,
-			HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+			HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException, InvalidFormatException {
+	
 		logger.info("started file processsing" + file.getOriginalFilename());
 		logger.info("insId" + insId);
-		logger.info("claimOrHospital" + claimOrHospital);
 		logger.info("fileTypeId" + fileTypeId);
-		logger.info("pharmacyClaim" + pharmacyClaim);
 
 		java.io.File sourceFile, newSourceFile = null;
 
@@ -239,40 +240,38 @@ public class FileUploadContentController implements ResourceLoaderAware {
 			String fileName = file.getOriginalFilename();
 			String newfileName = fileName.substring(0, fileName.indexOf('.'));
 
-			try {
-				// String ext = FilenameUtils.getExtension(fileName);
-				logger.info("fileName is : " + fileName);
-				FileUploadContent fileUploadContenter = new FileUploadContent();
-				fileUploadContenter.setFileName(fileName);
-				fileUploadContenter.setContentType(file.getContentType());
-				fileUploadContenter.setData(file.getBytes());
-				fileUploadContentService.saveFileUploadContent(fileUploadContenter);
+			logger.info("fileName is : " + fileName);
+			FileUploadContent fileUploadContenter = new FileUploadContent();
+			fileUploadContenter.setFileName(fileName);
+			fileUploadContenter.setContentType(file.getContentType());
+			fileUploadContenter.setData(file.getBytes());
+			fileUploadContentService.saveFileUploadContent(fileUploadContenter);
 
-				String ext = FilenameUtils.getExtension(fileName);
+			String ext = FilenameUtils.getExtension(fileName);
 
-				logger.info("configProperties.getFilesUploadDirectory()" + configProperties.getFilesUploadDirectory());
-				FileUtils.writeByteArrayToFile(new java.io.File(configProperties.getFilesUploadDirectory() + fileName),
-						file.getBytes());
+			logger.info("configProperties.getFilesUploadDirectory()" + configProperties.getFilesUploadDirectory());
+			FileUtils.writeByteArrayToFile(new java.io.File(configProperties.getFilesUploadDirectory() + fileName),
+					file.getBytes());
 
-				sourceFile = new java.io.File(configProperties.getFilesUploadDirectory() + fileName);
-				sourceFile.createNewFile();
-				if (!"csv".equals(ext)) {
-					newSourceFile = new java.io.File(configProperties.getFilesUploadDirectory() + newfileName + ".csv");
-					newSourceFile.createNewFile();
-					XLSX2CSV.xls(sourceFile, newSourceFile);
-					if (sourceFile.exists()) {
-						sourceFile.delete();
-					}
-				} else {
-					newSourceFile = sourceFile;
+			sourceFile = new java.io.File(configProperties.getFilesUploadDirectory() + fileName);
+			sourceFile.createNewFile();
+			System.out.println("sourceFile"+sourceFile);
+			if (!"csv".equals(ext) && !"zip".equals(ext)) {
+				newSourceFile = new java.io.File(configProperties.getFilesUploadDirectory() + newfileName + ".csv");
+				
+				newSourceFile.createNewFile();
+				XLSX2CSV.xls(sourceFile, newSourceFile);
+				if (sourceFile.exists()) {
+					sourceFile.delete();
 				}
-			} catch (InvalidFormatException | IOException e) {
-				logger.warn(e.getCause().getMessage());
+				
+			} else {
+				newSourceFile = sourceFile;
 			}
 
 		}
-
-		req.setAttribute("fileName", newSourceFile.getAbsolutePath());
+		
+		//req.setAttribute("fileName", newSourceFile.getAbsolutePath());
 		String url = "/api/fileUploader/?fileName=" + newSourceFile.getAbsolutePath() + "&insId=" + insId
 				+ "&fileTypeCode=" + fileTypeId + "&activityMonth=" + activityMonth + "&reportMonth=" + activityMonth;
 		req.getRequestDispatcher(url).forward(req, res);
@@ -304,26 +303,103 @@ public class FileUploadContentController implements ResourceLoaderAware {
 	public ResponseEntity<?> loadMembershipRoster(@ModelAttribute("username") String username,
 			@RequestParam(required = true, value = "insId") Integer insId,
 			@RequestParam(required = true, value = "fileTypeCode") Integer fileTypeId,
-			@RequestParam(required = true, value = "activityMonth") Integer activityMonth,
-			@RequestParam(required = true, value = "reportMonth") Integer reportMonth,
-			@RequestParam(value = "fileName", required = true) String fileName)
-			throws IOException, InterruptedException, ExecutionException {
+			@RequestParam(required = false, value = "activityMonth") Integer activityMonth,
+			@RequestParam(required = false, value = "reportMonth") Integer reportMonth,
+			@RequestParam(value = "fileName", required = true) String fileName) throws IOException, InterruptedException, ExecutionException  {
 
-		Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-				.asyncFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
-		while (true) {
-			try {
-				if (future.isDone()) {
-					System.out.println("FileUpload  processing completed - " + future.get());
-					break;
+		FileType  fileType = fileTypeService.findById(fileTypeId);
+		 String foldername = fileName.substring(0, fileName.lastIndexOf('.'));
+		List<Future<ResponseEntity<?>>> futures = new ArrayList<>();
+		File[] files = new File[0];
+		 if(activityMonth != null)
+			{
+			    if (fileType != null && fileType.getDescription().contains("Package") ) {
+					logger.info("forwarding to claims Package");
+					 File zipFolder = new File(foldername);
+					 zipFolder.mkdir();
+					prasUtil.unZip(fileName, foldername);
+					 files = zipFolder.listFiles();
+					for (File file : files) {
+					    if (!file.isFile()) continue;
+					 String  filename = foldername.replace("/", "\\")+"\\"+file.getName();
+					   if(file.getName().contains("claims") ){
+						   logger.info("forwarding to claims file.getAbsolutePath()"+file.getAbsolutePath());
+						   FileType fileType1 = fileTypeService.findByDescription("AMG Membership Claim");
+						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType1.getId(), activityMonth, reportMonth, filename);
+							futures.add(future);
+					   } else   if( file.getName().contains("pharmacy")){
+						   logger.info("forwarding to pharmacy"+file.getAbsolutePath());
+						   FileType  fileType2 = fileTypeService.findByDescription("AMG Membership Claims Pharmacy");
+						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType2.getId(), activityMonth, reportMonth, filename);
+							futures.add(future);
+					   } else if(file.getName().contains("memberlevel")){
+						   logger.info("forwarding to member Level");
+						   FileType fileType3 = fileTypeService.findByDescription("AMG Member Level");
+						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType3.getId(), activityMonth, reportMonth, filename);
+							futures.add(future);
+					   } else if( file.getName().contains("adjust")){
+						   logger.info("forwarding to adjust");
+						   FileType fileType4 = fileTypeService.findByDescription("AMG Adjust");
+						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType4.getId(), activityMonth, reportMonth, filename);
+							futures.add(future);
+					   }
+					     
+					}
+					
 				}
-			} catch (Exception ex) {
-				break;
+			    else if (fileType != null && fileType.getDescription().contains("Claim") ) {
+					logger.info("forwarding to claims");
+					Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+							.asyncMbrClaimsFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
+					futures.add(future);
+				} else	if(fileType != null && (fileType.getDescription().contains("Level") || fileType.getDescription().contains("Adjust"))){
+					logger.info("forwarding to member Level");
+					Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+							.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
+					futures.add(future);
+				}else {
+					logger.info("forwarding to roster or cap");
+					Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+					.asyncMbrRosterOrCapFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
+					futures.add(future);
+				}
 			}
-			System.out.println("FileUpload  processing is in progress. ");
-			Thread.sleep(15000);
-		}
-		return future.get();
+			else{	
+				if (fileType != null && fileType.getDescription().contains("Hospitalization")) {
+					logger.info("forwarding to hospitalization");
+					//hospitalization
+					//futures.add(future);
+				}  
+			}
+			
+		 Future<ResponseEntity<?>> finalFuture =null;
+		 Integer index =0;
+		
+			while (index < futures.size() && futures.get(index) != null && true) {
+				try {
+					if (futures.get(index).isDone()) {
+						finalFuture = futures.get(index);
+						if(++index >= files.length )
+							break;
+					}
+				} catch (Exception ex) {
+					finalFuture = futures.get(index);
+					if(++index >=files.length )
+						break;
+				} 
+				System.out.println("FileUpload  processing is in progress. ");
+				Thread.sleep(5000);
+			}
+			
+			if(files.length >1){
+				prasUtil.deleteFolder(foldername);
+			}
+			
+		return finalFuture.get();
 	}
 
 	public void setResourceLoader(ResourceLoader resourceLoader) {

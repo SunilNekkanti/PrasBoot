@@ -1,6 +1,8 @@
 package com.pfchoice.springboot.service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,5 +32,7 @@ public interface MembershipHedisMeasureService {
 	int unloadCSV2Table();
 
 	boolean isDataExistsInTable(String tableName);
+	
+	Integer loadData(Map<String, Object> parameters)  throws IOException, InterruptedException;
 
 }

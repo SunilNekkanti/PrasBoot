@@ -57,6 +57,7 @@ public class Provider extends RecordDetails implements Serializable {
 					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })
 	private Contact contact;
 
+	
 	/**
 	 * 
 	 */
@@ -165,6 +166,7 @@ public class Provider extends RecordDetails implements Serializable {
 	public void setPrvdrRefContracts(Set<ProviderReferenceContract> prvdrRefContracts) {
 		this.prvdrRefContracts = prvdrRefContracts;
 	}
+
 
 	@Override
 	public String toString() {

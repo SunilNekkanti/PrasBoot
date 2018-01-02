@@ -27,6 +27,8 @@ app.controller('ProviderController',
         self.getAllStates = getAllStates;
         self.getAllInsurances = getAllInsurances;
         self.getAllRefContractInsurances = getAllRefContractInsurances;
+        self.addInsPrvdrContract = addInsPrvdrContract;
+        self.setInsPrvdrContractDates = setInsPrvdrContractDates;
         self.providerEdit = providerEdit;
         self.cancelEdit = cancelEdit;
         self.readUploadedFile = readUploadedFile;
@@ -48,7 +50,6 @@ app.controller('ProviderController',
            /* DTColumnBuilder.newColumn('prvdrInsContracts').renderWith(function(data) {
             	var insurances=[];
             	var keys = Object.keys(data);
-            	console.log('keys'+JSON.stringify(keys));
             	if(data !== undefined && keys !== null ){
             		
             		for(var i = 0, j = 0; i<keys.length ; i++)
@@ -140,7 +141,6 @@ app.controller('ProviderController',
        
         function submit() {
         	 console.log('Submitting');
-        	 console.log('self.prvdr.prvdrRefContracts before '+JSON.stringify(self.prvdr.prvdrRefContracts));
         	 var myFiles = self.prvdr.prvdrRefContracts.map(a => a.myFile );
         	 console.log('myFiles',myFiles);
              if(myFiles.length > 0){
@@ -148,18 +148,16 @@ app.controller('ProviderController',
 
  	            promise.then(function (response) {
  	            	
- 	            	console.log('self.prvdr after '+JSON.stringify(self.prvdr));
  	            	  self.prvdr.prvdrRefContracts.forEach(function (refContract, idx){
  	            		  
  	            		 response.forEach(function (fileUpload,uploadidx) {
- 	 	            	    console.log('fileUpload fetched values %d: %s', uploadidx, fileUpload);
- 	 	            	    console.log('self.prvdr.prvdrRefContracts[idx].myFile', self.prvdr.prvdrRefContracts[idx].myFile);
 	 	            		 if(fileUpload && self.prvdr.prvdrRefContracts[idx].myFile ){
 	  	            	    	self.prvdr.prvdrRefContracts[idx].contract.fileUpload = fileUpload;
 	  	            	    	response.splice(uploadidx, 1);
 	  	            	     }
  	            	     });
  	            	  });
+ 	            	  
  	            	
  	            	 if (self.prvdr.id === undefined || self.prvdr.id === null) {
  							console.log('Saving New Provider');
@@ -282,10 +280,16 @@ app.controller('ProviderController',
             ProviderService.getProvider(id).then(
                 function (prvdr) {
                     self.prvdr = prvdr;
+                    if(!self.prvdr.prvdrRefContracts || self.prvdr.prvdrRefContracts.length ==0){
+                    	self.prvdr.prvdrRefContracts = [];
+            			self.prvdr.prvdrRefContracts.push({});
+                    }
+                    
                     self.languages = getAllLanguages();
                     self.states = getAllStates();
                     self.insurances = getAllInsurances();
                     self.refContractInsurances = getAllRefContractInsurances();
+                    self.prvdrInsurances  = self.prvdr.prvdrRefContracts.map(refContract => refContract.ins);
                     self.display = true;
                 },
                 function (errResponse) {
@@ -311,8 +315,8 @@ app.controller('ProviderController',
         function cancelEdit(){
             self.successMessage='';
             self.errorMessage='';
+            $state.go('main.provider', {}, {location: true,reload: false,notify: true});
             self.prvdr={};
-            $state.go('main.provider', {}, {location: true,reload: false,notify: false});
             self.display = false;
         }
        
@@ -320,6 +324,8 @@ app.controller('ProviderController',
             self.successMessage='';
             self.errorMessage='';
             self.prvdr ={}
+            self.prvdr.prvdrRefContracts = [];
+            self.prvdr.prvdrRefContracts.push({});
             self.languages = getAllLanguages();
             self.states = getAllStates();
             self.insurances = getAllInsurances();
@@ -328,23 +334,38 @@ app.controller('ProviderController',
         }
         
         function readUploadedFile(index){
-			console.log('About to read consignment form');
-			FileUploadService.getFileUpload(self.prvdr.contracts[index].fileUpload.id).then(
+			console.log('About to read file');
+			FileUploadService.getFileUpload(self.prvdr.prvdrRefContracts[index].contract.fileUpload.id).then(
 					function(response) {
 						self.errorMessage = '';
-						var file = new Blob([response], {type: self.prvdr.contracts[index].fileUpload.contentType});
-						 var fileURL = URL.createObjectURL(file);
+						var file = new Blob([response], {type: self.prvdr.prvdrRefContracts[index].contract.fileUpload.contentType});
+						var fileURL = URL.createObjectURL(file);
 					    self.content = $sce.trustAsResourceUrl(fileURL); 
 					    
 					},
 					function(errResponse) {
 						console
-								.error('Error while reading consignment form');
-						self.errorMessage = 'Error while reading consignment form: '
+								.error('Error while reading file');
+						self.errorMessage = 'Error while reading file: '
 								+ errResponse.data.errorMessage;
 						self.successMessage = '';
 					}); 
 		}
+		
+		function addInsPrvdrContract(){
+		self.prvdrInsurances  = self.prvdr.prvdrRefContracts.map(refContract => refContract.ins);
+		  if(!self.prvdr.prvdrRefContracts || self.prvdr.prvdrRefContracts.length  ===0){
+		      self.prvdr.prvdrRefContracts = [];
+		  }
+		  self.prvdr.prvdrRefContracts.push({contract:{}});
+		}
+        
+        function setInsPrvdrContractDates(index){
+               self.prvdr.prvdrRefContracts[index].contract.startDate= self.prvdr.prvdrRefContracts[index].contract.startDate || self.prvdr.prvdrRefContracts[index].ins.contracts[0].startDate;
+               self.prvdr.prvdrRefContracts[index].contract.endDate= self.prvdr.prvdrRefContracts[index].contract.endDate || self.prvdr.prvdrRefContracts[index].ins.contracts[0].endDate;
+                 
+        }
+        
         
     }
 

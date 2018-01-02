@@ -125,9 +125,8 @@ app.controller('InsuranceController',
 	            	if(!self.insurance.contracts[0].fileUpload){
 	            		self.insurance.contract[0].fileUpload = {};
 	            	}
-	            	 var fileuploads = response;
-	            	 if(fileuploads.length >0 )
-	                self.insurance.contracts[0].fileUpload= fileuploads[0];
+	            	 if(response.length >0 )
+	                self.insurance.contracts[0].fileUpload= response[0];
 	            	 if (self.insurance.id === undefined || self.insurance.id === null) {
 							console.log('Saving New Insurance');
 							createInsurance(self.insurance);
@@ -237,7 +236,11 @@ app.controller('InsuranceController',
             InsuranceService.getInsurance(id).then(
                 function (insurance) {
                     self.insurance = insurance;
-                   
+                    if(!self.insurance.contracts || self.insurance.contracts.length == 0){
+                       self.insurance.contracts = [];
+	                   self.insurance.contracts.push({});
+                    }
+                    
                     self.display = true;
                 },
                 function (errResponse) {
@@ -275,6 +278,8 @@ app.controller('InsuranceController',
 				self.successMessage='';
 	            self.errorMessage='';
 	            self.insurance = {};
+	            self.insurance.contracts = [];
+	            self.insurance.contracts.push({});
 	            self.planTypes = getAllPlanTypes();
 	            self.states = getAllStates();
 	            self.display =true; 

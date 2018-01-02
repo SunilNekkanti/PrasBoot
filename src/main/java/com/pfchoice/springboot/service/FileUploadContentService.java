@@ -24,6 +24,13 @@ public interface FileUploadContentService {
 
 	boolean isFileUploadContentExists(FileUploadContent fileUploadContent);
 
-	Future<?> asyncFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
-			Integer reportMonth, String fileName) throws IOException;
+	Future<?> asyncMbrRosterOrCapFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
+			Integer reportMonth, String fileName) throws IOException, InterruptedException;
+	
+
+	Future<?> asyncMbrClaimsFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
+			Integer reportMonth, String fileName) throws IOException, InterruptedException;
+	
+	Future<?> asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(String username, Integer insId, Integer fileTypeId,
+			Integer activityMonth, Integer reportMonth, String fileName) throws IOException, InterruptedException;
 }

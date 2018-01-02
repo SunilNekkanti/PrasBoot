@@ -53,7 +53,7 @@ app.service('NewMedicalLossRatioService',
                 $http.get(urls.REPORTMONTH_SERVICE_API, config )
                     .then(
                         function (response) {
-                            console.log('Fetched successfully all reportMonths');
+                            console.log('Fetched successfully all reportMonths',response);
                             if (localStorage.getItem("reportMonths") === null) {
                             	 $localStorage.reportMonths = response.data;
                            }else {
@@ -77,8 +77,7 @@ app.service('NewMedicalLossRatioService',
             }
 
             function getAllReportMonths(){
-            	console.log('$localStorage.reportMonths');
-                return $localStorage.reportMonths;
+              return $localStorage.reportMonths;
             }
 
         }

@@ -29,7 +29,7 @@ email:
 
 spring:
   profiles:
-    active: "local"
+    active: "server"
   main:
     banner-mode: "off"
  
@@ -71,7 +71,7 @@ envProperties:
       queryTypeInsertLevel2: _insert_level2
 datasource:
   pras:
-    url: jdbc:mysql://localhost:3308/pfchoices_final_20171005?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3308/pfchoices_final_2017128?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: root
     password: test123
     driverClassName: com.mysql.jdbc.Driver
@@ -79,9 +79,9 @@ datasource:
     maxPoolSize: 10
     hibernate:
       hbm2ddl.method: none
-      show_sql: true
-      format_sql: true
-      dialect: org.hibernate.dialect.MySQLDialect
+      show_sql: false
+      format_sql: false
+      dialect: com.pfchoice.springboot.hibernate.MySQL5InnoDBDialect
       hikari:
        idleTimeout: 900000
        maxLifeTime: 840000
@@ -133,7 +133,7 @@ envProperties:
       
 datasource:
   pras:
-    url: jdbc:mysql://pras-aws-prod.cp2ok1lxfh49.us-east-1.rds.amazonaws.com:3306/pfchoices_final_20171117?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://pras-aws-prod.cp2ok1lxfh49.us-east-1.rds.amazonaws.com:3306/pfchoices_final_20171227?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: dbadmin
     password: prasdb20!7
     driverClassName: com.mysql.jdbc.Driver

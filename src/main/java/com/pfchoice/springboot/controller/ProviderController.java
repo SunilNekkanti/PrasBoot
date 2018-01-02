@@ -86,6 +86,7 @@ public class ProviderController {
 					HttpStatus.CONFLICT);
 		}
 		logger.info("Creating Provider : before save");
+		provider.getPrvdrRefContracts().forEach( prvdrRefContract -> prvdrRefContract.setPrvdr(provider) );
 		providerService.saveProvider(provider);
 		logger.info("Creating Provider : after save");
 

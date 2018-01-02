@@ -2,6 +2,7 @@ package com.pfchoice.springboot.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,8 +12,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 
+import org.hibernate.annotations.OrderBy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -57,14 +64,26 @@ public class Contract extends RecordDetails implements Serializable {
 	@Column(name = "end_date")
 	private Date endDate;
 
-	/*
-	 * @OneToOne( mappedBy ="contract" , fetch = FetchType.LAZY) private
-	 * InsuranceReferenceContract referenceContract ;
-	 */
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "file_upload_id", referencedColumnName = "file_upload_id")
 	private FileUpload fileUpload;
 
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy ="contracts")
+    private Set<Insurance> insurances;
+	
+
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "reference_contracts", joinColumns = {
+			@JoinColumn(name = "contract_id", referencedColumnName = "contract_id", nullable = false, unique = true) }, inverseJoinColumns = {
+					@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id", nullable = false, unique = true) }
+	)
+	@OrderBy(clause = "insurance_id asc")
+	@OrderColumn(name = "insurance_id")
+    private Set<Provider> providers;
+	
+	
 	/**
 	 * 
 	 */
@@ -205,6 +224,34 @@ public class Contract extends RecordDetails implements Serializable {
 	 */
 	public void setFilesUpload(FileUpload fileUpload) {
 		this.fileUpload = fileUpload;
+	}
+
+	/**
+	 * @return the insurances
+	 */
+	public Set<Insurance> getInsurances() {
+		return insurances;
+	}
+
+	/**
+	 * @param insurances the insurances to set
+	 */
+	public void setInsurances(Set<Insurance> insurances) {
+		this.insurances = insurances;
+	}
+
+	/**
+	 * @return the providers
+	 */
+	public Set<Provider> getProviders() {
+		return providers;
+	}
+
+	/**
+	 * @param providers the providers to set
+	 */
+	public void setProviders(Set<Provider> providers) {
+		this.providers = providers;
 	}
 
 	@Override

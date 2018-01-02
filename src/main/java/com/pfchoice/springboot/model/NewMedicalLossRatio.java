@@ -27,6 +27,7 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+ 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
@@ -47,53 +48,66 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	@Column(name = "activity_Month")
 	private Integer activityMonth;
 
-	@Column(name = "patients")
-	private BigDecimal patients;
-
-	@Column(nullable = true, name = "fund")
-	private BigDecimal fund;
-
-	@Column(nullable = true, name = "prof")
-	private BigDecimal prof;
-
-	@Column(nullable = true, name = "inst")
-	private BigDecimal inst;
-
-	@Column(nullable = true, name = "pharmacy")
-	private BigDecimal pharmacy;
-
 	@Column(name = "file_id", nullable = false)
 	private Integer fileId;
+	
+	@Column(nullable = true, name = "amg_funding")
+	private BigDecimal funding;
 
-	@Column(nullable = true, name = "ibnr")
+	@Column(nullable = true, name = "amg_mbr_cnt")
+	private BigDecimal amgMbrCnt;
+
+
+	@Column(nullable = true, name = "amg_prof")
+	private BigDecimal amgProf;
+
+	@Column(nullable = true, name = "amg_inst")
+	private BigDecimal amgInst;
+
+	@Column(nullable = true, name = "amg_phar")
+	private BigDecimal amgPhar;
+	
+	@Column(nullable = true, name = "amg_ibnr_tot")
 	private BigDecimal ibnr;
 
-	@Column(nullable = true, name = "pcpcap")
+	@Column(nullable = true, name = "amg_pcp_cap")
 	private BigDecimal pcpCap;
 
-	@Column(nullable = true, name = "speccap")
+	@Column(nullable = true, name = "amg_spec_cap")
 	private BigDecimal specCap;
 
-	@Column(nullable = true, name = "stoplossExp")
-	private BigDecimal stopLossExp;
+	@Column(nullable = true, name = "amg_sl_exp")
+	private BigDecimal amgSLExp;
 
-	@Column(nullable = true, name = "stoplossCredit")
-	private BigDecimal stopLossCredit;
+	@Column(nullable = true, name = "amg_sl_credit")
+	private BigDecimal amgSLCredit;
+	
+	@Column(nullable = true, name = "amg_vab_adj")
+	private BigDecimal amgVabAdjust;
+	
+	@Column(nullable = true, name = "amg_dental_cap")
+	private BigDecimal dentalCap;
+	
+	@Column(nullable = true, name = "amg_trans_cap")
+	private BigDecimal transCap;
+	
+	@Column(nullable = true, name = "amg_vision_cap")
+	private BigDecimal visCap;
+	
+	@Column(nullable = true, name = "amg_ibnr_inst")
+	private BigDecimal ibnrInst;
 
-	@Column(nullable = true, name = "Adjust")
+	@Column(nullable = true, name = "amg_ibnr_prof")
+	private BigDecimal ibnrProf;
+	
+	@Column(nullable = true, name = "amg_adj")
 	private BigDecimal adjust;
 
-	@Column(nullable = true, name = "TotalExp")
+	@Column(nullable = true, name = "amg_totalExp")
 	private BigDecimal totalExp;
 
 	@Column(nullable = true, name = "balance")
 	private BigDecimal balance;
-
-	@Column(nullable = true, name = "unwanted_claims")
-	private BigDecimal unwantedClaims;
-
-	@Column(nullable = true, name = "stop_loss")
-	private BigDecimal stopLoss;
 
 	@Column(nullable = true, name = "mlr")
 	private BigDecimal mlr;
@@ -117,30 +131,33 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 		this.id = id;
 	}
 
-	public NewMedicalLossRatio(final Integer reportMonth, final Integer activityMonth, final BigDecimal patients,
-			final BigDecimal fund, final BigDecimal prof, final BigDecimal inst, final BigDecimal pharmacy,
-			final BigDecimal ibnr, final BigDecimal pcpCap, final BigDecimal specCap, final BigDecimal stopLossExp,
-			final BigDecimal stopLossCredit, final BigDecimal adjust, final BigDecimal totalExp,
-			final BigDecimal balance, final BigDecimal unwantedClaims, final BigDecimal stopLoss, final BigDecimal mlr,
+	public NewMedicalLossRatio(final Integer reportMonth, final Integer activityMonth, 
+			final BigDecimal amgMbrCnt,final BigDecimal funding,final BigDecimal amgProf, final BigDecimal amgInst, final BigDecimal amgPhar,
+			final BigDecimal ibnr, final BigDecimal pcpCap, final BigDecimal specCap, final BigDecimal dentalCap, final BigDecimal transCap, final BigDecimal visCap,
+			final BigDecimal stopLossExp,	final BigDecimal stopLossCredit, final BigDecimal amgVabAdjust,final BigDecimal adjust, final BigDecimal totalExp,
+			final BigDecimal balance,  final BigDecimal mlr,
 			final BigDecimal qmlr) {
 		super();
 		this.reportMonth = reportMonth;
 		this.activityMonth = activityMonth;
-		this.patients = patients;
-		this.fund = fund;
-		this.prof = prof;
-		this.inst = inst;
-		this.pharmacy = pharmacy;
+		this.amgMbrCnt = amgMbrCnt;
+		this.funding = funding;
+		this.amgProf = amgProf;
+		this.amgInst = amgInst;
+		this.amgPhar = amgPhar;
+		this.amgProf = amgProf;
 		this.ibnr = ibnr;
 		this.pcpCap = pcpCap;
 		this.specCap = specCap;
-		this.stopLossExp = stopLossExp;
-		this.stopLossCredit = stopLossCredit;
+		this.dentalCap = dentalCap;
+		this.transCap = transCap;
+		this.visCap = visCap;
+		this.amgSLExp = stopLossExp;
+		this.amgSLCredit = stopLossCredit;
+		this.amgVabAdjust = amgVabAdjust;
 		this.adjust = adjust;
 		this.totalExp = totalExp;
 		this.balance = balance;
-		this.unwantedClaims = unwantedClaims;
-		this.stopLoss = stopLoss;
 		this.mlr = mlr;
 		this.qmlr = qmlr;
 	}
@@ -191,46 +208,6 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 
 	public void setActivityMonth(Integer activityMonth) {
 		this.activityMonth = activityMonth;
-	}
-
-	public BigDecimal getPatients() {
-		return patients;
-	}
-
-	public void setPatients(BigDecimal patients) {
-		this.patients = patients;
-	}
-
-	public BigDecimal getFund() {
-		return fund;
-	}
-
-	public void setFund(BigDecimal fund) {
-		this.fund = fund;
-	}
-
-	public BigDecimal getProf() {
-		return prof;
-	}
-
-	public void setProf(BigDecimal prof) {
-		this.prof = prof;
-	}
-
-	public BigDecimal getInst() {
-		return inst;
-	}
-
-	public void setInst(BigDecimal inst) {
-		this.inst = inst;
-	}
-
-	public BigDecimal getPharmacy() {
-		return pharmacy;
-	}
-
-	public void setPharmacy(BigDecimal pharmacy) {
-		this.pharmacy = pharmacy;
 	}
 
 	/**
@@ -294,36 +271,6 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @return the stopLossExp
-	 */
-	public BigDecimal getStopLossExp() {
-		return stopLossExp;
-	}
-
-	/**
-	 * @param stopLossExp
-	 *            the stopLossExp to set
-	 */
-	public void setStopLossExp(BigDecimal stopLossExp) {
-		this.stopLossExp = stopLossExp;
-	}
-
-	/**
-	 * @return the stopLossCredit
-	 */
-	public BigDecimal getStopLossCredit() {
-		return stopLossCredit;
-	}
-
-	/**
-	 * @param stopLossCredit
-	 *            the stopLossCredit to set
-	 */
-	public void setStopLossCredit(BigDecimal stopLossCredit) {
-		this.stopLossCredit = stopLossCredit;
-	}
-
-	/**
 	 * @return the adjust
 	 */
 	public BigDecimal getAdjust() {
@@ -369,36 +316,6 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @return the unwantedClaims
-	 */
-	public BigDecimal getUnwantedClaims() {
-		return unwantedClaims;
-	}
-
-	/**
-	 * @param unwantedClaims
-	 *            the unwantedClaims to set
-	 */
-	public void setUnwantedClaims(BigDecimal unwantedClaims) {
-		this.unwantedClaims = unwantedClaims;
-	}
-
-	/**
-	 * @return the stopLoss
-	 */
-	public BigDecimal getStopLoss() {
-		return stopLoss;
-	}
-
-	/**
-	 * @param stopLoss
-	 *            the stopLoss to set
-	 */
-	public void setStopLoss(BigDecimal stopLoss) {
-		this.stopLoss = stopLoss;
-	}
-
-	/**
 	 * @return the mlr
 	 */
 	public BigDecimal getMlr() {
@@ -426,6 +343,188 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	 */
 	public void setQmlr(BigDecimal qmlr) {
 		this.qmlr = qmlr;
+	}
+
+	/**
+	 * @return the funding
+	 */
+	public BigDecimal getFunding() {
+		return funding;
+	}
+
+	/**
+	 * @param funding the funding to set
+	 */
+	public void setFunding(BigDecimal funding) {
+		this.funding = funding;
+	}
+
+	/**
+	 * @return the amgMbrCnt
+	 */
+	public BigDecimal getAmgMbrCnt() {
+		return amgMbrCnt;
+	}
+
+	/**
+	 * @param amgMbrCnt the amgMbrCnt to set
+	 */
+	public void setAmgMbrCnt(BigDecimal amgMbrCnt) {
+		this.amgMbrCnt = amgMbrCnt;
+	}
+
+	/**
+	 * @return the amgProf
+	 */
+	public BigDecimal getAmgProf() {
+		return amgProf;
+	}
+
+	/**
+	 * @param amgProf the amgProf to set
+	 */
+	public void setAmgProf(BigDecimal amgProf) {
+		this.amgProf = amgProf;
+	}
+
+	/**
+	 * @return the amgInst
+	 */
+	public BigDecimal getAmgInst() {
+		return amgInst;
+	}
+
+	/**
+	 * @param amgInst the amgInst to set
+	 */
+	public void setAmgInst(BigDecimal amgInst) {
+		this.amgInst = amgInst;
+	}
+
+	/**
+	 * @return the amgPhar
+	 */
+	public BigDecimal getAmgPhar() {
+		return amgPhar;
+	}
+
+	/**
+	 * @param amgPhar the amgPhar to set
+	 */
+	public void setAmgPhar(BigDecimal amgPhar) {
+		this.amgPhar = amgPhar;
+	}
+
+	/**
+	 * @return the amgSLExp
+	 */
+	public BigDecimal getAmgSLExp() {
+		return amgSLExp;
+	}
+
+	/**
+	 * @param amgSLExp the amgSLExp to set
+	 */
+	public void setAmgSLExp(BigDecimal amgSLExp) {
+		this.amgSLExp = amgSLExp;
+	}
+
+	/**
+	 * @return the amgSLCredit
+	 */
+	public BigDecimal getAmgSLCredit() {
+		return amgSLCredit;
+	}
+
+	/**
+	 * @param amgSLCredit the amgSLCredit to set
+	 */
+	public void setAmgSLCredit(BigDecimal amgSLCredit) {
+		this.amgSLCredit = amgSLCredit;
+	}
+
+	/**
+	 * @return the amgVabAdjust
+	 */
+	public BigDecimal getAmgVabAdjust() {
+		return amgVabAdjust;
+	}
+
+	/**
+	 * @param amgVabAdjust the amgVabAdjust to set
+	 */
+	public void setAmgVabAdjust(BigDecimal amgVabAdjust) {
+		this.amgVabAdjust = amgVabAdjust;
+	}
+
+	/**
+	 * @return the dentalCap
+	 */
+	public BigDecimal getDentalCap() {
+		return dentalCap;
+	}
+
+	/**
+	 * @param dentalCap the dentalCap to set
+	 */
+	public void setDentalCap(BigDecimal dentalCap) {
+		this.dentalCap = dentalCap;
+	}
+
+	/**
+	 * @return the transCap
+	 */
+	public BigDecimal getTransCap() {
+		return transCap;
+	}
+
+	/**
+	 * @param transCap the transCap to set
+	 */
+	public void setTransCap(BigDecimal transCap) {
+		this.transCap = transCap;
+	}
+
+	/**
+	 * @return the visCap
+	 */
+	public BigDecimal getVisCap() {
+		return visCap;
+	}
+
+	/**
+	 * @param visCap the visCap to set
+	 */
+	public void setVisCap(BigDecimal visCap) {
+		this.visCap = visCap;
+	}
+
+	/**
+	 * @return the ibnrInst
+	 */
+	public BigDecimal getIbnrInst() {
+		return ibnrInst;
+	}
+
+	/**
+	 * @param ibnrInst the ibnrInst to set
+	 */
+	public void setIbnrInst(BigDecimal ibnrInst) {
+		this.ibnrInst = ibnrInst;
+	}
+
+	/**
+	 * @return the ibnrProf
+	 */
+	public BigDecimal getIbnrProf() {
+		return ibnrProf;
+	}
+
+	/**
+	 * @param ibnrProf the ibnrProf to set
+	 */
+	public void setIbnrProf(BigDecimal ibnrProf) {
+		this.ibnrProf = ibnrProf;
 	}
 
 	@Override

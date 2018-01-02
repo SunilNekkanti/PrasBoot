@@ -272,13 +272,15 @@
             </div>
           </div>
           <div class="row" >
-            <div class="col-sm-12 contractInfo">
+            <div class="col-sm-12 thirdPartyContractInfo">
               <div class="panel panel-success">
-                <div class="panel-heading">Third Party Agreement</div>
+                <div class="panel-heading">Third Party Agreement
+                <button type="button" ng-click="ctrl.addInsPrvdrContract()" ng-disabled="!ctrl.prvdr.prvdrRefContracts[0].contract.id" class="btn btn-success btn-xs custom-width  floatRight"> Add </button>
+                </div>
                 <div ng-repeat=" prvdrInsContract in ctrl.prvdr.prvdrRefContracts" ng-if="$index > 0" >
               
                   <div class="panel panel-success panel-body">
-                    <div class="row col-md-12">
+                   
                       <div class="row">
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
@@ -296,14 +298,15 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="plan">Insurance</label>
-                            <select class=" form-control" ng-model="ctrl.prvdr.prvdrRefContracts[$index].ins" ng-options="insurance.name for insurance in ctrl.insurances | orderBy:'name' track by insurance.id"></select>
+                            <select class=" form-control" ng-model="ctrl.prvdr.prvdrRefContracts[$index].ins" ng-change="ctrl.setInsPrvdrContractDates($index)" ng-options="insurance.name for insurance in ctrl.insurances  | orderBy:'name' track by insurance.id"></select>
                           </div>
                         </div>
+
 
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="contractNumber">Start Date</label>
-                            <div class="input-group date" id="startDate" name="startDate" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.startDate" date1-picker>
+                            <div class="input-group date" id="startDate" name="startDate"  ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.startDate" date1-picker>
                               <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.startDate" date-picker-input ng-required="true">
                               <span class="input-group-addon">
 			           							<span class="glyphicon glyphicon-calendar"></span>
@@ -320,7 +323,7 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="contractNumber">End Date</label>
-                            <div class="input-group date" id="startDate" name="endDate" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.endDate" date1-picker>
+                            <div class="input-group date" id="startDate" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.endDate"   name="endDate" date1-picker>
                               <input type="text" class="form-control netto-input" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.endDate" date-picker-input ng-required="true">
                               <span class="input-group-addon">
 			           							<span class="glyphicon glyphicon-calendar"></span>
@@ -340,7 +343,7 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="pmpm">PMPM</label>
-                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.pmpm" name="pmpm" class="username form-control input-sm" placeholder="Enter PMPM" required ng-minlength="1" />
+                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.pmpm" name="pmpm" class="username form-control input-sm" placeholder="Enter PMPM" ng-required="true" ng-minlength="1" />
                             <div class="has-error" ng-show="myForm.$dirty">
                               <span ng-show="myForm.pmpm.$error.required">This is a required field</span>
                               <span ng-show="myForm.pmpm.$error.minlength">Minimum length required is 1</span>
@@ -364,7 +367,7 @@
                         <div class="col-sm-3">
                           <div class="form-group col-sm-12">
                             <label for="serviceFund">Provider Number</label>
-                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.pcpPrvdrNBR" name="pcpPrvdrNBR" class="username form-control input-sm" placeholder="Enter ServiceFund" required ng-minlength="1" />
+                            <input type="text" ng-model="ctrl.prvdr.prvdrRefContracts[$index].contract.pcpPrvdrNBR" name="pcpPrvdrNBR" class="username form-control input-sm" placeholder="Enter ServiceFund" ng-required="true" ng-minlength="1" />
                             <div class="has-error" ng-show="myForm.$dirty">
                               <span ng-show="myForm.pcpPrvdrNBR.$error.required">This is a required field</span>
                               <span ng-show="myForm.pcpPrvdrNBR.$error.minlength">Minimum length required is 1</span>
@@ -385,7 +388,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

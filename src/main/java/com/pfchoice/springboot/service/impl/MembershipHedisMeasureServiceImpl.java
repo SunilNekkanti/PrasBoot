@@ -1,10 +1,14 @@
 package com.pfchoice.springboot.service.impl;
 
+import com.pfchoice.springboot.configuration.ConfigProperties;
 import com.pfchoice.springboot.model.MembershipHedisMeasure;
 import com.pfchoice.springboot.repositories.MembershipHedisMeasureRepository;
 import com.pfchoice.springboot.service.MembershipHedisMeasureService;
+import com.pfchoice.springboot.util.PrasUtil;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +24,12 @@ public class MembershipHedisMeasureServiceImpl implements MembershipHedisMeasure
 	@Autowired
 	private MembershipHedisMeasureRepository membershipHedisMeasureRepository;
 
+	@Autowired
+	ConfigProperties configProperties;
+
+	@Autowired
+	PrasUtil prasUtil;
+	
 	public MembershipHedisMeasure findById(Integer id) {
 		return membershipHedisMeasureRepository.findOne(id);
 	}
@@ -61,4 +71,7 @@ public class MembershipHedisMeasureServiceImpl implements MembershipHedisMeasure
 		return membershipHedisMeasureRepository.unloadCSV2Table();
 	}
 
+	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipHedisMeasureRepository,parameters, configProperties.getQueryTypeInsert() );
+	}
 }

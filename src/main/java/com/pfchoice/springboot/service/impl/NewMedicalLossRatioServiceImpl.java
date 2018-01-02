@@ -48,7 +48,7 @@ public class NewMedicalLossRatioServiceImpl implements NewMedicalLossRatioServic
 
 	public Page<NewMedicalLossRatio> findSummary(Integer insId, List<Integer> prvdrIds, List<Integer> reportMonths,
 			Pageable page) {
-		return medicalLossRatioRepository.findSummary(insId, prvdrIds, reportMonths, page);
+		return medicalLossRatioRepository.findSummary(insId, prvdrIds,  reportMonths, page);
 	}
 
 }

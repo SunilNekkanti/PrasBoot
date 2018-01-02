@@ -59,9 +59,8 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@JoinColumn(name = "mbr_genderid", referencedColumnName = "gender_id")
 	private Gender genderId;
 
-	@ManyToOne
-	@JoinColumn(name = "mbr_countycode", referencedColumnName = "code")
-	private County countyCode;
+	@Column(name = "Mbr_CountyCode")
+	private String countyCode;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mbr_ethinic_code", referencedColumnName = "code")
@@ -216,7 +215,7 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	/**
 	 * @return the countyCode
 	 */
-	public County getCountyCode() {
+	public String getCountyCode() {
 		return countyCode;
 	}
 
@@ -224,7 +223,7 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	 * @param countyCode
 	 *            the countyCode to set
 	 */
-	public void setCountyCode(final County countyCode) {
+	public void setCountyCode(final String countyCode) {
 		this.countyCode = countyCode;
 	}
 

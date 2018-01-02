@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.pfchoice.springboot.model.Membership;
@@ -34,6 +35,7 @@ import com.pfchoice.springboot.util.PrasUtil;
 @RestController
 @RequestMapping("/api")
 @SuppressWarnings({ "unchecked", "rawtypes" })
+@SessionAttributes({ "username", "roleId", "userId", "roleName" })
 public class MembershipController {
 
 	public static final Logger logger = LoggerFactory.getLogger(MembershipController.class);

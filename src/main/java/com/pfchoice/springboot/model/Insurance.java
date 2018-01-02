@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -51,7 +51,7 @@ public class Insurance extends RecordDetails implements Serializable {
 					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })
 	private Contact contact;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "reference_contracts", joinColumns = {
 			@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_Id", nullable = false, unique = true) }, inverseJoinColumns = {
 					@JoinColumn(name = "contract_id", referencedColumnName = "contract_id", nullable = false, unique = true) })

@@ -8,7 +8,7 @@ app.controller('FileController', ['FileService', 'InsuranceService', 'FileTypeSe
     self.files = [];
     self.selectedInsurances = [];
     self.display = $stateParams.fileDisplay || false;;
-    self.displayEditButton = false;
+    self.displayUploadButton = true;
     self.submit = submit;
     self.getAllFiles = getAllFiles;
     self.createFile = createFile;
@@ -44,7 +44,7 @@ app.controller('FileController', ['FileService', 'InsuranceService', 'FileTypeSe
 
 
     self.dtOptions = DTOptionsBuilder.newOptions()
-      .withDisplayLength(20)
+      .withDisplayLength(10)
       .withOption('bServerSide', true)
       .withOption('responsive', true)
       .withOption("bLengthChange", false)
@@ -264,14 +264,27 @@ app.controller('FileController', ['FileService', 'InsuranceService', 'FileTypeSe
     }
 
     function uploadFile() { 
+      self.displayUploadButton = false;
+      self.successMessage = '';
+      self.errorMessage = '';
+      self.warningMessage = 'Processing uploaded file';
       if (self.myFile) {
     	 var activityMonth = moment(self.activityMonth).format('YYYYMM');
         var promise = FileUploadService.uploadFileToUrl(self.myFile, self.insurance.id, self.fileType.id, activityMonth);
 
-        promise.then( function(response) {   
+        promise.then( function(response) {  
+         				self.serverResponse = 'Processed uploaded file '+ self.myFile.name+ ' successfully';
+         				self.successMessage = 'Processed uploaded file '+ self.myFile.name+ ' successfully';
+         				 self.displayUploadButton = true;
+         				  self.warningMessage='';
+         				 $scope.myForm.$setPristine();
                        },
         		      function() {
-                      self.serverResponse = 'An error has occurred';
+                      self.serverResponse = 'An error has occurred while processing'+ self.myFile.name;
+                      self.errorMessage = 'An error has occurred while processing'+ self.myFile.name;
+                       self.displayUploadButton = true;
+                       self.warningMessage='';
+                       $scope.myForm.$setPristine();
                       }
                     );
       }

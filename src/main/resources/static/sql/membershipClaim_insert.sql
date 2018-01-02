@@ -1,30 +1,29 @@
+
 drop table if exists csv2Table_Amg_Claim_temp;
  create temporary table csv2Table_Amg_Claim_temp as
- select *
- from csv2Table_Amg_Claim
- group by SRC_SYS_MEMBER_NBR;
+ select *   from csv2Table_Amg_Claim group by SRC_SYS_MEMBER_NBR;
+  
+ alter table csv2Table_Amg_Claim_temp add key MBRGENDER(MBRGENDER),  add key SRC_SYS_MEMBER_NBR(SRC_SYS_MEMBER_NBR)  ;
  
-INSERT ignore INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB, Mbr_Status,Mbr_MedicaidNo,Mbr_MedicareNo,file_id,created_date,updated_date,created_by,updated_by	,active_ind )
-select * from (
- SELECT   MLNAME,MFNAME,lg.gender_id,STRING_TO_DATE(MBRDOB), 4 status,MEDICAIDNO,MEDICARENO,:fileId fileId,  now() created_date,now() updated_date,'sarath' created_by,'sarath' updated_by,'Y' active_ind  
+ select :activityMonth into @reportMonth;
+ 
+INSERT ignore INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB, Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,Mbr_MedicareNo,file_id,created_date,updated_date,created_by,updated_by	,active_ind )
+ SELECT   MLNAME,MFNAME,lg.gender_id,
+ case when STRING_TO_DATE(MBRDOB)    > current_date   then  DATE_SUB( STRING_TO_DATE(MBRDOB) ,INTERVAL 100 YEAR)   else  STRING_TO_DATE(MBRDOB)  end  dob,  
+ 4 status,csv2AmgClaim.SRC_SYS_MEMBER_NBR,MEDICAIDNO,MEDICARENO,:fileId fileId,  now() created_date,now() updated_date,:username created_by,:username updated_by,'Y' active_ind  
   FROM csv2Table_Amg_Claim_temp csv2AmgClaim
    join lu_gender lg on lg.code = csv2AmgClaim.MBRGENDER
- LEFT OUTER JOIN (select * from membership_insurance group by SRC_SYS_MBR_NBR) mi on mi.SRC_SYS_MBR_NBR  =  convert(csv2AmgClaim.SRC_SYS_MEMBER_NBR,unsigned) and mi.ins_Id=:insId
- where mi.SRC_SYS_MBR_NBR is null
- group by csv2AmgClaim.SRC_SYS_MEMBER_NBR
- )a 
-ON DUPLICATE KEY UPDATE
- Mbr_Status =a.status ,
- Mbr_MedicaidNo =a.MEDICAIDNO,
- file_id=a.fileId;
+ LEFT  JOIN  membership m on m.SRC_SYS_MBR_NBR  =   csv2AmgClaim.SRC_SYS_MEMBER_NBR
+ where m.SRC_SYS_MBR_NBR is null;
  
-  
- INSERT INTO membership_insurance (ins_id,mbr_id,SRC_SYS_MBR_NBR,file_id,created_date,updated_date,created_by ,   updated_by ,   active_ind ) 
- SELECT :insId, m.mbr_id, csv2AmgClaim.SRC_SYS_MEMBER_NBR , :fileId, now(),now(),'sarath','sarath','Y'   FROM csv2Table_Amg_Claim_temp csv2AmgClaim
- join membership m  on m.Mbr_MedicaidNo=csv2AmgClaim.MEDICAIDNO
-  LEFT OUTER JOIN (select * from membership_insurance group by SRC_SYS_MBR_NBR) mi on mi.SRC_SYS_MBR_NBR  =  convert(csv2AmgClaim.SRC_SYS_MEMBER_NBR,unsigned) and mi.ins_Id=:insId
- where mi.SRC_SYS_MBR_NBR is null
- group by csv2AmgClaim.SRC_SYS_MEMBER_NBR;
+ 
+
+ -- INSERT INTO membership_insurance (ins_id,mbr_id,SRC_SYS_MBR_NBR,file_id,created_date,updated_date,created_by ,   updated_by ,   active_ind ) 
+ -- SELECT :insId, m.mbr_id, csv2AmgClaim.SRC_SYS_MEMBER_NBR , :fileId, now(),now(),:username,:username,'Y'   FROM csv2Table_Amg_Claim_temp csv2AmgClaim
+ -- join membership m  on m.SRC_SYS_MBR_NBR=csv2AmgClaim.SRC_SYS_MBR_NBR
+ --  LEFT  JOIN  membership_insurance mi on mi.mbr_id = m.mbr_id and  mi.ins_Id=:insId
+ -- where mi.mbr_id is null
+ -- group by csv2AmgClaim.SRC_SYS_MEMBER_NBR;
  
 
 INSERT INTO membership_claims
@@ -36,23 +35,21 @@ market_lvl1,market_lvl2,market_lvl3,market_lvl4,market_lvl5,market_lvl6,market_l
 tin,dx_type_cd,proc_type_cd,created_date,updated_date,created_by,updated_by,active_ind,file_id
 )
 SELECT 
-CLAIMNUMBER,mi.mbr_id,rc.prvdr_id,:insId, :reportMonth reportMonth,CLAIMTYPE,lft.code,null,
+CLAIMNUMBER,m.mbr_id,c.prvdr_id,:insId, @reportMonth reportMonth,CLAIMTYPE,lft.code,null,
 null,csv2AmgClaim.BILLTYPE,csv2AmgClaim.DISCHARGESTATUS,null,
 CONCAT_WS(',',NULLIF(DIAGNOSIS1,'') , NULLIF(DIAGNOSIS2,'') , NULLIF(DIAGNOSIS3,''), NULLIF(DIAGNOSIS4,'') ,NULLIF(DIAGNOSIS5,'') , NULLIF(DIAGNOSIS6,'') , NULLIF(DIAGNOSIS7,'') ,NULLIF(DIAGNOSIS8,'')) diagnoses,
 csv2AmgClaim.PRODUCT_LABEL,csv2AmgClaim.PRODUCT_LVL1,csv2AmgClaim.PRODUCT_LVL2,csv2AmgClaim.PRODUCT_LVL3,csv2AmgClaim.PRODUCT_LVL4,csv2AmgClaim.PRODUCT_LVL5,
 csv2AmgClaim.PRODUCT_LVL6,csv2AmgClaim.PRODUCT_LVL7,csv2AmgClaim.MARKET_LVL1,csv2AmgClaim.MARKET_LVL2,csv2AmgClaim.MARKET_LVL3,csv2AmgClaim.MARKET_LVL4,
 csv2AmgClaim.MARKET_LVL5,csv2AmgClaim.MARKET_LVL6,csv2AmgClaim.MARKET_LVL7,csv2AmgClaim.MARKET_LVL8,
 csv2AmgClaim.TIN,csv2AmgClaim.DX_TYPE_CD,csv2AmgClaim.PROC_TYPE_CD,
-  now(),now(),'sarath','sarath','Y', :fileId 
+  now(),now(),:username,:username,'Y', :fileId
   FROM csv2Table_Amg_Claim csv2AmgClaim
- LEFT OUTER JOIN ( select * from membership_insurance group by SRC_SYS_MBR_NBR)  mi on mi.SRC_SYS_MBR_NBR  =   csv2AmgClaim.SRC_SYS_MEMBER_NBR and mi.ins_Id=:insId
- LEFT OUTER JOIN contract c on INSTR(c.PCP_PROVIDER_NBR, csv2AmgClaim.PCP_PROVIDER_NBR )
- LEFT OUTER JOIN reference_contract rc on  c.ref_contract_Id = rc.ref_contract_Id  
+  JOIN  membership m on m.SRC_SYS_MBR_NBR  =   csv2AmgClaim.SRC_SYS_MEMBER_NBR 
+   LEFT JOIN (select c.*,rc.prvdr_id,insurance_id from contract c 
+                   JOIN reference_contracts rc on  c.contract_Id = rc.contract_Id  and insurance_id =:insId
+                   )c on FIND_IN_SET( csv2AmgClaim.PCP_PROVIDER_NBR,c.PCP_PROVIDER_NBR )
 LEFT OUTER JOIN lu_facility_type lft on lft.description = csv2AmgClaim.FACILITY_TYPE_DESC
-LEFT OUTER JOIN membership_claims mc on mc.claim_id_number =  csv2AmgClaim.CLAIMNUMBER and mc.mbr_id=mi.mbr_id and mc.claim_type = csv2AmgClaim.CLAIMTYPE and mc.ins_id=:insId and mc.report_month = :reportMonth
+LEFT OUTER JOIN membership_claims mc on mc.claim_id_number =  csv2AmgClaim.CLAIMNUMBER and mc.mbr_id=m.mbr_id and mc.claim_type = csv2AmgClaim.CLAIMTYPE and mc.ins_id=:insId and mc.report_month = @reportMonth
 WHERE  mc.claim_id_number is null
-GROUP BY CLAIMNUMBER,mi.mbr_id,CLAIMTYPE,reportMonth;
-
-
-
+GROUP BY CLAIMNUMBER,m.mbr_id,CLAIMTYPE,reportMonth;
 

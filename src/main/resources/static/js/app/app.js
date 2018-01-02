@@ -714,15 +714,16 @@
 	          controller:'ProblemController',
 	          controllerAs:'ctrl',
 	          resolve: {
-	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+	        	  loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
 		                return $ocLazyLoad.load('main.problem'); // Resolve promise and load before view 
 		            }],
-			      icdMeasures : function ( $q,  ICDMeasureService) {
+			      icdMeasures : ['loadMyService', '$q',  '$injector', function (loadMyService, $q, $injector) {
 		    		  console.log('Load all ICDMeasures');
+		    		  var ICDMeasureService = $injector.get("ICDMeasureService");
 			          var deferred = $q.defer();
 			          ICDMeasureService.loadICDMeasures().then(deferred.resolve, deferred.resolve);
 			          return deferred.promise;
-			      }
+			      }]
 	          }
 	      })
 	      .state('main.problem.edit', {
@@ -743,15 +744,16 @@
 	          controller:'HedisMeasureRuleController',
 	          controllerAs:'ctrl',
 	          resolve: {
-	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+	        	  loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
 		                return $ocLazyLoad.load('main.hedisMeasureRule'); // Resolve promise and load before view 
 		            }],
-	        	  hedisMeasures : function ( $q,  HedisMeasureService) {
+	        	  hedisMeasures: ['loadMyService', '$q',  '$injector', function (loadMyService, $q, $injector) {
 		    		  console.log('Load all hedisMeasures');
+		    		   var HedisMeasureService = $injector.get("HedisMeasureService");
 			          var deferred = $q.defer();
 			          HedisMeasureService.loadAllHedisMeasures().then(deferred.resolve, deferred.resolve);
 			          return deferred.promise;
-			      }
+			      }]
 	          }
 	      })
 	      .state('main.hedisMeasureRule.edit', {
@@ -938,9 +940,16 @@
 	          controller:'NewMedicalLossRatioController',
 	          controllerAs:'ctrl',
 	          resolve: {
-	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+	        	  loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
 		                return $ocLazyLoad.load('main.newMedicalLossRatio'); // Resolve promise and load before view 
-		            }]
+		            }],
+			      reportMonths: ['loadMyService', '$q',  '$injector', function (loadMyService, $q, $injector  ) {
+		    		  console.log('Load all reportMonths');
+		    		  var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
+			          var deferred = $q.defer();
+			          NewMedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }]
 	          }
 	      })
 	       .state('main.membershipActivityMonth', {
@@ -1192,6 +1201,29 @@
 			  };
 			});
 
+	app.filter('filterNotFromArray', function() {
+		  return function(input, arrayToMatch) {
+			    input = input || [];
+			    arrayToMatch= arrayToMatch|| [];
+			    var l = input.length,
+			        k = arrayToMatch.length,
+			        out = [], i = 0,
+			        map = {};
+
+			    for (; i < k; i++) {
+			      map[arrayToMatch[k]] = true;
+			    }
+
+			    for (i = 0; i < l; i++) {
+			      if(!map[input[i].name]){
+			          out.push(input[i]);
+			      }
+			    }
+
+			    return out;
+			  };
+			});
+			
 	app.filter('tel', function () {
 	    return function (tel) {
 	        if (!tel) { return ''; }

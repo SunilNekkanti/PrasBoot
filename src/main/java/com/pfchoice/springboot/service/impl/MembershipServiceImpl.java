@@ -1,11 +1,15 @@
 package com.pfchoice.springboot.service.impl;
 
+import com.pfchoice.springboot.configuration.ConfigProperties;
 import com.pfchoice.springboot.model.Membership;
 import com.pfchoice.springboot.repositories.MembershipRepository;
 import com.pfchoice.springboot.service.MembershipService;
+import com.pfchoice.springboot.util.PrasUtil;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +25,12 @@ public class MembershipServiceImpl implements MembershipService {
 	@Autowired
 	private MembershipRepository membershipRepository;
 
+	@Autowired
+	ConfigProperties configProperties;
+
+	@Autowired
+	PrasUtil prasUtil;
+	
 	public Membership findById(Integer id) {
 		return membershipRepository.findOne(id);
 	}
@@ -71,6 +81,14 @@ public class MembershipServiceImpl implements MembershipService {
 
 	public int unloadCSV2Table() {
 		return membershipRepository.unloadCSV2Table();
+	}
+	
+	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipRepository,parameters, configProperties.getQueryTypeInsert() );
+	}
+	
+	public Integer loadData(final String entityClassName, final Map<String, Object> parameters) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(entityClassName, parameters, configProperties.getQueryTypeInsert() );
 	}
 
 }

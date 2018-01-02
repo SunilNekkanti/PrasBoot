@@ -37,23 +37,18 @@
 
          <div style="height:600px" ng-if="!ctrl.displayTable"> </div> 
        
-              <div class="table-responsive" >
+         <div ng-if="ctrl.displayTable">
                <tabset>
                  <tab heading="Detail">
-	                  <div ng-if="ctrl.displayTable">
 	                    <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns" dt-instance="dtInstance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
-	                    cellspacing="0" width="100%"></table>
-	                  </div>
+	                    cellspacing="0" width="97%"></table>
 	 				</tab>
 	 				 <tab heading="Summary">
-	 				  <div  ng-if="ctrl.displayTable">
 	 				      <table datatable="" id="content1" dt-options="ctrl.dt1Options" dt-columns="ctrl.dt1Columns" dt-instance="dt1InstanceCallback" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
-	                       cellspacing="0" width="100%"></table>
-	 				  </div>
+	                       cellspacing="0" width="97%"></table>
 	                 </tab>
              </tabset>
-               
-              </div>
+         </div>
          
   
 

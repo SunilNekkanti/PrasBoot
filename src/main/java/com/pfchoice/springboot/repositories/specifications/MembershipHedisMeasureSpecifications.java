@@ -41,7 +41,7 @@ public class MembershipHedisMeasureSpecifications implements Specification<Membe
 		}
 
 		if (mbrId != null) {
-			p.getExpressions().add(cb.and(cb.equal(root.join("mbr").get("id"), mbrId)));
+			p.getExpressions().add(cb.and(root.join("mbr").get("id").in(mbrId)));
 		}
 
 		if (hedisRules != null && hedisRules.size() > 0) {

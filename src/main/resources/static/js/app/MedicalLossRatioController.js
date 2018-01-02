@@ -9,7 +9,7 @@ app.controller('MedicalLossRatioController',
         self.medicalLossRatio = {};
         self.medicalLossRatios = [];
         self.prvdrs=[];
-        self.categories =['Total', 'Pharmacy','Inst','Fund','Unwanted_Claims','Stop_Loss', 'Patients' ,'MLR','QMLR','AVGMLR', 'AVGQMLR'];
+        self.categories =['Total', 'Pharmacy','Inst','Prof','Fund','Unwanted_Claims','Stop_Loss', 'Patients' ,'MLR','QMLR','AVGMLR', 'AVGQMLR'];
         self.reportMonths = [];
         self.selectedPrvdrs = [];
         self.selectedReportMonths =[];

@@ -1,8 +1,13 @@
 package com.pfchoice.springboot.service.impl;
 
+import com.pfchoice.springboot.configuration.ConfigProperties;
 import com.pfchoice.springboot.model.FacilityType;
 import com.pfchoice.springboot.repositories.FacilityTypeRepository;
 import com.pfchoice.springboot.service.FacilityTypeService;
+import com.pfchoice.springboot.util.PrasUtil;
+
+import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +22,12 @@ public class FacilityTypeServiceImpl implements FacilityTypeService {
 
 	@Autowired
 	private FacilityTypeRepository facilityTypeRepository;
+
+	@Autowired
+	ConfigProperties configProperties;
+
+	@Autowired
+	PrasUtil prasUtil;
 
 	public FacilityType findById(Integer id) {
 		return facilityTypeRepository.findOne(id);
@@ -50,4 +61,10 @@ public class FacilityTypeServiceImpl implements FacilityTypeService {
 		return findByDescription(facilityType.getDescription()) != null;
 	}
 
+	@Override
+	public Integer loadData(Map<String, Object> parameters) throws IOException, InterruptedException {
+		return prasUtil.executeSQLQuery(facilityTypeRepository, parameters, configProperties.getQueryTypeInsert());
+	}
+
+	
 }

@@ -7,6 +7,7 @@
       <div class="formcontainer">
         <div class="alert alert-success" facilityType="alert" ng-if="ctrl.successMessage">{{ctrl.successMessage}}</div>
         <div class="alert alert-danger" facilityType="alert" ng-if="ctrl.errorMessage">{{ctrl.errorMessage}}</div>
+         <div class="alert alert-primary" facilityType="alert" ng-if="ctrl.warningMessage">{{ctrl.errorMessage}}</div>
         <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
           <input type="hidden" ng-model="ctrl.facilityType.id" />
           <div class="row">
@@ -40,7 +41,7 @@
 
           <div class="row">
             <div class="form-actions floatCenter col-md-offset-8">
-             <button type="button" ng-click="ctrl.uploadFile()"   ng-show="ctrl.myFile" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">Upload</button>
+             <button type="button" ng-click="ctrl.uploadFile()"   ng-show="ctrl.myFile && ctrl.displayUploadButton" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">Upload</button>
               <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-show="ctrl.insurance.id" ng-disabled="myForm.$pristine">Reset Form</button>
               <button type="button" ng-click="ctrl.cancelEdit()" class="btn btn-warning btn-sm" ng-show="ctrl.facilityType.id">Cancel</button>
             </div>
