@@ -113,7 +113,6 @@
 							<li><a  ui-sref="main.membershipClaims"  ui-sref-active="active">Claims</a></li>
 							<li><a  ui-sref="main.membershipProblem"  ui-sref-active="active">Problems</a></li>
 							<li><a  ui-sref="main.membershipActivityMonth"  ui-sref-active="active">Activity	Month</a></li>
-							<li><a  ui-sref="main.medicalLossRatio"  ui-sref-active="active">Medical Loss Ratio(MLR) </a></li>
 							<li><a  ui-sref="main.newMedicalLossRatio"  ui-sref-active="active">New Medical Loss Ratio(MLR) </a></li>
              </ul>
              </li> 

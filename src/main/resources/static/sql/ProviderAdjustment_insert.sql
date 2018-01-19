@@ -2,14 +2,15 @@
 replace into provider_adjustment select null,c.insurance_id, c.prvdr_id, :fileId, :activityMonth reportMonth, ml.IPA_CD, ml.RISK_ENTITY_TYPE, ml.CONTRACT_YEAR, ml.TIME_PERIOD, ml.CONTRACT_PERIOD_START_DT, 
 ml.CONTRACT_PERIOD_END_DT, ml.TRACK_MODEL, ml.RISK_IND, ml.PCP_PROVIDER_NBR, ml.ACTIVITYDATE, ml.ACTIVITYMONTH, ml.RISK_RECON_COS_DESC, ml.ADJUSTMENT_DESC, ml.PRODUCT_LABEL, ml.PRODUCT_LVL1, 
 ml.PRODUCT_LVL2, ml.PRODUCT_LVL3, ml.PRODUCT_LVL4, ml.PRODUCT_LVL5, ml.PRODUCT_LVL6, ml.PRODUCT_LVL7, ml.MARKET_LVL1, ml.MARKET_LVL2, ml.MARKET_LVL3, ml.MARKET_LVL4, ml.MARKET_LVL5, ml.MARKET_LVL6,
-ml.MARKET_LVL7, ml.MARKET_LVL8, sum(ml.ADJUSTMENT_AMT), ml.TIN
+ml.MARKET_LVL7, ml.MARKET_LVL8,(ml.ADJUSTMENT_AMT), ml.TIN
 from csv2table_amg_adjust ml
 JOIN  ( select c.*,rc.insurance_id,rc.prvdr_id from contract c 
                         JOIN reference_contracts rc on  c.contract_Id = rc.contract_Id  and insurance_id =:insId
 				 ) c on FIND_IN_SET(ml.PCP_PROVIDER_NBR, c.PCP_PROVIDER_NBR)    
 left join provider_adjustment pa on pa.report_month =:activityMonth and pa.ins_id =c.insurance_id and pa.prvdr_id = c.prvdr_id and pa.ACTIVITYMONTH = ml.ACTIVITYMONTH and pa.ADJUSTMENT_DESC = ml.ADJUSTMENT_DESC and pa.PRODUCT_LABEL = ml.PRODUCT_LABEL
 where pa.PRVDR_ADJ_ID is null
- group by reportMonth,c.insurance_id,c.prvdr_id,ACTIVITYMONTH,ml.ADJUSTMENT_DESC,ml.PRODUCT_LABEL;
+ group by reportMonth,c.insurance_id,c.prvdr_id,ACTIVITYMONTH,ml.ADJUSTMENT_DESC,ml.PRODUCT_LABEL,PRODUCT_LVL1
+ ;
   
  
  replace  into new_medical_loss_ratio 
