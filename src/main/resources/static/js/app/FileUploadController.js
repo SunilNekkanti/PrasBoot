@@ -2,7 +2,7 @@
 'use strict';
 var app = angular.module('my-app');
 app.controller('FileUploadController',
-    ['FileUploadService','InsuranceService','$scope', '$compile','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( FileUploadService, InsuranceService, $scope,$compile, $state, $stateParams,DTOptionsBuilder, DTColumnBuilder) {
+    ['FileUploadService','InsuranceService','$scope', '$compile','$state','$stateParams','$interval','DTOptionsBuilder', 'DTColumnBuilder', function( FileUploadService, InsuranceService, $scope,$compile, $state, $stateParams,$interval,DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
         self.fileUpload = {};
@@ -80,6 +80,7 @@ app.controller('FileUploadController',
 				  sortDir = paramMap['order'][0]['dir'];
 			 }
 			 
+			 
 			// Then just call your service to get the
 			// records from server side
 			FileUploadService
@@ -93,6 +94,7 @@ app.controller('FileUploadController',
 								};
 								fnCallback(records);
 							});
+				$interval(reloadData,  1000);			
 		}
 
 		 function reloadData() {
@@ -100,6 +102,8 @@ app.controller('FileUploadController',
 			self.dtInstance.reloadData(callback,
 					resetPaging);
 		} 
+		
+		
 		 
        function createdRow(row, data, dataIndex) {
             // Recompiling so we can bind Angular directive to the DT

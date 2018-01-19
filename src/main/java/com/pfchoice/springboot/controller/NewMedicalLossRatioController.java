@@ -44,15 +44,16 @@ public class NewMedicalLossRatioController {
 			@RequestParam(value = "insId", required = true) Integer insId,
 			@RequestParam(value = "prvdrIds", required = true) List<Integer> prvdrIds,
 			@RequestParam(value = "reportMonths", required = true) List<Integer> reportMonths,
+			@RequestParam(value = "activityMonths", required = true) List<Integer> activityMonths,
 			@RequestParam(value = "isSummary", required = true) boolean isSummary,
 			@RequestParam(value = "search", required = false) String search) {
 
 		Page<NewMedicalLossRatio> newMedicalLossRatios;
 		if (isSummary) {
-			newMedicalLossRatios = newMedicalLossRatioService.findSummary(insId, prvdrIds, reportMonths, pageRequest);
+			newMedicalLossRatios = newMedicalLossRatioService.findSummary(insId, prvdrIds, reportMonths, activityMonths, pageRequest);
 		} else {
 			Specification<NewMedicalLossRatio> spec = new NewMedicalLossRatioSpecifications(search, insId, prvdrIds,
-					reportMonths);
+					reportMonths, activityMonths);
 			newMedicalLossRatios = newMedicalLossRatioService.findAllNewMedicalLossRatios(spec, pageRequest);
 		}
 
@@ -73,6 +74,23 @@ public class NewMedicalLossRatioController {
 
 		newMedicalLossRatioService.deleteAllNewMedicalLossRatios();
 		return new ResponseEntity<NewMedicalLossRatio>(HttpStatus.NO_CONTENT);
+	}
+
+	
+	// -------------------Retrieve All
+	// ReportMonths---------------------------------------------
+
+	@SuppressWarnings("unchecked")
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
+	@RequestMapping(value = "/newMedicalLossRatio/reportingYears/", method = RequestMethod.GET)
+	public ResponseEntity<List<String>> listAllReportingYears() {
+		List<String> reportYears = newMedicalLossRatioService.findAllReportingYears();
+
+		if (reportYears.isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			// You many decide to return HttpStatus.NOT_FOUND
+		}
+		return new ResponseEntity<List<String>>(reportYears, HttpStatus.OK);
 	}
 
 }

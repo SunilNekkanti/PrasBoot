@@ -1,7 +1,7 @@
 //Code goes here
 (function(){
 	'use strict';
-	var app = angular.module('my-app', ['ui.bootstrap','datatables.bootstrap','ui.router','ngStorage','datatables','ngAnimate', 'ngSanitize','btorfs.multiselect','oc.lazyLoad']);
+	var app = angular.module('my-app', ['datatables','ui.bootstrap','datatables.bootstrap',, 'datatables.buttons', 'datatables.fixedcolumns','ui.router','ngStorage','ngAnimate', 'ngSanitize','btorfs.multiselect','oc.lazyLoad']);
 	app.constant('urls', {
 	    BASE: '/Pras',
 	    USER_SERVICE_API : '/Pras/api/user/',
@@ -16,6 +16,7 @@
 	    STATE_SERVICE_API : '/Pras/api/state/',
 	    STATUS_SERVICE_API : '/Pras/api/membershipStatus/',
 	    REPORTMONTH_SERVICE_API : '/Pras/api/membershipClaimReportMonth/',
+	    PAYMENT_YEARS_SERVICE_API : '/Pras/api/paymentYears/',
 	    LANGUAGE_SERVICE_API : '/Pras/api/language/',
 	    PLANTYPE_SERVICE_API : '/Pras/api/planType/',
 	    FILE_TYPE_SERVICE_API : '/Pras/api//fileType/',
@@ -51,7 +52,9 @@
 	    EVENT_WEEKDAY_SERVICE_API : '/Pras/api/eventWeekDay/',
 	    FILE_UPLOADED_SERVICE_API : '/Pras/api/fileUploaded/',
 	    EVENT_WEEKNUMBER_SERVICE_API : '/Pras/api/eventWeekNumber/',
-	    BESTTIMETOCALL_SERVICE_API : '/Pras/api/bestTimeToCall/'
+	    BESTTIMETOCALL_SERVICE_API : '/Pras/api/bestTimeToCall/',
+	    CALCULATE_RISK_SCORE_SERVICE_API : '/Pras/api/calculateRiskScore/',
+	    MLR_REPORTING_YEARS_SERVICE_API : '/Pras/api/newMedicalLossRatio/reportingYears/'
 	});
 
 	app.controller('NavbarController',  ['$rootScope', '$scope', '$state', '$stateParams', 'UserService', '$localStorage', '$window' , function( $rootScope, $scope, $state, $stateParams, UserService, $localStorage, $window){
@@ -144,6 +147,10 @@
 				name : 'main.icd', 
 				serie: true,
 				files: ['js/app/ICDMeasureService.js','js/app/ICDMeasureController.js']
+             },{
+				name : 'main.riskScore', 
+				serie: true,
+				files: ['js/app/RiskScoreService.js','js/app/RiskScoreController.js']
              },{
 				name : 'main.hedis', 
 				serie: true,
@@ -632,6 +639,24 @@
 	          resolve: {
 	          }
 	      })
+	       .state('main.riskScore', {
+	          url: '/riskScore',
+	          templateUrl: 'partials/riskScore_list',
+	          controller:'RiskScoreController',
+	          controllerAs:'ctrl',
+	          resolve: {
+	        	  loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
+		                return $ocLazyLoad.load('main.riskScore'); // Resolve promise and load before view 
+		            }],
+			       paymentYears: ['loadMyService', '$q',  '$injector', function (loadMyService, $q, $injector  ) {
+			            	 var RiskScoreService = $injector.get("RiskScoreService");
+				    		  console.log('Load all  paymentYears');
+					          var deferred = $q.defer();
+					          RiskScoreService.loadAllPaymentYears().then(deferred.resolve, deferred.resolve);
+					          return deferred.promise;
+				          }] 
+	          }
+	      })
 	       .state('main.hedis', {
 	          url: '/hedis',
 	          templateUrl: 'partials/hedis_list',
@@ -948,6 +973,13 @@
 		    		  var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
 			          var deferred = $q.defer();
 			          NewMedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }],
+		          reportingYears: ['loadMyService', '$q',  '$injector', function (loadMyService, $q, $injector  ) {
+		    		  console.log('Load all reportingYears');
+		    		  var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
+			          var deferred = $q.defer();
+			          NewMedicalLossRatioService.loadAllReportingYears().then(deferred.resolve, deferred.resolve);
 			          return deferred.promise;
 		         }]
 	          }
@@ -1291,7 +1323,21 @@
 		    return filteredObject;
 		   };
 		 });
+		 
+   app.filter('sumByKey', function() {
+        return function(data, key) {
+            if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                return 0;
+            }
+
+            var sum = 0;
+            angular.forEach(data, function(obj, objKey){
+                sum+= parseFloat(obj[key]);
+            });
+
+            return sum;
+        };
+    });		 
 
 })();
-
 

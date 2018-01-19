@@ -11,11 +11,16 @@ app.controller('NewMedicalLossRatioController',
         self.prvdrs=[];
         self.categories =['Total', 'Pharmacy','Inst','Fund','Unwanted_Claims','Stop_Loss', 'Patients' ,'MLR','QMLR','AVGMLR', 'AVGQMLR'];
         self.reportMonths = [];
+        self.reportingQuarters = [{quarter:'Q1', months:['01','02','03']},{quarter:'Q2',months:['04','05','06']},{quarter:'Q3',months:['07','08','09']},{quarter:'Q4',months:['10','11','12']}];
+        self.selectedReportingQuarters =[];
+        self.reportingYears = [];
         self.selectedPrvdrs = [];
         self.selectedReportMonths =[];
+        self.selectedReportingYears = [];
         self.selectedCategories =[];
-        self.insurance ={};
-        self.insurance.id= 0;
+        self.isChecked = isChecked;
+        self.isCheckedQuarter = isCheckedQuarter;
+        self.isCheckedMonth = isCheckedMonth;
         self.display =false;
         self.displayEditButton = false;
         self.insurances=[];
@@ -25,10 +30,15 @@ app.controller('NewMedicalLossRatioController',
         self.mbrId = null;
 		self.prvdrId = null;
         self.reset = reset;
+        self.sync =sync;
+         self.syncQuarters =syncQuarters;
+         self.syncMonths = syncMonths;
+        self.isChecked = isChecked;
         self.getAllInsurances = getAllInsurances;
         self.getAllProviders = getAllProviders;
         self.getAllNewMedicalLossRatios = getAllNewMedicalLossRatios;
         self.getAllReportMonths = getAllReportMonths;
+        self.getAllReportingYears = getAllReportingYears;
         self.setProviders = setProviders;
         self.cancelEdit = cancelEdit;
         self.generate = generate;
@@ -41,11 +51,18 @@ app.controller('NewMedicalLossRatioController',
         self.insurances = getAllInsurances();
         self.prvdrs = getAllProviders();
         self.reportMonths = getAllReportMonths();
+        self.reportingYears = getAllReportingYears();
         self.dtInstanceCallback = dtInstanceCallback;
         self.dt1InstanceCallback = dt1InstanceCallback;
         self.reset = reset;
+        self.selectedActivityMonths  = [];
+        self.insurance = self.insurance || self.insurances[0];
+        self.selectedReportMonths.push(self.reportMonths[0]);
+        self.reportingMonths = [{month:'Jan',value:'01'},{month:'Feb',value:'02'},{month:'Mar',value:'03'},{month:'Apr',value:'04'},{month:'May',value:'05'},{month:'Jun',value:'06'},{month:'Jul',value:'07'},{month:'Aug',value:'08'},{month:'Sep',value:'09'},{month:'Oct',value:'10'},{month:'Nov',value:'11'},{month:'Dec',value:'12'}];
+        self.selectedReportingMonths = [];
         
         self.displayTable = false;
+        
         function dtInstanceCallback(dtInstance) {
 	        self.dtInstance = dtInstance;
 	    }
@@ -57,7 +74,7 @@ app.controller('NewMedicalLossRatioController',
         
         self.dtColumns =[
         	DTColumnBuilder.newColumn('prvdr.name').withTitle('PROVIDER').withClass("text-left"),
- 			DTColumnBuilder.newColumn('reportMonth').withTitle('REPORT_MONTH').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('reportMonth').withTitle('DATAFILE').withClass("text-center"),
  			DTColumnBuilder.newColumn('activityMonth').withTitle('ACTIVITY_MONTH').withClass("text-center"),
  			DTColumnBuilder.newColumn('amgMbrCnt').withTitle('MBR_CNT').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('funding').withTitle('FUNDING').withOption('defaultContent', '').withClass("text-center"),
@@ -84,7 +101,7 @@ app.controller('NewMedicalLossRatioController',
         ];
         
         self.dt1Columns =[
- 			DTColumnBuilder.newColumn('reportMonth').withTitle('REPORT_MONTH').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('reportMonth').withTitle('DATAFILE').withClass("text-center"),
  			DTColumnBuilder.newColumn('activityMonth').withTitle('ACTIVITY_MONTH').withClass("text-center"),
  			DTColumnBuilder.newColumn('amgMbrCnt').withTitle('MBR_CNT').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('funding').withTitle('FUNDING').withOption('defaultContent', '').withClass("text-center"),
@@ -109,21 +126,34 @@ app.controller('NewMedicalLossRatioController',
  			DTColumnBuilder.newColumn('adjust').withTitle('ADJUSTMENT').withOption('defaultContent', '').withClass("text-center")
         ];
         
-        
+		
         self.dtOptions = DTOptionsBuilder.newOptions()
+        .withDOM('Bft')
 		.withOption('bServerSide', true)
-		.withOption('responsive', true)
-		.withOption("bLengthChange", false)
-		.withOption("bPaginate", false)
-		.withOption('bProcessing', true)
-		.withOption('bSaveState', true)
-		.withOption('searchDelay', 1000)
+		.withOption('ordering', false)
 	    .withOption('createdRow', createdRow)
-        .withPaginationType('full_numbers')
 		.withOption('bDeferRender', true)
 		.withOption('scrollY', 450)
 		.withOption('scrollX', 750)
 		.withOption('bDestroy', true)
+		.withFixedColumns({
+							fixedColumns: {
+							            heightMatch: 'auto',
+					        			leftColumns: 3
+					    				}
+        			
+    				     })
+    	.withButtons([
+            		   {
+            extend: 'excelHtml5',
+            text: 'Save as Excel',
+            customize: function( xlsx ) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                $('row:first c', sheet).attr( 's', '42' );
+            }
+        }
+					  ]
+					)
 		.withFnServerData(serverData);
         
         
@@ -132,6 +162,7 @@ app.controller('NewMedicalLossRatioController',
             var insId =  (self.insurance === undefined || self.insurance === null)? 0 : self.insurance.id;
             var prvdrIds = (self.selectedPrvdrs === undefined || self.selectedPrvdrs === null)? 0 :  self.selectedPrvdrs.map(a => a.id);
             var prvdrIdss = prvdrIds.join();
+            var activityMonths = self.selectedActivityMonths.join() ;
             var isSummary = false;
             var reportMonths = self.selectedReportMonths.join();
             var search = aoData[5].value;
@@ -139,35 +170,46 @@ app.controller('NewMedicalLossRatioController',
 			// Then just call your service to get the
 			// records from server side
 			 NewMedicalLossRatioService
-				.loadNewMedicalLossRatios( insId,prvdrIdss, reportMonths, isSummary,search.value)
+				.loadNewMedicalLossRatios( insId,prvdrIdss, reportMonths, activityMonths, isSummary,search.value)
 					.then(
 							function(result) {
+							self.finalData1  = result.data.content;
 								var records = {
 									'recordsTotal' : result.data.totalElements||0,
 									'recordsFiltered' : result.data.totalElements||0,
-									'data' : result.data.content||{}
+									'data' : self.finalData1||{}
 								};
 								fnCallback(records);
 							});
-			 
 		}
 
 
 
 		self.dt1Options = DTOptionsBuilder.newOptions()
+		 .withDOM('Bft')
 		.withOption('bServerSide', true)
-		.withOption('responsive', true)
-		.withOption("bLengthChange", false)
-		.withOption("bPaginate", false)
-		.withOption('bProcessing', true)
-		.withOption('bSaveState', true)
-		.withOption('searchDelay', 1000)
+		.withOption('ordering', false)
 		.withOption('createdRow', createdRow)
-		.withPaginationType('full_numbers')
 		.withOption('bDeferRender', true)
 		.withOption('bDestroy', true)
 		.withOption('scrollY', 450)
 		.withOption('scrollX', 750)
+		.withFixedColumns({
+		                   heightMatch: 'none',
+        				   leftColumns: 4,
+        				   rightColumns: 1
+    						})
+    	.withButtons([
+					   {
+			            extend: 'excelHtml5',
+			            text: 'Save as Excel',
+			            customize: function( xlsx ) {
+			                		var sheet = xlsx.xl.worksheets['sheet1.xml'];
+			                		$('row:first c', sheet).attr( 's', '42' );
+			                       }
+                        }
+					  ]
+					)
 		.withFnServerData(serverData1);
 
         function serverData1(sSource, aoData, fnCallback) {
@@ -177,19 +219,37 @@ app.controller('NewMedicalLossRatioController',
             var prvdrIdss = prvdrIds.join();
             var isSummary = true;
             var reportMonths = self.selectedReportMonths.join();
-			
+			 var activityMonths = self.selectedActivityMonths.join() ;
+			 
 			// Then just call your service to get the
 			// records from server side
 			 NewMedicalLossRatioService
-				.loadNewMedicalLossRatios( insId,prvdrIdss, reportMonths, isSummary)
+				.loadNewMedicalLossRatios( insId, prvdrIdss, reportMonths, activityMonths, isSummary)
 					.then(
 							function(result) {
-								self.finalData  = [];
+								self.finalData  = result.data.content;
+								var rowTotals = {};
+								if( result.data.content != null && result.data.content.length > 0){
+									var keys = Object.keys(result.data.content[0]);
+									keys.forEach( function ( key) {
+									var keyTotal = $filter('sumByKey')(result.data.content, key);
+										 switch(key) {
+										  case  'activityMonth' : rowTotals[key] = 'Total' ; break;
+										  case  'reportMonth' : rowTotals[key]  = result.data.content[0]['reportMonth'];  break;
+										  case  'mlr' : rowTotals[key] =  (rowTotals['totalExp'] / rowTotals['funding'] *100).toFixed(2);  break;
+										  case  'qmlr' : rowTotals[key] =  (rowTotals['totalExp'] / rowTotals['funding']*100 ).toFixed(2);  break;
+										  default : rowTotals[key] = keyTotal.toFixed(2);
+										 }
+									
+									});
+									console.log('rowTotals:',rowTotals);
+								}
+								self.finalData.push(rowTotals);
 							  	
 								var records = {
 									'recordsTotal' : result.data.totalElements||0,
 									'recordsFiltered' : result.data.totalElements||0,
-									'data' : result.data.content||{}
+									'data' : self.finalData||{}
 								};
 								fnCallback(records);
 							});
@@ -202,6 +262,23 @@ app.controller('NewMedicalLossRatioController',
         
        
        function generate(){
+       self.selectedActivityMonths = [];
+       self.selectedReportingYears.forEach(function(reportYear){
+        
+		        if(self.selectedReportingQuarters != null && self.selectedReportingQuarters.length> 0){
+			         self.selectedReportingQuarters.forEach(function(reportingQuarter){
+			            reportingQuarter.months.forEach(function(reportMonth) {
+			            self.selectedActivityMonths.push(''+reportYear+reportMonth);
+			            });
+			         });
+		        } else if(self.selectedReportingMonths != null && self.selectedReportingMonths.length> 0){
+		        	self.selectedReportingMonths.forEach(function(reportMonth) {
+			            self.selectedActivityMonths.push(''+reportYear+reportMonth.value);
+			            });
+		        }
+         
+        }) ;
+       
     	   self.displayTable =true;
        }
        
@@ -223,6 +300,11 @@ app.controller('NewMedicalLossRatioController',
         	return self.reportMonths;
 		}
         
+         function getAllReportingYears() {
+        	self.reportingYears = NewMedicalLossRatioService.getAllReportingYears();
+        	console.log('self.reportingYears', self.reportingYears);
+        	return self.reportingYears;
+		}
         
         function getAllInsurances() {
 			return InsuranceService.getAllInsurances();
@@ -246,6 +328,7 @@ app.controller('NewMedicalLossRatioController',
         function setProviders(){
             self.providers = $filter('providerFilter')(self.prvdrs,  self.insurance.id );
         	self.providers =   $filter('orderBy')(self.providers, 'name');
+        	self.providers.forEach(function(prvdr){self.selectedPrvdrs.push(prvdr) });
         	reset();
         }
         
@@ -258,8 +341,89 @@ app.controller('NewMedicalLossRatioController',
         function reset(){
         	self.displayTable = false;
         }
+        
+        function isChecked(item){
+							      var match = false;
+							      for(var i=0 ; i < self.selectedReportingYears.length; i++) 
+							        if(self.selectedReportingYears[i] == item){
+							           match = true;
+							          break;
+							        }
+							      return match;
+							  };
+							  
+							  
+         function sync(bool, item){
+								  reset();
+								    if(bool){
+								    	self.selectedReportingYears.push(item);
+								    } else {
+								      // remove item
+								      for(var i=0 ; i < self.selectedReportingYears.length; i++) {
+								        if(self.selectedReportingYears[i] == item){
+								        	self.selectedReportingYears.splice(i,1);
+								        }
+								      }      
+								    }
+								  };
+								  
+		function syncQuarters(bool, item){
+		 reset();
+								    if(bool){
+								    	self.selectedReportingQuarters.push(item);
+								    	self.reportingMonths.forEach(function(reportingMonth){
+								    	 syncMonths(false, reportingMonth);
+								    	  });
+								    } else {
+								      // remove item
+								      for(var i=0 ; i < self.selectedReportingQuarters.length; i++) {
+								        if(self.selectedReportingQuarters[i].quarter == item.quarter){
+								        	self.selectedReportingQuarters.splice(i,1);
+								        }
+								      }      
+								    }
+								  };
+								  
+         function isCheckedQuarter(item){
+							      var match = false;
+							      for(var i=0 ; i < self.selectedReportingQuarters.length; i++) 
+							        if(self.selectedReportingQuarters[i].quarter == item.quarter){
+							           match = true;
+							          break;
+							        }
+							      return match;
+							  };
+		
+		function syncMonths(bool, item){
+								  reset();
+								    if(bool){
+								    	self.selectedReportingMonths.push(item);
+								    	 self.reportingQuarters.forEach(function(reportingQuarterrr){
+								    	    syncQuarters(false,reportingQuarterrr);
+								    	  });
+								    } else {
+								      // remove item
+								      for(var i=0 ; i < self.selectedReportingMonths.length; i++) {
+								        if(self.selectedReportingMonths[i].month == item.month){
+								        	self.selectedReportingMonths.splice(i,1);
+								        }
+								      }      
+								    }
+								  };
+								  
+         function isCheckedMonth(item){
+							      var match = false;
+							      for(var i=0 ; i < self.selectedReportingMonths.length; i++) 
+							        if(self.selectedReportingMonths[i].month == item.month){
+							           match = true;
+							          break;
+							        }
+							      return match;
+							  };
+							  
     }
     
-
+ 					
     ]);
    })();
+   

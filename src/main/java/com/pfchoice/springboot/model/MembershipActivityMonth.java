@@ -52,6 +52,7 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	@JoinColumn(name = "ins_id", nullable = false, referencedColumnName = "insurance_id")
 	private Insurance ins;
 
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "file_id", nullable = false, referencedColumnName = "file_id")
 	private File file;

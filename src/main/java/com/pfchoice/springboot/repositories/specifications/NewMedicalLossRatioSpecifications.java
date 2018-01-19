@@ -21,14 +21,17 @@ public class NewMedicalLossRatioSpecifications implements Specification<NewMedic
 	private List<Integer> prvdrIds;
 
 	private List<Integer> reportMonths;
+	
+	private List<Integer> activityMonths;
 
 	public NewMedicalLossRatioSpecifications(String searchTerm, Integer insId, List<Integer> prvdrIds,
-			List<Integer> reportMonths) {
+			List<Integer> reportMonths,List<Integer> activityMonths) {
 		super();
 		this.searchTerm = searchTerm;
 		this.insId = insId;
 		this.prvdrIds = prvdrIds;
 		this.reportMonths = reportMonths;
+		this.activityMonths = activityMonths;
 
 	}
 
@@ -58,6 +61,9 @@ public class NewMedicalLossRatioSpecifications implements Specification<NewMedic
 			p.getExpressions().add(cb.and(root.get("reportMonth").in(reportMonths)));
 		}
 
+		if (activityMonths != null && activityMonths.size() > 0) {
+			p.getExpressions().add(cb.and(root.get("activityMonth").in(activityMonths)));
+		}
 		return p;
 
 	}

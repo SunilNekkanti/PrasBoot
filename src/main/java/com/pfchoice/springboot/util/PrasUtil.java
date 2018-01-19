@@ -65,10 +65,10 @@ public class PrasUtil {
 	}
 
 	@Transactional
-	public List<Object[]> executeStoredProcedure(String spName, Map<String, Object> parameters) {
+	public  List<Object[]> executeStoredProcedure(String spName, Map<String, Object> parameters) {
 
 		StoredProcedureQuery query = em.createNamedStoredProcedureQuery(spName);
-
+		
 		for (Map.Entry<String, Object> entry : parameters.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}
@@ -78,6 +78,7 @@ public class PrasUtil {
 
 	}
 
+	
 	@Transactional
 	public Integer executeSqlScript(final String entityClassName, final String queryType,
 			Map<String, Object> parameters) {

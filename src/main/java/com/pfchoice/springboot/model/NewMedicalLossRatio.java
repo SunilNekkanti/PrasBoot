@@ -31,7 +31,7 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
-	@Column(name = "medical_loss_ratio_id", nullable = false)
+	@Column(name = "medical_loss_ratio_id")
 	private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -131,13 +131,29 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 		this.id = id;
 	}
 
-	public NewMedicalLossRatio(final Integer reportMonth, final Integer activityMonth, 
-			final BigDecimal amgMbrCnt,final BigDecimal funding,final BigDecimal amgProf, final BigDecimal amgInst, final BigDecimal amgPhar,
-			final BigDecimal ibnr, final BigDecimal pcpCap, final BigDecimal specCap, final BigDecimal dentalCap, final BigDecimal transCap, final BigDecimal visCap,
-			final BigDecimal stopLossExp,	final BigDecimal stopLossCredit, final BigDecimal amgVabAdjust,final BigDecimal adjust, final BigDecimal totalExp,
-			final BigDecimal balance,  final BigDecimal mlr,
+	public NewMedicalLossRatio( final Integer reportMonth, 
+			final Integer activityMonth, 
+			final BigDecimal amgMbrCnt,
+			final BigDecimal funding,
+			final BigDecimal amgProf,
+			final BigDecimal amgInst, 
+			final BigDecimal amgPhar,
+			final BigDecimal ibnr, 
+			final BigDecimal pcpCap,
+			final BigDecimal specCap,
+			final BigDecimal dentalCap,
+			final BigDecimal transCap, 
+			final BigDecimal visCap,
+			final BigDecimal stopLossExp,
+			final BigDecimal stopLossCredit,
+			final BigDecimal amgVabAdjust,
+			final BigDecimal adjust,
+			final BigDecimal ibnrInst,
+			final BigDecimal ibnrProf,
+			final BigDecimal totalExp,
+			final BigDecimal balance, 
+			final BigDecimal mlr,
 			final BigDecimal qmlr) {
-		super();
 		this.reportMonth = reportMonth;
 		this.activityMonth = activityMonth;
 		this.amgMbrCnt = amgMbrCnt;
@@ -156,6 +172,8 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 		this.amgSLCredit = stopLossCredit;
 		this.amgVabAdjust = amgVabAdjust;
 		this.adjust = adjust;
+		this.ibnrInst = ibnrInst;
+		this.ibnrProf = ibnrProf;
 		this.totalExp = totalExp;
 		this.balance = balance;
 		this.mlr = mlr;

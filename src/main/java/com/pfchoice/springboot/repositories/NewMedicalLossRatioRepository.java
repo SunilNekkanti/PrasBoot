@@ -16,12 +16,37 @@ import com.pfchoice.springboot.model.NewMedicalLossRatio;
 public interface NewMedicalLossRatioRepository
 		extends JpaRepository<NewMedicalLossRatio, Integer>, JpaSpecificationExecutor<NewMedicalLossRatio> {
 
-	@Query(value ="SELECT new NewMedicalLossRatio( mlr.reportMonth as reportMonth, mlr.activityMonth as activityMonth,  sum( mlr.amgMbrCnt) as amgMbrCnt, sum(mlr.funding) as funding, sum(mlr.amgProf) as amgProf,"
-			+ " sum(mlr.amgInst) as amgInst ,sum(mlr.amgPhar) as amgPhar, sum(mlr.ibnr) as ibnr,sum(mlr.pcpCap) as pcpCap,sum(mlr.specCap) as specCap,sum(mlr.dentalCap) as dentalCap,sum(mlr.transCap) as transCap,sum(mlr.visCap) as visCap,"
-			+ " sum(mlr.amgSLExp) as stopLossExp,sum(mlr.amgSLCredit) as stopLossCredit, sum(mlr.amgVabAdjust) as amgVabAdjust, sum(mlr.adjust) as adjust,sum(mlr.totalExp) as totalExp,"
-			+ "sum(mlr.balance) as balance, qmlrfunction(reportMonth,mlr.ins.id,mlr.prvdr.id,activityMonth,true, true)  as mlr, qmlrfunction(reportMonth,mlr.ins.id,mlr.prvdr.id,activityMonth,false,true)  as qmlr) from NewMedicalLossRatio mlr"
-			+ "  WHERE mlr.ins.id= :insId and mlr.prvdr.id  in ( :prvdrIds) and reportMonth  in ( :reportMonths) group by reportMonth,mlr.ins.id, activityMonth  order by reportMonth,mlr.ins.name,activityMonth ")
-	Page<NewMedicalLossRatio> findSummary(@Param("insId") Integer insId, @Param("prvdrIds") List<Integer> prvdrIds, 
-			@Param("reportMonths") List<Integer> reportMonths, Pageable page);
+	
+	 @Query(value ="SELECT NEW com.pfchoice.springboot.model.NewMedicalLossRatio( mlr.reportMonth , "
+	 		+ "mlr.activityMonth , "
+	 		+ " sum(mlr.amgMbrCnt) ,"
+	 		+ " sum(mlr.funding) ,"
+	 		+ " sum(mlr.amgProf),"
+			+ " sum(mlr.amgInst) ,"
+			+ "sum(mlr.amgPhar), "
+			+ "sum(mlr.ibnr),"
+			+ "sum(mlr.pcpCap) ,"
+			+ "sum(mlr.specCap) ,"
+			+ "sum(mlr.dentalCap) ,"
+			+ "sum(mlr.transCap),"
+			+ "sum(mlr.visCap) ,"
+			+ " sum(mlr.amgSLExp) ,"
+			+ "sum(mlr.amgSLCredit) ,"
+			+ " sum(mlr.amgVabAdjust),"
+			+ " sum(mlr.adjust) ,"
+			+ " sum(mlr.ibnrInst) ,"
+			+ " sum(mlr.ibnrProf) ,"
+			+ "sum(mlr.totalExp),"
+			+ "sum(mlr.balance) ,"
+			+ " qmlrfunction( reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,true,true) , "
+			+ " qmlrfunction( reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true)) from com.pfchoice.springboot.model.NewMedicalLossRatio mlr"
+			+ " WHERE mlr.ins.id =:insId and mlr.prvdr.id in (:prvdrIds) and mlr.reportMonth in (:reportMonths) and mlr.activityMonth in (:activityMonths)"
+			+ "group by mlr.reportMonth,mlr.ins.name,mlr.activityMonth ")
+	 Page<NewMedicalLossRatio> findSummary(@Param("insId") Integer insId, @Param("prvdrIds") List<Integer> prvdrIds, 
+			@Param("reportMonths") List<Integer> reportMonths, @Param("activityMonths") List<Integer> activityMonths, Pageable page);
 
-}
+	 
+	 @Query(value = "select distinct cast(left(activity_month,4) as char)  from new_medical_loss_ratio order by report_month asc", nativeQuery = true)
+		public List<String> findAllReportingYears();
+
+ }

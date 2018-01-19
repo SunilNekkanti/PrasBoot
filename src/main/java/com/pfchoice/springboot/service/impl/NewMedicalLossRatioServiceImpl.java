@@ -36,19 +36,18 @@ public class NewMedicalLossRatioServiceImpl implements NewMedicalLossRatioServic
 		medicalLossRatioRepository.deleteAll();
 	}
 
-	public List<NewMedicalLossRatio> findAllNewMedicalLossRatios(Integer insId, List<Integer> prvdrIds,
-			List<Integer> reportMonths) {
-		return medicalLossRatioRepository.findAll();
-	}
 
 	public Page<NewMedicalLossRatio> findAllNewMedicalLossRatios(Specification<NewMedicalLossRatio> spec,
 			Pageable page) {
 		return medicalLossRatioRepository.findAll(spec, page);
 	}
 
-	public Page<NewMedicalLossRatio> findSummary(Integer insId, List<Integer> prvdrIds, List<Integer> reportMonths,
+	public Page<NewMedicalLossRatio> findSummary(Integer insId, List<Integer> prvdrIds, List<Integer> reportMonths,List<Integer> activityMonths,
 			Pageable page) {
-		return medicalLossRatioRepository.findSummary(insId, prvdrIds,  reportMonths, page);
+		return medicalLossRatioRepository.findSummary(insId, prvdrIds,  reportMonths, activityMonths, page);
 	}
 
+	public List<String> findAllReportingYears(){
+		return medicalLossRatioRepository.findAllReportingYears();
+	}
 }

@@ -18,12 +18,11 @@ public interface NewMedicalLossRatioService {
 
 	void deleteAllNewMedicalLossRatios();
 
-	List<NewMedicalLossRatio> findAllNewMedicalLossRatios(Integer insId, List<Integer> prvdrIds,
-			List<Integer> reportMonths);
-
-	Page<NewMedicalLossRatio> findSummary(Integer insId, List<Integer> prvdrIds, List<Integer> reportMonths,
+	Page<NewMedicalLossRatio> findSummary(Integer insId, List<Integer> prvdrIds, List<Integer> reportMonths,List<Integer> activityMonths,
 			Pageable Page);
 
 	Page<NewMedicalLossRatio> findAllNewMedicalLossRatios(Specification<NewMedicalLossRatio> spec, Pageable Page);
+	
+	List<String> findAllReportingYears();
 
 }

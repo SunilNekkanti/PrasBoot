@@ -11,15 +11,17 @@ app.service('NewMedicalLossRatioService',
                 getAllNewMedicalLossRatios: getAllNewMedicalLossRatios,
                 loadAllReportMonths: loadAllReportMonths,
                 getAllReportMonths: getAllReportMonths,
+                loadAllReportingYears: loadAllReportingYears,
+                getAllReportingYears: getAllReportingYears
             };
 
             return factory;
 
             
-            function loadNewMedicalLossRatios( insId, prvdrIds, reportMonths, isSummary, search) {
+            function loadNewMedicalLossRatios( insId, prvdrIds, reportMonths, activityMonths, isSummary, search) {
                 console.log('Fetching  NewMedicalLossRatios');
                 var pageable = {
-                		 insId:insId,prvdrIds:prvdrIds, reportMonths:reportMonths, isSummary:isSummary,search:search
+                		 insId:insId,prvdrIds:prvdrIds, reportMonths:reportMonths, activityMonths:activityMonths, isSummary:isSummary,search:search
                   		};
 
                   		var config = {
@@ -80,6 +82,42 @@ app.service('NewMedicalLossRatioService',
               return $localStorage.reportMonths;
             }
 
+
+           function loadAllReportingYears() {
+                console.log('Fetching all reportingYears');
+                var deferred = $q.defer();
+                 		   var pageable = {
+                 		 page:0, size:5000
+                 		};
+
+                 		var config = {
+                 		 params: pageable,
+                 		 headers : {'Accept' : 'application/json'}
+                 		};
+                $http.get(urls.MLR_REPORTING_YEARS_SERVICE_API, config )
+                    .then(
+                        function (response) {
+                            console.log('Fetched successfully all reportingYears',response);
+                            if (localStorage.getItem("reportingYears") === null) {
+                            	 $localStorage.reportingYears = response.data;
+                           }else {
+                           	localStorage.removeItem("reportingYears") ;
+                             	$localStorage.reportingYears = response.data;
+                           }
+                            
+                            deferred.resolve(response);
+                        },
+                        function (errResponse) {
+                            console.error('Error while loading reportingYears');
+                            deferred.reject(errResponse);
+                        }
+                    );
+                return deferred.promise;
+            }
+            
+             function getAllReportingYears(){
+              return $localStorage.reportingYears;
+            }
         }
     ]);
    })();
