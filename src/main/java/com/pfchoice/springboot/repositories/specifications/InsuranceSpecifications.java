@@ -16,12 +16,13 @@ public class InsuranceSpecifications implements Specification<Insurance> {
 
 	private String searchTerm;
 	
-	private String currentScreen = "Active";
+	private String currentScreen;
 
 	public InsuranceSpecifications(String searchTerm, String currentScreen) {
 		super();
 		this.searchTerm = searchTerm;
-		this.currentScreen = currentScreen;
+		this.currentScreen = (currentScreen != null) ? currentScreen :"Active";
+		
 	}
 
 	public Predicate toPredicate(Root<Insurance> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {

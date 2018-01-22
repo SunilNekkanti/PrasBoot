@@ -17,12 +17,12 @@ public class ProviderSpecifications implements Specification<Provider> {
 
 	private String searchTerm;
 
-	private String currentScreen = "Active";
+	private String currentScreen;
 	
 	public ProviderSpecifications(String searchTerm, String currentScreen) {
 		super();
 		this.searchTerm = searchTerm;
-		this.currentScreen = currentScreen;
+		this.currentScreen = (currentScreen != null) ? currentScreen :"Active";
 	}
 
 	public Predicate toPredicate(Root<Provider> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {

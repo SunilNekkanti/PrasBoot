@@ -56,7 +56,12 @@ app.controller('NewMedicalLossRatioController',
         self.dt1InstanceCallback = dt1InstanceCallback;
         self.reset = reset;
         self.selectedActivityMonths  = [];
-        self.insurance = self.insurance || self.insurances[0];
+        if(self.insurances != null && self.insurances.length > 0){
+           self.insurance = self.insurance || self.insurances[0];
+        }else  {
+           self.insurance = {};
+        }
+         
         self.selectedReportMonths.push(self.reportMonths[0]);
         self.reportingMonths = [{month:'Jan',value:'01'},{month:'Feb',value:'02'},{month:'Mar',value:'03'},{month:'Apr',value:'04'},{month:'May',value:'05'},{month:'Jun',value:'06'},{month:'Jul',value:'07'},{month:'Aug',value:'08'},{month:'Sep',value:'09'},{month:'Oct',value:'10'},{month:'Nov',value:'11'},{month:'Dec',value:'12'}];
         self.selectedReportingMonths = [];
@@ -72,6 +77,7 @@ app.controller('NewMedicalLossRatioController',
 	        self.dt1Instance = dt1Instance;
 	    }
         
+        setProviders();
         self.dtColumns =[
         	DTColumnBuilder.newColumn('prvdr.name').withTitle('PROVIDER').withClass("text-left"),
  			DTColumnBuilder.newColumn('reportMonth').withTitle('DATAFILE').withClass("text-center"),

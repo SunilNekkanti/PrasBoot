@@ -506,7 +506,7 @@
 	          controllerAs:'ctrl',
 	          data: {
 	      	    'currentScreen': 'Active', 
-	      	     'toScreen': 'Archives', 
+	      	     'toScreen': 'Archive', 
 	      	    'linkToScreen': 'main.providerArchives' 
 	      	  },
 	          resolve: {
@@ -539,7 +539,7 @@
 	          controller:'ProviderController',
 	          controllerAs:'ctrl',
 	          data: {
-	      	    'currentScreen': 'Archives', 
+	      	    'currentScreen': 'Archive', 
 	      	    'toScreen': 'Active' ,
 	      	    'linkToScreen': 'main.provider' 
 	      	  },
@@ -604,7 +604,7 @@
 	          controllerAs:'ctrl',
 	          data: {
 	      	    'currentScreen': 'Active', 
-	      	     'toScreen': 'Archives', 
+	      	     'toScreen': 'Archive', 
 	      	    'linkToScreen': 'main.insuranceArchives' 
 	      	  },
 	          resolve: { 
@@ -619,7 +619,7 @@
 	          controller:'InsuranceController',
 	          controllerAs:'ctrl',
 	          data: {
-	      	    'currentScreen': 'Archives', 
+	      	    'currentScreen': 'Archive', 
 	      	    'toScreen': 'Active' ,
 	      	    'linkToScreen': 'main.insurance' 
 	      	  },
@@ -1034,17 +1034,6 @@
 				          console.log('deferred.promise'+deferred.promise);
 				          return deferred.promise;	  
 	                  }]
-	          }
-	      })
-	      .state('main.medicalLossRatio', {
-	          url: '/medicalLossRatio',
-	          templateUrl: 'partials/medicalLossRatio_list',
-	          controller:'MedicalLossRatioController',
-	          controllerAs:'ctrl',
-	          resolve: {
-	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
-		                return $ocLazyLoad.load('main.medicalLossRatio'); // Resolve promise and load before view 
-		            }]
 	          }
 	      })
 	       .state('main.newMedicalLossRatio', {
