@@ -142,8 +142,8 @@ datasource:
     hibernate:
       dialect: com.pfchoice.springboot.hibernate.MySQL5InnoDBDialect
       hbm2ddl.method: none
-      show_sql: false
-      format_sql: false
+      show_sql: true
+      format_sql: true
       hikari:
        idleTimeout: 900000
        maxLifeTime: 840000

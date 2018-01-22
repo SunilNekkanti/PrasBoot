@@ -51,7 +51,9 @@ public class InsuranceSpecifications implements Specification<Insurance> {
 		} else{
 			p.getExpressions().add(cb.or(
 					cb.greaterThan(cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
-			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")))  
+			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
+			        cb.isNull(contractStartTime),
+			        cb.isNull(contractEndTime)
 			        ));
 		}
 		

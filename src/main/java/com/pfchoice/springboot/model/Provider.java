@@ -51,7 +51,7 @@ public class Provider extends RecordDetails implements Serializable {
 	@OrderColumn(name = "insurance_id")
 	private Set<ProviderReferenceContract> prvdrRefContracts;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "reference_contacts", joinColumns = {
 			@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })

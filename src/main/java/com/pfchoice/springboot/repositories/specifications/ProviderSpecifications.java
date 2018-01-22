@@ -44,8 +44,8 @@ public class ProviderSpecifications implements Specification<Provider> {
 
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		
-		Expression<Date> contractStartTime = root.join("prvdrRefContracts").join("contract").get("startDate");
-		Expression<Date> contractEndTime = root.join("prvdrRefContracts").join("contract").get("endDate");
+		Expression<Date> contractStartTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("startDate");
+		Expression<Date> contractEndTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("endDate");
         
 		if("Active".equals(this.currentScreen)){
 			p.getExpressions().add(cb.and(cb.between(
@@ -56,7 +56,9 @@ public class ProviderSpecifications implements Specification<Provider> {
 		} else{
 			p.getExpressions().add(cb.or(
 					cb.greaterThan(cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
-			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")))  
+			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
+			        cb.isNull(contractStartTime),
+			        cb.isNull(contractEndTime)
 			        ));
 		}
 	

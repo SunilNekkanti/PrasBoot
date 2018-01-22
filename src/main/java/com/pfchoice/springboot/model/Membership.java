@@ -128,7 +128,7 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@Where(clause = "active_ind ='Y'")
 	private List<MembershipActivityMonth> mbrActivityMonthList;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(optional = true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "reference_contacts", joinColumns = {
 			@JoinColumn(name = "mbr_id", referencedColumnName = "mbr_id", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })

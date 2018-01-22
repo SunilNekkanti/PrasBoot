@@ -67,7 +67,7 @@ public class Contact extends RecordDetails implements Serializable, FieldHandled
 	private String city;
 
 	@LazyToOne(LazyToOneOption.NO_PROXY)
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(optional = true,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "ref_cnt_id", referencedColumnName = "ref_cnt_id")
 	private ReferenceContact refContact;
 
