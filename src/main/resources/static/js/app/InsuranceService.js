@@ -37,10 +37,10 @@ app.service('InsuranceService',
                 return deferred.promise;
             }
 
-            function loadInsurances(pageNo, length, search, order) {
+            function loadInsurances(pageNo, length, search, order, currentScreen) {
                 console.log('Fetching  Insurances');
                 var pageable = {
-                  		 page:pageNo, size:length,sort: order,search: search||''
+                  		 page:pageNo, size:length,sort: order,currentScreen:currentScreen, search: search||''
                   		};
 
                   		var config = {

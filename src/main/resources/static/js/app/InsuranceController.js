@@ -33,6 +33,10 @@ app.controller('InsuranceController',
         self.onlyIntegers = /^\d+$/;
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
         self.checkBoxChange = checkBoxChange;
+        self.currentScreen = $state.current.data.currentScreen;
+        self.toScreen = $state.current.data.toScreen;
+        self.linkToScreen = $state.current.data.linkToScreen;
+                
         self.dtColumns = [
             DTColumnBuilder.newColumn('name').withTitle('INSURANCE').renderWith(
 					function(data, type, full,
@@ -86,7 +90,7 @@ app.controller('InsuranceController',
 			// Then just call your service to get the
 			// records from server side
 			InsuranceService
-					.loadInsurances(page, length, search.value, sortCol+','+sortDir)
+					.loadInsurances(page, length, search.value, sortCol+','+sortDir, self.currentScreen)
 					.then(
 							function(result) {
 								var records = {
@@ -261,12 +265,22 @@ app.controller('InsuranceController',
             self.errorMessage='';
             self.insurance={};
             self.display = false;
-            $state.go('main.insurance', {}, {location: true,reload: false,notify: false});
+            if(self.currentScreen === 'Active') {
+           		 $state.go('main.insurance', {}, {location: true,reload: false,notify: false});
+            }else{
+            	$state.go('main.insuranceArchives', {}, {location: true,reload: false,notify: false});
+            }
+            
         }
         
         function insuranceEdit(id) {
         	var params = {'insuranceDisplay':true};
-			var trans =  $state.go('main.insurance.edit',params).transition;
+        	var trans;
+        	if(self.currentScreen === 'Active') {
+				trans =  $state.go('main.insurance.edit',params).transition;
+			}else {
+			    trans =  $state.go('main.insuranceArchives.edit',params).transition;
+			}
 			trans.onSuccess({}, function() { editInsurance(id);  }, { priority: -1 });
 			
         }

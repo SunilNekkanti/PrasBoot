@@ -31,21 +31,20 @@ public interface NewMedicalLossRatioRepository
 			+ "sum(mlr.transCap),"
 			+ "sum(mlr.visCap) ,"
 			+ " sum(mlr.amgSLExp) ,"
-			+ "sum(mlr.amgSLCredit) ,"
+			+ " sum(mlr.amgSLCredit) ,"
 			+ " sum(mlr.amgVabAdjust),"
 			+ " sum(mlr.adjust) ,"
 			+ " sum(mlr.ibnrInst) ,"
 			+ " sum(mlr.ibnrProf) ,"
-			+ "sum(mlr.totalExp),"
-			+ "sum(mlr.balance) ,"
-			+ " qmlrfunction( reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,true,true) , "
-			+ " qmlrfunction( reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true)) from com.pfchoice.springboot.model.NewMedicalLossRatio mlr"
+			+ " sum(mlr.totalExp),"
+			+ " sum(mlr.balance) ,"
+			+ " qmlrfunction( mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,true,true) , "
+			+ " qmlrfunction(  mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true)  ) from com.pfchoice.springboot.model.NewMedicalLossRatio mlr"
 			+ " WHERE mlr.ins.id =:insId and mlr.prvdr.id in (:prvdrIds) and mlr.reportMonth in (:reportMonths) and mlr.activityMonth in (:activityMonths)"
 			+ "group by mlr.reportMonth,mlr.ins.name,mlr.activityMonth ")
 	 Page<NewMedicalLossRatio> findSummary(@Param("insId") Integer insId, @Param("prvdrIds") List<Integer> prvdrIds, 
 			@Param("reportMonths") List<Integer> reportMonths, @Param("activityMonths") List<Integer> activityMonths, Pageable page);
 
-	 
 	 @Query(value = "select distinct cast(left(activity_month,4) as char)  from new_medical_loss_ratio order by report_month asc", nativeQuery = true)
 		public List<String> findAllReportingYears();
 

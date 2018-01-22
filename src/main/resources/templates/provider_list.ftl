@@ -1,10 +1,11 @@
 <div class="generic-container">
   <div class="panel panel-success" ng-if="!ctrl.display">
     <!-- Default panel contents -->
-    <div class="panel-heading"><span class="prvdr">List of Providers </span>
+    <div class="panel-heading"><span class="prvdr ">List of {{ctrl.currentScreen}} Providers  <i>(Click here for <a  ui-sref="{{ctrl.linkToScreen}}" ><span class="text-danger"> {{ctrl.toScreen}} <span> </a> </i> </span>)
       <button type="button" ng-click="ctrl.addProvider()" ng-hide="ctrl.displayEditButton" class="btn btn-success btn-xs custom-width  floatRight"> Add </button>
       <button type="button" ng-click="ctrl.editProvider(ctrl.prvdrId)" ng-show="ctrl.displayEditButton" class="btn btn-primary  btn-xs custom-width floatRight">Edit</button>
       <button type="button" ng-click="ctrl.removeProvider(ctrl.prvdrId)" ng-show="ctrl.displayEditButton" class="btn btn-danger  btn-xs custom-width floatRight">Remove</button>
+      
     </div>
     <div class="table-responsive">
       <div class="panel-body">

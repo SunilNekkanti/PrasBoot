@@ -136,7 +136,15 @@
             	 name : 'main.provider',  
                 files: ['js/app/ProviderService.js','js/app/RefContractInsuranceService.js','js/app/FileUploadService.js','js/app/ProviderController.js']
             },{
+            	 serie: true,
+            	 name : 'main.providerArchives',  
+                files: ['js/app/ProviderService.js','js/app/RefContractInsuranceService.js','js/app/FileUploadService.js','js/app/ProviderController.js']
+            },{
 				name : 'main.insurance', 
+				serie: true,
+				files: ['js/app/PlanTypeService.js','js/app/FileUploadService.js','js/app/InsuranceController.js']
+             },{
+				name : 'main.insuranceArchives', 
 				serie: true,
 				files: ['js/app/PlanTypeService.js','js/app/FileUploadService.js','js/app/InsuranceController.js']
              },{
@@ -496,6 +504,11 @@
 	          templateUrl: 'partials/provider_list',
 	          controller:'ProviderController',
 	          controllerAs:'ctrl',
+	          data: {
+	      	    'currentScreen': 'Active', 
+	      	     'toScreen': 'Archives', 
+	      	    'linkToScreen': 'main.providerArchives' 
+	      	  },
 	          resolve: {
 	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
 		                return $ocLazyLoad.load('main.provider'); // Resolve promise and load before view 
@@ -503,6 +516,40 @@
 	          }
 	      })
 	      .state('main.provider.edit', {
+	          url: '/',
+	          templateUrl: 'partials/provider_list',
+	          controller:'ProviderController',
+	          controllerAs:'ctrl',
+	          params: {
+	      	    'id': '', 
+	      	    'providerDisplay': false, 
+	      	  },
+	          resolve: {
+			      refContractinsurances: function ( $q,  RefContractInsuranceService) {
+		    		  console.log('Load all RefContractInsuranceService');
+			          var deferred = $q.defer();
+			          RefContractInsuranceService.loadAllRefContractInsurances().then(deferred.resolve, deferred.resolve);
+			          return deferred.promise;
+		         }
+	          }
+	      }).state('main.providerArchives', {
+	          url: '/providerArchives',
+	          parent : 'main',
+	          templateUrl: 'partials/provider_list',
+	          controller:'ProviderController',
+	          controllerAs:'ctrl',
+	          data: {
+	      	    'currentScreen': 'Archives', 
+	      	    'toScreen': 'Active' ,
+	      	    'linkToScreen': 'main.provider' 
+	      	  },
+	          resolve: {
+	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+		                return $ocLazyLoad.load('main.provider'); // Resolve promise and load before view 
+		            }]
+	          }
+	      })
+	      .state('main.providerArchives.edit', {
 	          url: '/',
 	          templateUrl: 'partials/provider_list',
 	          controller:'ProviderController',
@@ -555,6 +602,27 @@
 	          templateUrl: 'partials/insurance_list',
 	          controller:'InsuranceController',
 	          controllerAs:'ctrl',
+	          data: {
+	      	    'currentScreen': 'Active', 
+	      	     'toScreen': 'Archives', 
+	      	    'linkToScreen': 'main.insuranceArchives' 
+	      	  },
+	          resolve: { 
+	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+		                return $ocLazyLoad.load('main.insurance'); // Resolve promise and load before view 
+		            }]
+	          }
+	      })
+	       .state('main.insuranceArchives', {
+	          url: '/insuranceArchives',
+	          templateUrl: 'partials/insurance_list',
+	          controller:'InsuranceController',
+	          controllerAs:'ctrl',
+	          data: {
+	      	    'currentScreen': 'Archives', 
+	      	    'toScreen': 'Active' ,
+	      	    'linkToScreen': 'main.insurance' 
+	      	  },
 	          resolve: { 
 	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
 		                return $ocLazyLoad.load('main.insurance'); // Resolve promise and load before view 
@@ -562,6 +630,26 @@
 	          }
 	      })
 	      .state('main.insurance.edit', {
+	          url: '/',
+	          templateUrl: 'partials/insurance_list',
+	          controller:'InsuranceController',
+	          controllerAs:'ctrl',
+	          params: {
+	      	    'id': '', 
+	      	    'insuranceDisplay': false, 
+	      	  },
+	          resolve: {
+	              planTypes: function ($q,PlanTypeService) {
+	                  console.log('Load all planTypes');
+	                  var deferred = $q.defer();
+	                  PlanTypeService.loadAllPlanTypes().then(deferred.resolve, deferred.resolve);
+	                  
+	                  console.log('deferred.promise'+deferred.promise);
+	                  return deferred.promise;
+	              }
+	          }
+	      })
+	      .state('main.insuranceArchives.edit', {
 	          url: '/',
 	          templateUrl: 'partials/insurance_list',
 	          controller:'InsuranceController',

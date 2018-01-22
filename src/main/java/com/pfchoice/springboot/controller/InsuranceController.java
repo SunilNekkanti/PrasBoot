@@ -41,9 +41,10 @@ public class InsuranceController {
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR", "ROLE_MANAGER" })
 	@RequestMapping(value = "/insurance/", method = RequestMethod.GET)
 	public ResponseEntity<?> listAllInsurances(@PageableDefault(page = 0, size = 100) Pageable pageRequest,
+			@RequestParam(value = "currentScreen", required = false) String currentScreen,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<Insurance> spec = new InsuranceSpecifications(search);
+		Specification<Insurance> spec = new InsuranceSpecifications(search,currentScreen);
 		Page<Insurance> insurances = insuranceService.findAllInsurancesByPage(spec, pageRequest);
 
 		if (insurances.getTotalElements() == 0) {

@@ -44,10 +44,10 @@ app.service('ProviderService',
                 return deferred.promise;
             }
 
-            function loadProviders(pageNo, length, search, order) {
+            function loadProviders(pageNo, length, search, order, currentScreen) {
                 console.log('Fetching  Providers');
                 var pageable = {
-                  		 page:pageNo, size:length,sort:order, search: search||''
+                  		 page:pageNo, size:length,sort:order,currentScreen:currentScreen, search: search||'' 
                   		};
 
                   		var config = {

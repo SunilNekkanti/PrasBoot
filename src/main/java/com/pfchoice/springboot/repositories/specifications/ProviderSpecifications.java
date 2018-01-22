@@ -1,7 +1,10 @@
 package com.pfchoice.springboot.repositories.specifications;
 
+import java.util.Date;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -14,9 +17,12 @@ public class ProviderSpecifications implements Specification<Provider> {
 
 	private String searchTerm;
 
-	public ProviderSpecifications(String searchTerm) {
+	private String currentScreen = "Active";
+	
+	public ProviderSpecifications(String searchTerm, String currentScreen) {
 		super();
 		this.searchTerm = searchTerm;
+		this.currentScreen = currentScreen;
 	}
 
 	public Predicate toPredicate(Root<Provider> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -37,6 +43,23 @@ public class ProviderSpecifications implements Specification<Provider> {
 		}
 
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
+		
+		Expression<Date> contractStartTime = root.join("prvdrRefContracts").join("contract").get("startDate");
+		Expression<Date> contractEndTime = root.join("prvdrRefContracts").join("contract").get("endDate");
+        
+		if("Active".equals(this.currentScreen)){
+			p.getExpressions().add(cb.and(cb.between(
+					cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")),
+					cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")),
+					cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d"))))); 
+	
+		} else{
+			p.getExpressions().add(cb.or(
+					cb.greaterThan(cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
+			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")))  
+			        ));
+		}
+	
 		return p;
 
 	}

@@ -1,7 +1,10 @@
 package com.pfchoice.springboot.repositories.specifications;
 
+import java.util.Date;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -12,10 +15,13 @@ import com.pfchoice.springboot.model.Insurance;
 public class InsuranceSpecifications implements Specification<Insurance> {
 
 	private String searchTerm;
+	
+	private String currentScreen = "Active";
 
-	public InsuranceSpecifications(String searchTerm) {
+	public InsuranceSpecifications(String searchTerm, String currentScreen) {
 		super();
 		this.searchTerm = searchTerm;
+		this.currentScreen = currentScreen;
 	}
 
 	public Predicate toPredicate(Root<Insurance> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -31,6 +37,25 @@ public class InsuranceSpecifications implements Specification<Insurance> {
 
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
 		// p.getExpressions().add(cb.and(cb.isNull(root.join("contract").join("referenceContract").get("prvdr"))));
+		
+
+		Expression<Date> contractStartTime = root.join("contracts").get("startDate");
+		Expression<Date> contractEndTime = root.join("contracts").get("endDate");
+
+		if("Active".equals(this.currentScreen)){
+			p.getExpressions().add(cb.and(cb.between(
+					cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")),
+					cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")),
+					cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d"))))); 
+	
+		} else{
+			p.getExpressions().add(cb.or(
+					cb.greaterThan(cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
+			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")))  
+			        ));
+		}
+		
+		
 		return p;
 
 	}

@@ -1,10 +1,11 @@
 <div class="generic-container">
   <div class="panel panel-success" ng-if="!ctrl.display">
     <!-- Default panel contents -->
-    <div class="panel-heading"><span class="insurance">List of Insurances </span>
-      <button type="button" ng-click="ctrl.addInsurance()" ng-hide="ctrl.displayEditButton" class="btn btn-success  custom-width floatRight"> Add </button>
+    <div class="panel-heading">List of {{ctrl.currentScreen}} Insurances  <i>(Click here for <a  ui-sref="{{ctrl.linkToScreen}}" ><span class="text-danger"> {{ctrl.toScreen}} <span> </a> </i> </span>)
+      <button type="button" ng-click="ctrl.addInsurance()" ng-hide="ctrl.displayEditButton" class="btn btn-success btn-xs  custom-width floatRight"> Add </button>
       <button type="button" ng-click="ctrl.editInsurance(ctrl.insuranceId)" ng-show="ctrl.displayEditButton" class="btn btn-primary custom-width floatRight">Edit</button>
       <button type="button" ng-click="ctrl.removeInsurance(ctrl.insuranceId)" ng-show="ctrl.displayEditButton" class="btn btn-danger custom-width floatRight">Remove</button>
+       
     </div>
     <div class="table-responsive">
       <div class="panel-body">

@@ -39,6 +39,9 @@ app.controller('ProviderController',
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
         self.checkBoxChange = checkBoxChange;
         self.providers=[];
+        self.currentScreen = $state.current.data.currentScreen;
+        self.toScreen = $state.current.data.toScreen;
+        self.linkToScreen = $state.current.data.linkToScreen;
         self.dtColumns = [
             
             DTColumnBuilder.newColumn('name').withTitle('PROVIDER').renderWith(
@@ -109,7 +112,7 @@ app.controller('ProviderController',
 			// Then just call your service to get the
 			// records from server side
 			ProviderService
-					.loadProviders(page, length, search.value, sortCol+','+sortDir)
+					.loadProviders(page, length, search.value, sortCol+','+sortDir, self.currentScreen)
 					.then(
 							function(result) {
 								var records = {
@@ -213,7 +216,7 @@ app.controller('ProviderController',
 
 
         function updateProvider(prvdr, id){
-            console.log('About to update prvdr'+ JSON.stringify(prvdr));
+            console.log('About to update prvdr');
             ProviderService.updateProvider(prvdr, id)
                 .then(
                     function (response){
@@ -300,7 +303,13 @@ app.controller('ProviderController',
         
         function providerEdit(id) {
         	var params = {'providerDisplay':true};
-			var trans =  $state.go('main.provider.edit',params).transition;
+			var trans ;
+			if(self.currentScreen === 'Active') {
+				trans =  $state.go('main.provider.edit',params).transition;
+			}else {
+			    trans =  $state.go('main.providerArchives.edit',params).transition;
+			}
+			
 			trans.onSuccess({}, function() { editProvider(id);  }, { priority: -1 });
 			
         }
@@ -315,7 +324,11 @@ app.controller('ProviderController',
         function cancelEdit(){
             self.successMessage='';
             self.errorMessage='';
-            $state.go('main.provider', {}, {location: true,reload: false,notify: true});
+            if(self.currentScreen === 'Active') {
+           		 $state.go('main.provider', {}, {location: true,reload: false,notify: false});
+            }else{
+            	$state.go('main.providerArchives', {}, {location: true,reload: false,notify: false});
+            }
             self.prvdr={};
             self.display = false;
         }
