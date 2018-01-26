@@ -134,6 +134,9 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 					@JoinColumn(name = "cnt_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })
 	@Where(clause = "active_ind ='Y'")
 	private Contact contact;
+	
+	@Column(name = "SRC_SYS_MBR_NBR")
+	private String srcSysMbrNbr;
 
 	@JsonIgnore
 	private FieldHandler fieldHandler;
@@ -456,6 +459,20 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	 */
 	public void setContact(Contact contact) {
 		this.contact = contact;
+	}
+
+	/**
+	 * @return the srcSysMbrNbr
+	 */
+	public String getSrcSysMbrNbr() {
+		return srcSysMbrNbr;
+	}
+
+	/**
+	 * @param srcSysMbrNbr the srcSysMbrNbr to set
+	 */
+	public void setSrcSysMbrNbr(String srcSysMbrNbr) {
+		this.srcSysMbrNbr = srcSysMbrNbr;
 	}
 
 	public void setFieldHandler(FieldHandler fieldHandler) {

@@ -122,6 +122,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 		final String tableName = fileType.getTablesName();
 		final String fileTypeDescription = fileType.getDescription();
 		final String entityClassName = fileType.getEntityClassName();
+		final String insuranceCode = (fileType.getInsuranceCode() != null)?fileType.getInsuranceCode():"";
 		final String queryTypeLoad = configProperties.getQueryTypeLoad();
 		final String queryTypeInsert = configProperties.getQueryTypeInsert();
 
@@ -180,7 +181,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			params.put("activityMonth", activityMonth);
 			params.put("username", username);
 			Resource insertIntoTable = getResource(
-					"classpath:static/sql/" + entityClassName + queryTypeInsert + configProperties.getSqlQueryExtn());
+					"classpath:static/sql/" + entityClassName +insuranceCode+ queryTypeInsert + configProperties.getSqlQueryExtn());
 			sqlQuery = StreamUtils.copyToString(insertIntoTable.getInputStream(), StandardCharsets.UTF_8);
 
 			Integer noOfRecordsLoaded = prasUtil.executeSqlScript(sqlQuery, params, false);
@@ -205,6 +206,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			FileType fileType = fileTypeService.findById(fileTypeId);
 			String tableName = fileType.getTablesName();
 			String fileTypeDescription = fileType.getDescription();
+			final String insuranceCode = (fileType.getInsuranceCode() != null)?fileType.getInsuranceCode():"";
 			String entityClassName = fileType.getEntityClassName();
 			String queryTypeLoad = configProperties.getQueryTypeLoad();
 
@@ -241,7 +243,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				}
 				
 				Resource loadFromCSVTable = getResource(
-						"classpath:static/sql/" + entityClassName + queryTypeLoad + configProperties.getSqlQueryExtn());
+						"classpath:static/sql/" + entityClassName  +insuranceCode + queryTypeLoad + configProperties.getSqlQueryExtn());
 				sqlQuery = StreamUtils.copyToString(loadFromCSVTable.getInputStream(), StandardCharsets.UTF_8);
 
 				String[] tokens = tableName.split(",", -1);
@@ -276,15 +278,15 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				params.put("activityMonth", activityMonth);
 				params.put("username", username);
 
-				Integer mbrClaimLoadedData = mbrClaimService.loadData(params);
+				Integer mbrClaimLoadedData = mbrClaimService.loadData(params, insuranceCode);
 				logger.info("membershipClaimLoadedData " + mbrClaimLoadedData + new Date());
 				
-				Integer mbrClaimDetailsLoadedData = mbrClaimDetailsService.loadData(params);
+				Integer mbrClaimDetailsLoadedData = mbrClaimDetailsService.loadData(params, insuranceCode);
 				logger.info("membershipClaimDetailsLoadedData " + mbrClaimDetailsLoadedData + new Date());
 				
-				Integer mbrProblemLoadedData = mbrProblemService.loadData(params);
+				Integer mbrProblemLoadedData = mbrProblemService.loadData(params, insuranceCode);
 				logger.info("mbrProblemLoadedData " + mbrProblemLoadedData + new Date());
-				Integer mbrHedisLoadedData = mbrHedisMeasureService.loadData(params);
+				Integer mbrHedisLoadedData = mbrHedisMeasureService.loadData(params, insuranceCode);
 				logger.info("mbrHedisLoadedData " + mbrHedisLoadedData + new Date());
 
 				params.clear();
@@ -308,6 +310,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			final String tableName = fileType.getTablesName();
 			final String fileTypeDescription = fileType.getDescription();
 			final String entityClassName = fileType.getEntityClassName();
+			final String insuranceCode = (fileType.getInsuranceCode() != null)?fileType.getInsuranceCode():"";
 			final String queryTypeLoad = configProperties.getQueryTypeLoad();
 			final String queryTypeInsert = configProperties.getQueryTypeInsert();
 
@@ -344,7 +347,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				}
 				
 				Resource loadFromCSVTable = getResource(
-						"classpath:static/sql/" + entityClassName + queryTypeLoad + configProperties.getSqlQueryExtn());
+						"classpath:static/sql/" + entityClassName + insuranceCode+ queryTypeLoad + configProperties.getSqlQueryExtn());
 				sqlQuery = StreamUtils.copyToString(loadFromCSVTable.getInputStream(), StandardCharsets.UTF_8);
 
 				String[] tokens = tableName.split(",", -1);
@@ -387,7 +390,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				params.put("activityMonth", activityMonth);
 				params.put("username", username);
 				Resource insertIntoTable = getResource(
-						"classpath:static/sql/" + entityClassName + queryTypeInsert + configProperties.getSqlQueryExtn());
+						"classpath:static/sql/" + entityClassName +insuranceCode+ queryTypeInsert + configProperties.getSqlQueryExtn());
 				sqlQuery = StreamUtils.copyToString(insertIntoTable.getInputStream(), StandardCharsets.UTF_8);
 
 				Integer noOfRecordsLoaded = prasUtil.executeSqlScript(sqlQuery, params, false);

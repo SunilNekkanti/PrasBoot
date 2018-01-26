@@ -11,6 +11,8 @@ public interface FileTypeService {
 	FileType findById(Integer id);
 
 	FileType findByDescription(String description);
+	
+	FileType findByDescriptionAndInsId(String description, Integer insId);
 
 	void saveFileType(FileType fileType);
 

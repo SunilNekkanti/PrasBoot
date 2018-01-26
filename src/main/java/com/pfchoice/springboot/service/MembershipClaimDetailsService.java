@@ -28,5 +28,5 @@ public interface MembershipClaimDetailsService {
 
 	boolean isMembershipClaimDetailsExist(MembershipClaimDetails membership);
 	
-	Integer loadData(Map<String, Object> parameters)  throws IOException, InterruptedException;
+	Integer loadData(Map<String, Object> parameters, String insuranceCode)  throws IOException, InterruptedException;
 }

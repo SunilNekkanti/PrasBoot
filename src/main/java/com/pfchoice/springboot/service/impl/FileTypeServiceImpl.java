@@ -25,6 +25,11 @@ public class FileTypeServiceImpl implements FileTypeService {
 	public FileType findByDescription(String description) {
 		return fileTypeRepository.findByDescription(description);
 	}
+	
+	public FileType findByDescriptionAndInsId(String description, Integer insId){
+		return fileTypeRepository.findByDescriptionEndingWithIgnoreCaseAndInsId(description,insId);
+	}
+	
 
 	public void saveFileType(FileType fileType) {
 		fileTypeRepository.save(fileType);

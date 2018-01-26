@@ -71,7 +71,7 @@ public class MembershipClaimServiceImpl implements MembershipClaimService {
 		return membershipClaimRepository.findAllMembershipClaimRiskCategories();
 	}
 	
-	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
-		return prasUtil.executeSQLQuery(membershipClaimRepository,parameters, configProperties.getQueryTypeInsert() );
+	public Integer loadData(final Map<String, Object> parameters, String insuranceCode) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipClaimRepository,insuranceCode, parameters, configProperties.getQueryTypeInsert() );
 	}
 }

@@ -117,14 +117,14 @@ public class PrasUtil {
 	 * @throws IOException 
 	 * @throws InterruptedException 
 	 */
-	public <T> Integer executeSQLQuery(JpaSpecificationExecutor<?> repository, final Map<String, Object>  params, final String queryType) throws IOException, InterruptedException {
+	public <T> Integer executeSQLQuery(JpaSpecificationExecutor<?> repository,final String insuranceCode,  final Map<String, Object>  params, final String queryType) throws IOException, InterruptedException {
 		
 		Class clazz = repository.getClass().getInterfaces()[0];
 		DefaultRepositoryMetadata drm = new DefaultRepositoryMetadata(clazz);
 		Class<?> domainType = drm.getDomainType();
 		final String entityClassName  = domainType.getSimpleName();
 
-		Integer noOfRecordsLoaded = executeSQLQuery(entityClassName,params,queryType );
+		Integer noOfRecordsLoaded = executeSQLQuery(entityClassName,insuranceCode, params, queryType );
 		logger.info("insertedData " + noOfRecordsLoaded + " records into " + entityClassName);
 	
 		return noOfRecordsLoaded;
@@ -137,8 +137,8 @@ public class PrasUtil {
 	 * @throws IOException 
 	 * @throws InterruptedException 
 	 */
-	public  <T> Integer executeSQLQuery(String  entityClassName, final Map<String, Object>  params, final String queryType) throws IOException, InterruptedException {
-			Resource insertIntoTable = getResource("classpath:static/sql/" + entityClassName + queryType + configProperties.getSqlQueryExtn());
+	public  <T> Integer executeSQLQuery(String  entityClassName, final String insuranceCode, final Map<String, Object>  params,  final String queryType) throws IOException, InterruptedException {
+			Resource insertIntoTable = getResource("classpath:static/sql/" + entityClassName +insuranceCode + queryType + configProperties.getSqlQueryExtn());
 			String sqlQuery = StreamUtils.copyToString(insertIntoTable.getInputStream(), StandardCharsets.UTF_8);
 		
 			Integer noOfRecordsLoaded = executeSqlScript(sqlQuery, params, false);

@@ -323,7 +323,6 @@ app.controller('MembershipController',
     	function serverData6(sSource, aoData, fnCallback) {
     		var search = aoData[5].value;
     		var filteredArr = self.membership.mbrActivityMonthList;
-    		
     		if(search.value !== ''){
     			  filteredArr = filteredArr.filter(function(item){
         		    return String(item.activityMonth).indexOf(search.value)>-1  || item.isRoster.indexOf(search.value.toUpperCase()) > -1  || item.isCap.indexOf(search.value.toUpperCase()) > -1  ;

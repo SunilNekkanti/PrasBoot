@@ -11,5 +11,7 @@ public interface FileTypeRepository
 		extends PagingAndSortingRepository<FileType, Integer>, JpaSpecificationExecutor<FileType> {
 
 	FileType findByDescription(String description);
+	
+	FileType findByDescriptionEndingWithIgnoreCaseAndInsId(String description, Integer insId);
 
 }

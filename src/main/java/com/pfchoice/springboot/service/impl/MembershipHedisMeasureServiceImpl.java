@@ -71,7 +71,7 @@ public class MembershipHedisMeasureServiceImpl implements MembershipHedisMeasure
 		return membershipHedisMeasureRepository.unloadCSV2Table();
 	}
 
-	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
-		return prasUtil.executeSQLQuery(membershipHedisMeasureRepository,parameters, configProperties.getQueryTypeInsert() );
+	public Integer loadData(final Map<String, Object> parameters, String insuranceCode) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipHedisMeasureRepository,insuranceCode, parameters, configProperties.getQueryTypeInsert() );
 	}
 }

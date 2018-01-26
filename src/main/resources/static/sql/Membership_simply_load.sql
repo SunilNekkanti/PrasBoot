@@ -1,0 +1,3 @@
+LOAD DATA LOCAL INFILE :file INTO TABLE csv2table_simply_roster FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n'   IGNORE 1 LINES SET dob = STRING_TO_DATE(case when POSITION(' 0:00' IN dob) > 0 then   
+SUBSTR(dob,1, POSITION(' 0:00' IN dob))  else dob end),Member_Eff=STRING_TO_DATE(Member_Eff) ,Member_Term=STRING_TO_DATE(if(Member_Term='12/31/99','12/31/2099',Member_Term)),
+PCP_Eff=STRING_TO_DATE( PCP_Eff) ,PCP_Term= STRING_TO_DATE(PCP_Term ) 

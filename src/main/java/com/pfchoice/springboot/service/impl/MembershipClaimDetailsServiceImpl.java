@@ -64,7 +64,8 @@ public class MembershipClaimDetailsServiceImpl implements MembershipClaimDetails
 	}
 
 	
-	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
-		return prasUtil.executeSQLQuery(membershipClaimDetailsRepository,parameters, configProperties.getQueryTypeInsert() );
+	public Integer loadData(final Map<String, Object> parameters, String insuranceCode) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipClaimDetailsRepository,insuranceCode, parameters, configProperties.getQueryTypeInsert() );
 	}
+
 }

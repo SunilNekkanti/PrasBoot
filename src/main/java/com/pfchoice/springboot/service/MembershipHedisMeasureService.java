@@ -33,6 +33,6 @@ public interface MembershipHedisMeasureService {
 
 	boolean isDataExistsInTable(String tableName);
 	
-	Integer loadData(Map<String, Object> parameters)  throws IOException, InterruptedException;
+	Integer loadData(Map<String, Object> parameters,String insuranceCode)  throws IOException, InterruptedException;
 
 }

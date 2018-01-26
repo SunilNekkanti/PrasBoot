@@ -62,7 +62,7 @@ public class MembershipProblemServiceImpl implements MembershipProblemService {
 	public boolean isMembershipProblemExist(MembershipProblem membershipProblem) {
 		return findById(membershipProblem.getId()) != null;
 	}
-	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
-		return prasUtil.executeSQLQuery(membershipProblemRepository,parameters, configProperties.getQueryTypeInsert() );
+	public Integer loadData(final Map<String, Object> parameters, String insuranceCode) throws IOException, InterruptedException{
+		return prasUtil.executeSQLQuery(membershipProblemRepository,insuranceCode,parameters, configProperties.getQueryTypeInsert() );
 	}
 }

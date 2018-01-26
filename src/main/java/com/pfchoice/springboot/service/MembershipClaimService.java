@@ -32,5 +32,5 @@ public interface MembershipClaimService {
 
 	List<String> findAllMembershipClaimRiskCategories();
 	
-	Integer loadData(Map<String, Object> parameters)  throws IOException, InterruptedException;
+	Integer loadData(Map<String, Object> parameters, String insuranceCode)  throws IOException, InterruptedException;
 }

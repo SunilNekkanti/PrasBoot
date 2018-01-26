@@ -84,11 +84,11 @@ public class MembershipServiceImpl implements MembershipService {
 	}
 	
 	public Integer loadData(final Map<String, Object> parameters) throws IOException, InterruptedException{
-		return prasUtil.executeSQLQuery(membershipRepository,parameters, configProperties.getQueryTypeInsert() );
+		return prasUtil.executeSQLQuery(membershipRepository,"",parameters, configProperties.getQueryTypeInsert() );
 	}
 	
 	public Integer loadData(final String entityClassName, final Map<String, Object> parameters) throws IOException, InterruptedException{
-		return prasUtil.executeSQLQuery(entityClassName, parameters, configProperties.getQueryTypeInsert() );
+		return prasUtil.executeSQLQuery(entityClassName, "",parameters, configProperties.getQueryTypeInsert() );
 	}
 
 }

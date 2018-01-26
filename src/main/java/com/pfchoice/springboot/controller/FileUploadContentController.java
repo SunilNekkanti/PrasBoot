@@ -300,7 +300,7 @@ public class FileUploadContentController implements ResourceLoaderAware {
 
 	@Secured({ "ROLE_ADMIN" })
 	@RequestMapping(value = "/fileUploader/")
-	public ResponseEntity<?> loadMembershipRoster(@ModelAttribute("username") String username,
+	public ResponseEntity<?> loadFiles(@ModelAttribute("username") String username,
 			@RequestParam(required = true, value = "insId") Integer insId,
 			@RequestParam(required = true, value = "fileTypeCode") Integer fileTypeId,
 			@RequestParam(required = false, value = "activityMonth") Integer activityMonth,
@@ -324,19 +324,19 @@ public class FileUploadContentController implements ResourceLoaderAware {
 					 String  filename = foldername.replace("/", "\\")+"\\"+file.getName();
 					   if(file.getName().contains("claims") ){
 						   logger.info("forwarding to claims file.getAbsolutePath()"+file.getAbsolutePath());
-						   FileType fileType1 = fileTypeService.findByDescription("AMG Membership Claim");
+						   FileType fileType1 = fileTypeService.findByDescriptionAndInsId("Membership Claim", insId);
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType1.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);
 					   } else   if( file.getName().contains("pharmacy")){
 						   logger.info("forwarding to pharmacy"+file.getAbsolutePath());
-						   FileType  fileType2 = fileTypeService.findByDescription("AMG Membership Claims Pharmacy");
+						   FileType  fileType2 = fileTypeService.findByDescriptionAndInsId("Membership Claims Pharmacy", insId);
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType2.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);
 					   } else if(file.getName().contains("memberlevel")){
 						   logger.info("forwarding to member Level");
-						   FileType fileType3 = fileTypeService.findByDescription("AMG Member Level");
+						   FileType fileType3 = fileTypeService.findByDescriptionAndInsId("Membership Level", insId);
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType3.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);

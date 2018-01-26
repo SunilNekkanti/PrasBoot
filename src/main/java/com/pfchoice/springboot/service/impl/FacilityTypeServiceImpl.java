@@ -63,7 +63,7 @@ public class FacilityTypeServiceImpl implements FacilityTypeService {
 
 	@Override
 	public Integer loadData(Map<String, Object> parameters) throws IOException, InterruptedException {
-		return prasUtil.executeSQLQuery(facilityTypeRepository, parameters, configProperties.getQueryTypeInsert());
+		return prasUtil.executeSQLQuery(facilityTypeRepository, "", parameters, configProperties.getQueryTypeInsert());
 	}
 
 	
