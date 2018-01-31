@@ -174,7 +174,7 @@ app.controller('RiskScoreController',
             self.errorMessage='';
             self.riskScore={};
             self.display = false;
-            $state.go('main.riskScore');
+            $state.go('main.riskScore', {}, {location: true,reload: true,notify: false});
         }
         
         function   getRiskScoreSumRow() {
