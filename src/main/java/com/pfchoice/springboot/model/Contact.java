@@ -319,7 +319,7 @@ public class Contact extends RecordDetails implements Serializable, FieldHandled
 	public String getAddress() {
 		if (fieldHandler != null && stateCode != null && zipCode != null) {
 			StringBuffer sb = new StringBuffer();
-			sb.append(this.address1).append(",").append(this.address2).append(",").append(this.city).append(",")
+			sb.append(this.address1).append(",").append((this.address2!= null)?this.address2:"").append(",").append(this.city).append(",")
 					.append(this.stateCode.getDescription()).append(",").append(this.zipCode.getCode());
 			return sb.toString();
 		} else {

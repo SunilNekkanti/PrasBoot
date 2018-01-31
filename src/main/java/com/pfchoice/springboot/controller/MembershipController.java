@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +26,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.pfchoice.springboot.model.Membership;
+import com.pfchoice.springboot.model.MembershipProblem;
 import com.pfchoice.springboot.repositories.specifications.MembershipSpecifications;
 import com.pfchoice.springboot.service.FileService;
 import com.pfchoice.springboot.service.FileTypeService;
+import com.pfchoice.springboot.service.ICDMeasureService;
+import com.pfchoice.springboot.service.MembershipProblemService;
 import com.pfchoice.springboot.service.MembershipService;
 import com.pfchoice.springboot.util.CustomErrorType;
 import com.pfchoice.springboot.util.PrasUtil;
@@ -59,6 +63,12 @@ public class MembershipController {
 	MembershipService membershipService; // Service which will do all data
 											// retrieval/manipulation work
 
+	@Autowired
+	ICDMeasureService icdMeasureService; // Service which will do all data  retrieval/manipulation work
+
+	@Autowired
+	MembershipProblemService membershipProblemService; // Service which will do all  retrieval/manipulation work
+	
 	@Autowired
 	FileTypeService fileTypeService;
 
@@ -134,7 +144,8 @@ public class MembershipController {
 	// ------------------------------------------------
 	@Secured({ "ROLE_ADMIN", "ROLE_MANAGER" })
 	@RequestMapping(value = "/membership/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateMembership(@PathVariable("id") int id, @RequestBody Membership membership) {
+	public ResponseEntity<?> updateMembership(@PathVariable("id") int id, @RequestBody Membership membership,
+			@ModelAttribute("username") String username) {
 		logger.info("Updating Membership with id {}", id);
 
 		Membership currentMembership = membershipService.findById(id);
@@ -144,11 +155,29 @@ public class MembershipController {
 			return new ResponseEntity(new CustomErrorType("Unable to upate. Membership with id " + id + " not found."),
 					HttpStatus.NOT_FOUND);
 		}
-
 		currentMembership.setFirstName(membership.getFirstName());
 		currentMembership.setLastName(membership.getLastName());
 		currentMembership.setDob(membership.getDob());
 
+		logger.info("Updating Membership with id {}", membership.getMbrProblemList());
+		currentMembership.getMbrProblemList().clear();
+
+		 for(MembershipProblem membershipProblem :membership.getMbrProblemList()){
+			  
+			  if (membershipProblemService.isMembershipProblemExist(membershipProblem ,id)) {
+					logger.error("Unable to create. A MembershipProblem with name {} already exist",
+							membershipProblem.getIcdMeasure());
+					
+					currentMembership.getMbrProblemList().remove(membershipProblem);
+					 
+				}
+		    	membershipProblem.setMbr(currentMembership);
+				membershipProblem.setCreatedBy(username);
+				membershipProblem.setUpdatedBy(username);
+		  }
+		 
+		currentMembership.getMbrProblemList().addAll(membership.getMbrProblemList());
+		
 		membershipService.updateMembership(currentMembership);
 		return new ResponseEntity<Membership>(currentMembership, HttpStatus.OK);
 	}

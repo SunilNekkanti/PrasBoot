@@ -25,7 +25,12 @@ app.service('ICDMeasureService',
                     .then(
                         function (response) {
                             console.log('Fetched successfully all icdMeasures');
-                            $localStorage.icdMeasures = response.data.content;
+                            if (localStorage.getItem("icdMeasures") === null) {
+                            	 $localStorage.icdMeasures = response.data.content;
+                           }else {
+                           	localStorage.removeItem("icdMeasures") ;
+                             	$localStorage.icdMeasures = response.data.content;
+                           }
                             deferred.resolve(response);
                         },
                         function (errResponse) {
@@ -50,7 +55,12 @@ app.service('ICDMeasureService',
                     .then(
                         function (response) {
                             console.log('Fetched successfully  icdMeasures');
-                            $localStorage.icdMeasures = response.data.content;
+                            if (localStorage.getItem("icdMeasures") === null) {
+                            	 $localStorage.icdMeasures = response.data.content;
+                           }else {
+                           	localStorage.removeItem("icdMeasures") ;
+                             	$localStorage.icdMeasures = response.data.content;
+                           }
                          return     response ;
                         },
                         function (errResponse) {

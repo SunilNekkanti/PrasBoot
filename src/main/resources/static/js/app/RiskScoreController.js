@@ -27,7 +27,7 @@ app.controller('RiskScoreController',
         self.paymentYears = paymentYears;
         self.onlyIntegers = /^\d+$/;
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
-         self.add = add;
+        self.add = add;
         
         self.records = [ ];
   

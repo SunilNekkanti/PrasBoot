@@ -1,7 +1,7 @@
 //Code goes here
 (function(){
 	'use strict';
-	var app = angular.module('my-app', ['datatables','ui.bootstrap','datatables.bootstrap',, 'datatables.buttons', 'datatables.fixedcolumns','ui.router','ngStorage','ngAnimate', 'ngSanitize','btorfs.multiselect','oc.lazyLoad']);
+	var app = angular.module('my-app', ['datatables','ui.bootstrap','datatables.bootstrap',, 'datatables.buttons', 'datatables.fixedcolumns','ui.router','ngStorage','ngAnimate', 'ngSanitize','btorfs.multiselect','oc.lazyLoad','ui.select']);
 	app.constant('urls', {
 	    BASE: '/Pras',
 	    USER_SERVICE_API : '/Pras/api/user/',
@@ -30,6 +30,7 @@
 	    HEDIS_REPORT_SERVICE_API : '/Pras/api/hedisReport/',
 	    HEDIS_REPORT_MEMBERSHIP_SERVICE_API: '/Pras/api/membershipHedisMeasure/',
 	    MEMBERSHIP_FOLLOWUPDETAILS_SERVICE_API:  '/Pras/api/membershipFollowupDetails/',
+	    MEMBERSHIP_PROBLEM_SERVICE_API:  '/Pras/api/membershipProblem/',
 	    PLACE_OF_SERVICE_API : '/Pras/api/placeOfService/',
 	    CATEGORY_SERVICE_API : '/Pras/api/riskRecon/',
 	    INSURANCE_SERVICE_API : '/Pras/api/insurance/',
@@ -130,7 +131,7 @@
             },{
             	 serie: true,
             	 name : 'main.membership',  
-                files: ['js/app/MembershipService.js','js/app/MembershipStatusService.js','js/app/UserService.js','js/app/MembershipController.js']
+                files: ['js/app/ICDMeasureService.js','js/app/MembershipProblemService.js', 'js/app/MembershipService.js','js/app/MembershipStatusService.js','js/app/UserService.js','js/app/MembershipController.js']
             },{
             	 serie: true,
             	 name : 'main.provider',  
@@ -178,7 +179,7 @@
              },{
 				name : 'main.hedisMeasureRule', 
 				serie: true,
-				files: ['js/app/HedisMeasureRuleService.js','js/app/ICDMeasureService.js','js/app/ProblemService.js','js/app/HedisMeasureService.js','js/app/FrequencyTypeService.js','js/app/HedisMeasureRuleController.js']
+				files: ['js/app/CPTMeasureService.js', 'js/app/ICDMeasureService.js','js/app/ModalInstanceController.js' ,'js/app/HedisMeasureRuleService.js','js/app/ICDMeasureService.js','js/app/ProblemService.js','js/app/HedisMeasureService.js','js/app/FrequencyTypeService.js','js/app/HedisMeasureRuleController.js']
              },{
 				name : 'main.frequencyType', 
 				serie: true,
@@ -573,9 +574,16 @@
 	          controller:'MembershipController',
 	          controllerAs:'ctrl',
 	          resolve: {
-	        	  loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+   	             loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
 		                return $ocLazyLoad.load('main.membership'); // Resolve promise and load before view 
-		            }]
+		            }],
+			       icdMeasures: ['loadMyService', '$q',  '$injector', function (loadMyService, $q, $injector  ) {
+			            	 var ICDMeasureService = $injector.get("ICDMeasureService");
+				    		  console.log('Load all  ICDMeasures');
+					          var deferred = $q.defer();
+					          ICDMeasureService.loadAllICDMeasures().then(deferred.resolve, deferred.resolve);
+					          return deferred.promise;
+				          }] 
 			     
 	          }
 	      })

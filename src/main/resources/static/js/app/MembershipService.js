@@ -22,7 +22,7 @@ app.service('MembershipService',
                 console.log('Fetching all memberships');
                 var deferred = $q.defer();
                 var pageable = {
-                 		 page:0, size:1000, insId:insId,prvdrId:prvdrId
+                 		 page:0, size:20, insId:insId,prvdrId:prvdrId
                  		};
 
                  		var config = {

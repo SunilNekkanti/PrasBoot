@@ -25,7 +25,7 @@ public class ICDMeasureServiceImpl implements ICDMeasureService {
 	}
 
 	public ICDMeasure findByCode(String code) {
-		return icdMeasureRepository.findByCode(code);
+		return icdMeasureRepository.findByCodeIgnoreCase(code);
 	}
 
 	public void saveICDMeasure(ICDMeasure icdMeasure) {

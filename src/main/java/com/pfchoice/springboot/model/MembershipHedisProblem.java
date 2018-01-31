@@ -13,25 +13,24 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pfchoice.springboot.util.JsonDateDeserializer;
-import com.pfchoice.springboot.util.JsonDateSerializer;
 
 /**
  *
  * @author SarathGandluri
  */
 @Entity
-@Table(name = "membership_problems")
+@Table(name = "membership_hedis_problems")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class MembershipProblem extends RecordDetails implements Serializable {
+public class MembershipHedisProblem extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,19 +47,19 @@ public class MembershipProblem extends RecordDetails implements Serializable {
 	private Membership mbr;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@NotNull(message = "Select ICD")
-	@JoinColumn(name = "icd_id", nullable = false, referencedColumnName = "icd_id")
+	@NotNull(message = "Select Problem")
+	@JoinColumn(name = "pbm_id", nullable = false, referencedColumnName = "pbm_id")
 	@Where(clause = "active_ind ='Y'")
-	private ICDMeasure icdMeasure;
+	private Problem pbm;
 
 	@Column(name = "start_date", nullable = false)
-	@JsonSerialize(using = JsonDateSerializer.class)
-	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	private Date startDate;
 
 	@Column(name = "resolved_date", nullable = true)
-	@JsonSerialize(using = JsonDateSerializer.class)
-	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	private Date resolvedDate;
 
 	@Column(name = "file_id")
@@ -69,14 +68,14 @@ public class MembershipProblem extends RecordDetails implements Serializable {
 	/**
 	 * 
 	 */
-	public MembershipProblem() {
+	public MembershipHedisProblem() {
 		super();
 	}
 
 	/**
 	 * @param id
 	 */
-	public MembershipProblem(final Integer id) {
+	public MembershipHedisProblem(final Integer id) {
 		super();
 		this.id = id;
 	}
@@ -111,17 +110,18 @@ public class MembershipProblem extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @return the icdMeasure
+	 * @return the pbm
 	 */
-	public ICDMeasure getIcdMeasure() {
-		return icdMeasure;
+	public Problem getPbm() {
+		return pbm;
 	}
 
 	/**
-	 * @param icdMeasure the icdMeasure to set
+	 * @param pbm
+	 *            the pbm to set
 	 */
-	public void setIcdMeasure(ICDMeasure icdMeasure) {
-		this.icdMeasure = icdMeasure;
+	public void setPbm(Problem pbm) {
+		this.pbm = pbm;
 	}
 
 	/**
@@ -178,10 +178,10 @@ public class MembershipProblem extends RecordDetails implements Serializable {
 
 	@Override
 	public boolean equals(Object object) {
-		if (!(object instanceof MembershipProblem)) {
+		if (!(object instanceof MembershipHedisProblem)) {
 			return false;
 		}
-		MembershipProblem other = (MembershipProblem) object;
+		MembershipHedisProblem other = (MembershipHedisProblem) object;
 		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
 			return false;
 		}

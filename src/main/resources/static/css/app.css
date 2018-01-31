@@ -766,3 +766,6 @@ ul.multiselect-container.dropdown-menu a {background-color:#FFFFFF;}
 	*border-left-color: #ffffff;
 }
 
+.selectize-control > .selectize-dropdown {
+      top: 36px;
+    }

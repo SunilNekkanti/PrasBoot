@@ -21,7 +21,7 @@ public interface ICDMeasureRepository
 	 * @param code
 	 * @return
 	 */
-	ICDMeasure findByCode(String code);
+	ICDMeasure findByCodeIgnoreCase(String code);
 
 	/**
 	 * 

@@ -3,7 +3,7 @@
 var app = angular.module('my-app');
 
 app.controller('MembershipController',
-    ['MembershipService','ProviderService', 'GenderService', 'StateService', 'InsuranceService','MembershipStatusService','$scope', '$compile','$state','$stateParams', '$filter' ,'DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, ProviderService,  GenderService, StateService,InsuranceService,MembershipStatusService, $scope,$compile,$state,$stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
+    ['MembershipService','ProviderService','MembershipProblemService', 'ICDMeasureService', 'GenderService', 'StateService', 'InsuranceService','MembershipStatusService','$scope', '$compile','$state','$stateParams', '$filter' ,'DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, ProviderService, MembershipProblemService,ICDMeasureService, GenderService, StateService,InsuranceService,MembershipStatusService, $scope,$compile,$state,$stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
         $scope.localNavbar = true;
@@ -13,16 +13,21 @@ app.controller('MembershipController',
         self.display =false;
         self.displayEditButton = false;
         self.submit = submit;
+         self.pbmsubmit = pbmsubmit;
         self.genders=[];
         self.states=[];
         self.insurances=[];
         self.statuses=[];
+         self.icdMeasures = [];
         self.getAllMemberships = getAllMemberships;
         self.createMembership = createMembership;
         self.updateMembership = updateMembership;
         self.removeMembership = removeMembership;
         self.editMembership = editMembership;
         self.addMembership = addMembership;
+        self.updateMembershipForPbms = updateMembershipForPbms;
+        self.addMembershipProblem = addMembershipProblem;
+        self.getAllICDMeasures = getAllICDMeasures;
         self.dtInstance = {};
         self.dt1Instance = {};
         self.dt2Instance = {};
@@ -41,12 +46,16 @@ app.controller('MembershipController',
         self.getAllProviders = getAllProviders;
         self.membershipEdit = membershipEdit;
         self.cancelEdit = cancelEdit;
+        self.cancelMbrPrblmEdit = cancelMbrPrblmEdit;
         self.successMessage = '';
         self.errorMessage = '';
+        self.mbrPbmSuccessMessage = '';
+        self.mbrPbmErrorMessage = '';
         self.done = false;
         self.onlyIntegers = /^\d+$/;
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
         self.insurances = getAllInsurances();
+        self.icdMeasures = getAllICDMeasures();
         self.prvdrs = getAllProviders();
         self.generate = generate;
         self.dt1InstanceCallback = dt1InstanceCallback;
@@ -56,7 +65,24 @@ app.controller('MembershipController',
         self.dt5InstanceCallback = dt5InstanceCallback;
         self.dt6InstanceCallback = dt6InstanceCallback;
         self.dt7InstanceCallback = dt7InstanceCallback;
+        self.dt4NonHCCInstanceCallback = dt4NonHCCInstanceCallback;
+        self.dt4HistoryInstanceCallback = dt4HistoryInstanceCallback;
         self.setProviders = setProviders;
+        self.membershipProblems = [ ];
+        self.add = add;
+        self.resetMbrPrblm = resetMbrPrblm;
+        self.displayProblem = false;
+       
+        
+        
+         
+         function add(){
+		         var mbrPrm = {icdMeasure:{},startDate:'', resolvedDate:'' ,fileId:1}; 
+		         self.membershipProblems.push(mbrPrm);
+		}
+		self.remove = function(index){ self.membershipProblems.splice(index, 1); } 
+        
+        
         
         function dt1InstanceCallback(dt1Instance) {
 	        self.dt1Instance = dt1Instance;
@@ -72,6 +98,13 @@ app.controller('MembershipController',
         
         function dt4InstanceCallback(dt4Instance) {
 	        self.dt4Instance = dt4Instance;
+	    }
+	    function dt4NonHCCInstanceCallback(dt4NonHCCInstanceCallback) {
+	        self.dt4NonHCCInstanceCallback = dt4NonHCCInstanceCallback;
+	    }
+        
+        function dt4HistoryInstanceCallback(dt4HistoryInstanceCallback) {
+	        self.dt4HistoryInstanceCallback = dt4HistoryInstanceCallback;
 	    }
         
         function dt5InstanceCallback(dt5Instance) {
@@ -93,9 +126,12 @@ app.controller('MembershipController',
 						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.membershipEdit('+full.id+')">'+data+'</a>';
 					}).withClass("text-left"),
 			DTColumnBuilder.newColumn('firstName').withTitle('FIRST NAME').withOption('defaultContent', ''),
-			DTColumnBuilder.newColumn('dob').withTitle('Birthday').withOption('defaultContent', ''),
-			DTColumnBuilder.newColumn('dob').withTitle('age').withOption('defaultContent', ''),
-			DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', '')
+			DTColumnBuilder.newColumn('dob').withTitle('BIRTHDAY').withOption('defaultContent', ''),
+			DTColumnBuilder.newColumn('dob').withTitle('AGE').withOption('defaultContent', ''),
+			DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', ''),
+			DTColumnBuilder.newColumn('contact.address').withTitle('ADDRESS').withOption('defaultContent', ''),
+			DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', '')
+			
           ];
      
         
@@ -149,7 +185,8 @@ app.controller('MembershipController',
 							function(result) {
 								
 								var records = {
-									 
+									'recordsTotal' : result.data.totalElements||0,
+									'recordsFiltered' : result.data.totalElements||0,									 
 									'data' : result.data.content||{}
 								};
 								fnCallback(records);
@@ -244,18 +281,19 @@ app.controller('MembershipController',
 		}
     	
     	self.dt4Columns = [
-            DTColumnBuilder.newColumn('pbm.description').withTitle('DESCRIPTION').renderWith(
+            DTColumnBuilder.newColumn('icdMeasure.code').withTitle('CODE').renderWith(
 					function(data, type, full,
 							meta) {
 						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.membershipEdit('+full.id+')">'+data+'</a>';
-					}).withClass("text-left"),
-			DTColumnBuilder.newColumn('startDate').withTitle('DIAGNOSED DATE'),
-			DTColumnBuilder.newColumn('resolvedDate').withTitle('RESOLVED DATE').withOption('defaultContent', '') 
+					}).withClass("text-center"),
+			DTColumnBuilder.newColumn('startDate').withTitle('DIAGNOSED DATE').withClass("text-center"),
+			DTColumnBuilder.newColumn('resolvedDate').withTitle('RESOLVED DATE').withOption('defaultContent', '').withClass("text-center") 
           ];
      
         
         self.dt4Options = DTOptionsBuilder.newOptions()
         .withDisplayLength(20)
+        .withOption('scrollY', 200)
         .withDOM('t')
 		.withOption('bServerSide', true)
 	    .withOption('createdRow', createdRow)
@@ -263,12 +301,57 @@ app.controller('MembershipController',
 		.withFnServerData(serverData4);
 
     	function serverData4(sSource, aoData, fnCallback) {
+			 var filteredArr1 = self.membership.mbrProblemList||[];
+    	     filteredArr1 = filteredArr1.filter(function(item){
+    	  		    return     item.icdMeasure.hcc !== ''  && (item.resolvedDate === undefined || item.resolvedDate === null ||  item.resolvedDate === '') ;
+    	          }); 
 			 var records = {
-						'data' : self.membership.mbrProblemList||{}
+						'data' : filteredArr1
+					};
+					fnCallback(records);
+		}
+		
+		 self.dt4NonHCCOptions = DTOptionsBuilder.newOptions()
+        .withDisplayLength(20)
+        .withOption('scrollY', 200)
+        .withDOM('t')
+		.withOption('bServerSide', true)
+	    .withOption('createdRow', createdRow)
+		.withOption('bDeferRender', true)
+		.withFnServerData(serverData4NonHCC);
+
+    	function serverData4NonHCC(sSource, aoData, fnCallback) {
+    	  var filteredArr1 = self.membership.mbrProblemList||[];
+    	  filteredArr1 = filteredArr1.filter(function(item){
+    	  		    return     item.icdMeasure.hcc === '' && (item.resolvedDate === undefined || item.resolvedDate === null ||  item.resolvedDate === '');
+    	          }); 
+			 var records = {
+						'data' : filteredArr1
 					};
 					fnCallback(records);
 		}
     	
+    	 self.dt4HistoryOptions = DTOptionsBuilder.newOptions()
+        .withDisplayLength(20)
+        .withOption('scrollY', 200)
+        .withDOM('t')
+		.withOption('bServerSide', true)
+	    .withOption('createdRow', createdRow)
+		.withOption('bDeferRender', true)
+		.withFnServerData(serverData4History);
+
+    	function serverData4History(sSource, aoData, fnCallback) {
+    	  var filteredArr1 = self.membership.mbrProblemList||[];
+    	  filteredArr1 = filteredArr1.filter(function(item){
+    	  		console.log('item',item)
+    	  		    return      item.resolvedDate !== undefined &&  item.resolvedDate !== null &&  item.resolvedDate !== '';
+    	          }); 
+			 var records = {
+						'data' : filteredArr1
+					};
+					fnCallback(records);
+		}
+
     	self.dt5Columns = [
             DTColumnBuilder.newColumn('hospital.name').withTitle('Hospital').renderWith(
 					function(data, type, full,
@@ -383,17 +466,31 @@ app.controller('MembershipController',
               self.dtInstance.rerender();
        }
         function submit() {
-            console.log('Submitting');
+            console.log('Submitting',self.membership.id);
             if (self.membership.id === undefined || self.membership.id === null) {
-                console.log('Saving New Membership', self.prvdr);
+                console.log('Saving New Membership');
                 createMembership(self.membership);
             } else {
+         console.log(' self.membership.mbrProblemList',  self.membership.mbrProblemList);
             	updateMembership(self.membership, self.membership.id);
                 console.log('Membership updated with id ', self.membership.id);
             }
             self.displayEditButton = false;
         }
 
+		function pbmsubmit() {
+            console.log('Submitting Membership Problem');
+            if (self.membership.id === undefined || self.membership.id === null) {
+                console.log('No Membership exists to add  problem(s)');
+            } else {
+                console.log('self.membershipProblems',self.membershipProblems);
+                  self.membership.mbrProblemList = self.membership.mbrProblemList.concat( self.membershipProblems);  
+            		updateMembershipForPbms(self.membership, self.membership.id);
+                console.log('Adding Membership Problems for membership id ', self.membership.id);
+            }
+            self.displayEditButton = false;
+        }
+        
         function createMembership(mbr) {
             console.log('About to create mbr');
             MembershipService.createMembership(mbr)
@@ -406,7 +503,6 @@ app.controller('MembershipController',
                         self.display =false;
                         self.memberships = getAllMemberships();
                         self.membership={};
-                        $scope.myForm.$setPristine();
                         cancelEdit();
                     },
                     function (errResponse) {
@@ -428,7 +524,6 @@ app.controller('MembershipController',
                         self.errorMessage='';
                         self.done = true;
                         self.display =false;
-                        $scope.myForm.$setPristine();
                         cancelEdit();
                     },
                     function(errResponse){
@@ -439,6 +534,26 @@ app.controller('MembershipController',
                 );
         }
 
+      function updateMembershipForPbms(mbr, id){
+            console.log('About to update mbr');
+            MembershipService.updateMembership(mbr, id)
+                .then(
+                    function (response){
+                        console.log('Membership updated successfully');
+                        self.mbrPbmSuccessMessage='Membership Problems updated successfully';
+                        self.mbrPbmErrorMessage='';
+                        self.done = true;
+                        self.displayProblem =false;
+                        cancelMbrPrblmEdit();
+                    },
+                    function(errResponse){
+                        console.error('Error while updating Membership');
+                        self.mbrPbmErrorMessage='Error while updating Membership '+errResponse.data;
+                        self.mbrPbmSuccessMessage='';
+                        self.displayProblem =true;
+                    }
+                );
+        }
 
         function removeMembership(id){
             console.log('About to remove Membership with id '+id);
@@ -477,6 +592,11 @@ app.controller('MembershipController',
         function getAllInsurances() {
 			return InsuranceService.getAllInsurances();
 		}
+		
+		 function getAllICDMeasures() {
+			return ICDMeasureService.getAllICDMeasures();
+		}
+        
         
         function getAllMembershipStatuses() {
 			return  MembershipStatusService.getAllMembershipStatuses();
@@ -513,20 +633,38 @@ app.controller('MembershipController',
             self.successMessage='';
             self.errorMessage='';
             self.membership={};
-            $scope.myForm.$setPristine(); //reset Form
         }
+        
+        function resetMbrPrblm(){
+            self.successMessage='';
+            self.errorMessage='';
+            self.membershipProblems=[];
+            add();
+        }
+        
         
         function cancelEdit(){
             self.successMessage='';
             self.errorMessage='';
-            self.provider={};
+            self.membership={};
+            cancelMbrPrblmEdit();
             self.display = false;
             $state.go('main.membership', {}, {location: true,reload: false,notify: false});
         }
        
+       function cancelMbrPrblmEdit(){
+       		self.successMessage='';
+            self.errorMessage='';
+            self.mbrPbmSuccessMessage='';
+            self.mbrPbmErrorMessage='';
+            self.membershipProblems=[];
+            self.displayProblem = false;
+       }
+       
         function addMembership() {
             self.successMessage='';
             self.errorMessage='';
+            self.membership={};
             self.genders = getAllGenders();
             self.states = getAllStates();
             self.insurances = getAllInsurances();
@@ -537,6 +675,35 @@ app.controller('MembershipController',
         function setProviders(){
         	self.providers = $filter('filter')(self.prvdrs, {prvdrRefContracts:[{ins:{id:self.insurance.id}}]},true);
         	
+        }
+        
+         function addMembershipProblem() {
+            self.displayProblem =true;
+            self.successMessage='';
+            self.errorMessage='';
+            self.membershipProblem={};
+            self.display =true;
+            add();
+        }
+        
+         function addMembershipProblems(membershipProblems, mbrId) {
+            console.log('About to add membershipProblems');
+            MembershipProblemService.addMembershipProblems(membershipProblems, mbrId)
+                .then(
+                    function (response) {
+                        console.log('Membership created successfully');
+                        self.successMessage = 'Added Membership Problems successfully';
+                        self.errorMessage='';
+                        self.displayProblem =false;
+                        self.membershipProblems=[];
+                       
+                    },
+                    function (errResponse) {
+                        console.error('Error while creating Membership');
+                        self.errorMessage = 'Error while creating Membership: ' + errResponse.data.errorMessage;
+                        self.successMessage='';
+                    }
+                );
         }
     
     }

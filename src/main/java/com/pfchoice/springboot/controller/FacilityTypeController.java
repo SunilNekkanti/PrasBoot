@@ -46,7 +46,7 @@ public class FacilityTypeController {
 			@RequestParam(value = "size", required = false) Integer pageSize,
 			@RequestParam(value = "search", required = false) String search) {
 		pageNo = (pageNo == null) ? 0 : pageNo;
-		pageSize = (pageSize == null) ? 1000 : pageSize;
+		pageSize = (pageSize == null) ? 10 : pageSize;
 		PageRequest pageRequest = new PageRequest(pageNo, pageSize);
 
 		Specification<FacilityType> spec = null;

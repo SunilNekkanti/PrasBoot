@@ -10,7 +10,7 @@ app.controller('ModalInstanceController',
      // It is not the same as the $modal service used above.
 
        $scope.items = [];
-       $scope.selection = items;
+       $scope.selection = items||[];
        $scope.popType = popType;
        angular.forEach($scope.selection, function(item, index) {
     	   item.checkbox_status =  true;

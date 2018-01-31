@@ -14,7 +14,7 @@ public interface MembershipProblemService {
 
 	MembershipProblem findById(Integer id);
 
-	void saveMembershipProblem(MembershipProblem membershipClaim);
+	void saveMembershipProblem(MembershipProblem membershipProblem);
 
 	void updateMembershipProblem(MembershipProblem membershipClaim);
 
@@ -26,7 +26,7 @@ public interface MembershipProblemService {
 
 	Page<MembershipProblem> findAllMembershipProblemsByPage(Specification<MembershipProblem> spec, Pageable pageable);
 
-	boolean isMembershipProblemExist(MembershipProblem membership);
+	boolean isMembershipProblemExist(MembershipProblem membershipProblem, Integer mbrId);
 	
 	Integer loadData(Map<String, Object> parameters, String insuranceCode)  throws IOException, InterruptedException;
 }

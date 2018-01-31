@@ -59,8 +59,9 @@ public class MembershipProblemServiceImpl implements MembershipProblemService {
 		return membershipProblemRepository.findAll(spec, pageable);
 	}
 
-	public boolean isMembershipProblemExist(MembershipProblem membershipProblem) {
-		return findById(membershipProblem.getId()) != null;
+	public boolean isMembershipProblemExist(MembershipProblem membershipProblem, Integer mbrId) {
+		System.out.println("membershipProblem.getIcdMeasure().getCode()"+membershipProblem.getIcdMeasure().getCode());
+		return membershipProblemRepository.isMembershipProblemExist(membershipProblem.getIcdMeasure().getCode() ,mbrId).size()>0 ;
 	}
 	public Integer loadData(final Map<String, Object> parameters, String insuranceCode) throws IOException, InterruptedException{
 		return prasUtil.executeSQLQuery(membershipProblemRepository,insuranceCode,parameters, configProperties.getQueryTypeInsert() );
