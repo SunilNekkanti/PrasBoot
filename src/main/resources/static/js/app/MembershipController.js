@@ -67,6 +67,8 @@ app.controller('MembershipController',
         self.dt7InstanceCallback = dt7InstanceCallback;
         self.dt4NonHCCInstanceCallback = dt4NonHCCInstanceCallback;
         self.dt4HistoryInstanceCallback = dt4HistoryInstanceCallback;
+        self.dt4RxInstanceCallback = dt4RxInstanceCallback;
+        self.dt4RxHistoryInstanceCallback = dt4RxHistoryInstanceCallback;
         self.setProviders = setProviders;
         self.membershipProblems = [ ];
         self.add = add;
@@ -107,6 +109,13 @@ app.controller('MembershipController',
 	        self.dt4HistoryInstanceCallback = dt4HistoryInstanceCallback;
 	    }
         
+         function dt4RxInstanceCallback(dt4RxInstanceCallback) {
+	        self.dt4RxInstanceCallback = dt4RxInstanceCallback;
+	    }
+        
+        function dt4RxHistoryInstanceCallback(dt4RxHistoryInstanceCallback) {
+	        self.dt4RxHistoryInstanceCallback = dt4RxHistoryInstanceCallback;
+	    }
         function dt5InstanceCallback(dt5Instance) {
 	        self.dt5Instance = dt5Instance;
 	    }
@@ -130,7 +139,8 @@ app.controller('MembershipController',
 			DTColumnBuilder.newColumn('dob').withTitle('AGE').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('contact.address').withTitle('ADDRESS').withOption('defaultContent', ''),
-			DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', '')
+			DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', ''),
+			DTColumnBuilder.newColumn('rafScore').withTitle('RAFSCORE').withOption('defaultContent', '')
 			
           ];
      
@@ -352,6 +362,48 @@ app.controller('MembershipController',
 					fnCallback(records);
 		}
 
+ 		self.dt4RxOptions = DTOptionsBuilder.newOptions()
+        .withDisplayLength(20)
+        .withOption('scrollY', 200)
+        .withDOM('t')
+		.withOption('bServerSide', true)
+	    .withOption('createdRow', createdRow)
+		.withOption('bDeferRender', true)
+		.withFnServerData(serverData4Rx);
+
+    	function serverData4Rx(sSource, aoData, fnCallback) {
+    	  var filteredArr1 = self.membership.mbrProblemList||[];
+    	  filteredArr1 = filteredArr1.filter(function(item){
+    	  		    return     item.icdMeasure.hcc === '' && (item.resolvedDate === undefined || item.resolvedDate === null ||  item.resolvedDate === '');
+    	          }); 
+			 var records = {
+						'data' : filteredArr1
+					};
+					fnCallback(records);
+		}
+    	
+    	 self.dt4RxHistoryOptions = DTOptionsBuilder.newOptions()
+        .withDisplayLength(20)
+        .withOption('scrollY', 200)
+        .withDOM('t')
+		.withOption('bServerSide', true)
+	    .withOption('createdRow', createdRow)
+		.withOption('bDeferRender', true)
+		.withFnServerData(serverData4RxHistory);
+
+    	function serverData4RxHistory(sSource, aoData, fnCallback) {
+    	  var filteredArr1 = self.membership.mbrProblemList||[];
+    	  filteredArr1 = filteredArr1.filter(function(item){
+    	  		console.log('item',item)
+    	  		    return      item.resolvedDate !== undefined &&  item.resolvedDate !== null &&  item.resolvedDate !== '';
+    	          }); 
+			 var records = {
+						'data' : filteredArr1
+					};
+					fnCallback(records);
+		}
+    	
+    	
     	self.dt5Columns = [
             DTColumnBuilder.newColumn('hospital.name').withTitle('Hospital').renderWith(
 					function(data, type, full,

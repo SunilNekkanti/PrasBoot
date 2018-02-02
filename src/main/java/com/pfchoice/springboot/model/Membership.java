@@ -1,6 +1,8 @@
 package com.pfchoice.springboot.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
@@ -143,6 +146,9 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	
 	@Column(name = "mbr_hasMedicaid", insertable = false)
 	private Character hasMedicaid = new Character('N');
+
+	@Transient
+	private BigDecimal rafScore ;
 
 	@JsonIgnore
 	private FieldHandler fieldHandler;
@@ -508,6 +514,20 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	public void setHasMedicaid(Character hasMedicaid) {
 		this.hasMedicaid = hasMedicaid;
 	}
+
+	/**
+	 * @return the rafScore
+	 */
+	public BigDecimal getRafScore() {
+		 
+		if(mbrActivityMonthList!= null && mbrActivityMonthList.size()> 0 ){
+			return	mbrActivityMonthList.stream().max(Comparator.comparing(MembershipActivityMonth::getActivityMonth)).get().getRafScore();
+		}else {
+			return null;
+		}
+	}
+
+ 
 
 	public void setFieldHandler(FieldHandler fieldHandler) {
 		this.fieldHandler = fieldHandler;

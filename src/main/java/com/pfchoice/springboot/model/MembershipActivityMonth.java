@@ -1,6 +1,7 @@
 package com.pfchoice.springboot.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -62,6 +63,9 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 
 	@Column(name = "is_cap")
 	private Character isCap;
+	
+	@Column(name = "raf_score" )
+	private BigDecimal rafScore ;
 
 	@Transient
 	private String mbrFullName;
@@ -199,6 +203,20 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	 */
 	public void setIsCap(Character isCap) {
 		this.isCap = isCap;
+	}
+
+	/**
+	 * @return the rafScore
+	 */
+	public BigDecimal getRafScore() {
+		return rafScore;
+	}
+
+	/**
+	 * @param rafScore the rafScore to set
+	 */
+	public void setRafScore(BigDecimal rafScore) {
+		this.rafScore = rafScore;
 	}
 
 	/**

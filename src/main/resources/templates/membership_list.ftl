@@ -160,7 +160,7 @@
                     <div class=" col-md-6">
                       <div class="form-group col-md-6">
                           <label for="plan">Medicaid Benefits</label>
-                          <input type="checkbox" class="form-control" ng-model="ctrl.membership.hasMedicaid" name="hasMedicaid" ng-true-value="'Y'" ng-false-value="'N'">
+                          <input type="checkbox" class="form-control  col-sm-6" ng-model="ctrl.membership.hasMedicaid" name="hasMedicaid" ng-true-value="'Y'" ng-false-value="'N'">
                       </div>
                     </div>
 
@@ -168,7 +168,7 @@
                     <div class="form-group col-md-6">
                       <div class="form-group col-sm-6">
                          <label for="plan">Disability Benefits</label>
-                        <input type="checkbox" class="form-control" ng-model="ctrl.membership.hasDisability" name="hasMedicaid" ng-true-value="'Y'" ng-false-value="'N'">
+                        <input type="checkbox" class="form-control  col-sm-6" ng-model="ctrl.membership.hasDisability" name="hasMedicaid" ng-true-value="'Y'" ng-false-value="'N'">
                       </div>
                     </div>
                   </div>
@@ -354,6 +354,18 @@
           <tab heading="History">
             <div class="panel-body">
               <table datatable="" id="content4History" dt-options="ctrl.dt4HistoryOptions" dt-columns="ctrl.dt4Columns" dt-instance="ctrl.dt4HistoryInstanceCallback" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
+              cellspacing="0" width="100%"></table>
+            </div>
+          </tab>
+             <tab heading="Rx">
+            <div class="panel-body">
+              <table datatable="" id="content4Rx" dt-options="ctrl.dt4RxOptions" dt-columns="ctrl.dt4Columns" dt-instance="ctrl.dt4RxInstanceCallback" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
+              cellspacing="0" width="100%"></table>
+            </div>
+          </tab>
+          <tab heading="RxHistory">
+            <div class="panel-body">
+              <table datatable="" id="content4RxHistory" dt-options="ctrl.dt4RxHistoryOptions" dt-columns="ctrl.dt4Columns" dt-instance="ctrl.dt4RxHistoryInstanceCallback" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
               cellspacing="0" width="100%"></table>
             </div>
           </tab>
