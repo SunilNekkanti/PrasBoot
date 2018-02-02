@@ -28,10 +28,9 @@ app.controller('RiskScoreController',
         self.onlyIntegers = /^\d+$/;
         self.onlyNumbers = /^\d+([,.]\d+)?$/;
         self.add = add;
-        
-        self.records = [ ];
+        self.records = [];
   
-         function add(){
+        function add(){
          var array = [];
 		        for(var i=0;i<6;i++){
 		        array.push('');
@@ -39,7 +38,7 @@ app.controller('RiskScoreController',
 		         
 		         self.records.push(array);
 			}
-			 add();
+		add();
 		self.remove = function(index){ self.records.splice(index, 1); } 
 
         function submit() {

@@ -137,6 +137,12 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	
 	@Column(name = "SRC_SYS_MBR_NBR")
 	private String srcSysMbrNbr;
+	
+	@Column(name = "mbr_hasdisability", insertable = false)
+	private Character hasDisability = new Character('N');
+	
+	@Column(name = "mbr_hasMedicaid", insertable = false)
+	private Character hasMedicaid = new Character('N');
 
 	@JsonIgnore
 	private FieldHandler fieldHandler;
@@ -473,6 +479,34 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	 */
 	public void setSrcSysMbrNbr(String srcSysMbrNbr) {
 		this.srcSysMbrNbr = srcSysMbrNbr;
+	}
+	
+	/**
+	 * @return the hasDisability
+	 */
+	public Character getHasDisability() {
+		return hasDisability;
+	}
+
+	/**
+	 * @param hasDisability the hasDisability to set
+	 */
+	public void setHasDisability(Character hasDisability) {
+		this.hasDisability = hasDisability;
+	}
+
+	/**
+	 * @return the hasMedicaid
+	 */
+	public Character getHasMedicaid() {
+		return hasMedicaid;
+	}
+
+	/**
+	 * @param hasMedicaid the hasMedicaid to set
+	 */
+	public void setHasMedicaid(Character hasMedicaid) {
+		this.hasMedicaid = hasMedicaid;
 	}
 
 	public void setFieldHandler(FieldHandler fieldHandler) {

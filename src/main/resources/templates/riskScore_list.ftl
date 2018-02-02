@@ -42,7 +42,7 @@
                 <label class="control-lable" for="uname"> Demographic Risk Factors</label>
                 <div>
                   Institutional
-                  <input type="checkbox" ng-model="ctrl.institutional"   ng-true-value="'INST'" ng-false-value="''"> &nbsp Medicaid
+                  <input type="checkbox" ng-model="ctrl.institutional"   ng-true-value="'INST'" ng-false-value="''"> &nbsp; Medicaid
                   <input type="checkbox" ng-model="ctrl.medicaid"  ng-true-value="'Medicaid'" ng-false-value="''" >
                 </div>
 
@@ -51,24 +51,23 @@
             </div>
 
 
-            &nbsp
+            &nbsp;
             <div class="row">
               <label class="control-lable"> Current Medicare Eligibility due to</label>
-              <input type="radio" ng-model="ctrl.isAgedOrDisabled"  value="Aged">Aged &nbsp
+              <input type="radio" ng-model="ctrl.isAgedOrDisabled"  value="Aged">Aged &nbsp;
               <input type="radio" ng-model="ctrl.isAgedOrDisabled"  value="Disabled">Disabled
             </div>
-            &nbsp
+            &nbsp;
             <div class="row">
               <label class="control-lable"> Original Medicare Eligibility due to Disability</label>
-              <input type="radio" ng-model="ctrl.originallyDueToDis"  value="Originally Disabled">Yes &nbsp
+              <input type="radio" ng-model="ctrl.originallyDueToDis"  value="Originally Disabled">Yes &nbsp;
               <input type="radio" ng-model="ctrl.originallyDueToDis"  value="">No
             </div>
 
           </div>
-
-<div > {{ ctrl.records.length}} </div>
+<div> {{ ctrl.records.length }} </div>
  
-          <div class="table-responsive"   >
+          <div class="table-responsive">
             <div class="panel-body">
 
               <table class="table ">

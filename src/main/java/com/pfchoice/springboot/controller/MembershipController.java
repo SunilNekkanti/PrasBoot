@@ -158,6 +158,8 @@ public class MembershipController {
 		currentMembership.setFirstName(membership.getFirstName());
 		currentMembership.setLastName(membership.getLastName());
 		currentMembership.setDob(membership.getDob());
+		currentMembership.setHasDisability(membership.getHasDisability());
+		currentMembership.setHasMedicaid( membership.getHasMedicaid());
 
 		logger.info("Updating Membership with id {}", membership.getMbrProblemList());
 		currentMembership.getMbrProblemList().clear();
