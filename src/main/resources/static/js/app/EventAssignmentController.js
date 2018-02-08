@@ -2,8 +2,7 @@
 'use strict';
 var app = angular.module('my-app');
 
-app
-		.controller(
+app.controller(
 				'EventAssignmentController',
 				[
 						'EventAssignmentService',
@@ -75,13 +74,12 @@ app
 							self.dtInstance = {};
 							self.eventAssignmentId = null;
 							self.reset = reset;
-							self.today = today;
 							self.repeatDisplay = false;
 							self.repeat = repeat;
-							self.toggleMin = toggleMin;
 							self.successMessage = '';
 							self.errorMessage = '';
 							self.done = false;
+							self.validEventDate = validEventDate;
 							self.cancelEdit = cancelEdit;
 							self.onlyIntegers = /^\d+$/;
 							self.onlyNumbers = /^\d+([,.]\d+)?$/;
@@ -95,55 +93,43 @@ app
 													}).withClass("text-left"),
 									DTColumnBuilder.newColumn('eventDateStartTime')
 											.withTitle('STARTDATE').renderWith(function(data, type) {
-												return $filter('date')(new Date(data), 'MM/dd/yyyy'); //date filter
+												return $filter('date')(new Date(data), 'MM/dd/yyyy'); // date
+																										// filter
 											}).withOption(
 													'defaultContent', ''),
 									DTColumnBuilder.newColumn('eventDateStartTime')
 													.withTitle('STARTTIME').renderWith(function(data, type) {
-														return $filter('date')(new Date(data), 'HH:mm'); //date filter
+														return $filter('date')(new Date(data), 'hh:mm a'); // date
+																											// filter
 													}).withOption(
 															'defaultContent', ''),				
 									DTColumnBuilder.newColumn('eventDateEndTime')
 													.withTitle('ENDDATE').renderWith(function(data, type) {
-														return $filter('date')(new Date(data), 'MM/dd/yyyy'); //date filter
+														return $filter('date')(new Date(data), 'MM/dd/yyyy'); // date
+																												// filter
 													}).withOption(
 															'defaultContent', ''),
 									DTColumnBuilder.newColumn('eventDateEndTime')
 																	.withTitle('ENDTIME').renderWith(function(data, type) {
-																		return $filter('date')(new Date(data), 'HH:mm'); //date filter
+																		return $filter('date')(new Date(data), 'hh:mm a'); // date
+																															// filter
 																	}).withOption(
 																			'defaultContent', ''),
 								    DTColumnBuilder.newColumn('representatives[,].name').withTitle(
 																			'REPRESENTATIVES').withOption('defaultContent', ''),
 								    DTColumnBuilder.newColumn('repeatRule').withTitle('Rule').withOption('defaultContent', '')										];
 
-							self.dtOptions = DTOptionsBuilder
-									.newOptions()
-									 .withDisplayLength(20)
-									.withOption(
-											'ajax',
-											{
-												url : '/Pras/api/eventAssignment/',
-												type : 'GET'
-											}).withDataProp('data').withOption(
-											'serverSide', true).withOption(
-											"bLengthChange", false).withOption(
-											"bPaginate", true).withOption(
-											'processing', true).withOption(
-											'saveState', true)
-									 .withOption(
-											'columnDefs', [ {
-												orderable : false,
-												className : 'select-checkbox',
-												targets : 0,
-												sortable : false,
-												aTargets : [ 0, 1 ]
-											} ]).withOption('select', {
-										style : 'os',
-										selector : 'td:first-child'
-									}).withOption('createdRow', createdRow)
-									.withPaginationType('full_numbers')
-									.withFnServerData(serverData);
+							self.dtOptions = DTOptionsBuilder.newOptions()
+							.withDisplayLength(20)
+						    .withOption('bServerSide', true)
+									.withOption("bLengthChange", false)
+									.withOption("bPaginate", true)
+									.withOption('bProcessing', true)
+									.withOption('bSaveState', true)
+								    .withOption('createdRow', createdRow)
+							        .withPaginationType('full_numbers')
+							        
+							        .withFnServerData(serverData);
 
 							self.reloadData = reloadData;
 
@@ -170,10 +156,23 @@ app
 								var length = aoData[4].value;
 								var search = aoData[5].value;
 
+								var paramMap = {};
+								for ( var i = 0; i < aoData.length; i++) {
+								  paramMap[aoData[i].name] = aoData[i].value;
+								}
+								
+								var sortCol ='';
+								var sortDir ='';
+								// extract sort information
+								 if(paramMap['columns'] !== undefined && paramMap['columns'] !== null && paramMap['order'] !== undefined && paramMap['order'] !== null ){
+									 sortCol = paramMap['columns'][paramMap['order'][0]['column']].data;
+									  sortDir = paramMap['order'][0]['dir'];
+								 }
+								 
 								// Then just call your service to get the
 								// records from server side
 								EventAssignmentService
-								.loadEventAssignments(page, length, search.value, order)
+								.loadEventAssignments(page, length, search.value, sortCol+','+sortDir)
 										.then(
 												function(result) {
 													var records = {
@@ -224,7 +223,7 @@ app
 													self.errorMessage = '';
 													self.done = true;
 													self.display = false;
-													//$scope.myForm.$setPristine();
+													// $scope.myForm.$setPristine();
 													self.eventAssignment = {};
 													self.dtInstance.reloadData();
 							                        self.dtInstance.rerender();
@@ -319,7 +318,7 @@ app
 
 							function addEventAssignment() {
 								
-									$state.go('eventAssignment.edit');
+									$state.go('main.eventAssignment.edit');
 									self.successMessage = '';
 									self.errorMessage = '';
 									self.users = getAllAgents();
@@ -327,7 +326,8 @@ app
 									self.eventAssignmentMonths =getAllEventMonths();
 									self.eventAssignmentMonth = self.eventAssignmentMonths[0];
 									self.eventAssignmentOnWeekDays =getAllEventWeekDays();
-									//self.eventAssignmentOnWeekDaysss = self.eventAssignmentOnWeekDays[0];
+									// self.eventAssignmentOnWeekDaysss =
+									// self.eventAssignmentOnWeekDays[0];
 									self.eventAssignmentOnWeeks =getAllEventWeekNumbers();
 									self.eventAssignmentOnWeek = self.eventAssignmentOnWeeks[0];
 									self.display = true;
@@ -347,11 +347,12 @@ app
 							}
 							
 							function cancelEdit(){
+							    
 								self.successMessage = '';
 								self.errorMessage = '';
 								self.eventAssignment = {};
 					            self.display  = false;
-					            $state.go('main.eventAssignment');
+					            $state.go('main.eventAssignment', {}, {reload: true}); 
 					        }
 							
 							
@@ -378,8 +379,10 @@ app
 						    			var byMonthDay =';BYMONTHDAY='+self.eventAssignment.onDay;
 							    		rrule.push(byMonthDay);
 						    		}else{
-						    		//	self.eventAssignmentOnWeek = self.eventAssignmentOnWeek||{};
-						    		//	self.eventAssignmentOnWeekDayss = self.eventAssignmentOnWeekDayss||{};
+						    		// self.eventAssignmentOnWeek =
+									// self.eventAssignmentOnWeek||{};
+						    		// self.eventAssignmentOnWeekDayss =
+									// self.eventAssignmentOnWeekDayss||{};
 						    			var byMonthWeekAndDay = ';BYSETPOS='+self.eventAssignmentOnWeek.id+';BYDAY='+self.eventAssignmentOnWeekDay.shortName;
 						    			rrule.push(byMonthWeekAndDay);
 						    		}
@@ -470,7 +473,7 @@ app
 									self.eventAssignment.onWeekDay ={} ;
 									self.eventAssignment.onWeek='';
 									self.eventAssignment.onDay=0;
-									//self.eventAssignment.frequency = {};
+									// self.eventAssignment.frequency = {};
 									self.eventAssignment.month = {};
 									self.eventAssignment.repeatRule = '';
 								}
@@ -493,9 +496,11 @@ app
 							}
 
 							
-							/*function getAllEventAssignmentFrequencies(){
-								return EventAssignmentFrequencyService.getAllEventAssignmentFrequencies();
-							}*/
+							/*
+							 * function getAllEventAssignmentFrequencies(){
+							 * return
+							 * EventAssignmentFrequencyService.getAllEventAssignmentFrequencies(); }
+							 */
 
 							function getAllEventAssignments() {
 								return EventAssignmentService.getAllEventAssignments();
@@ -546,7 +551,7 @@ app
 							  
 							  function addLead( ){
 									var params = {"eventId":self.eventAssignment.event.id,"leadDisplay":true};
-									$state.go('lead.edit', params );
+									$state.go('main.lead.edit', params );
 									
 								}
 							  
@@ -584,40 +589,21 @@ app
 							    	}
 							    }
 							  
-							self.inlineOptions = {
-								    customClass: getDayClass,
-								    minDate: new Date(),
-								    showWeeks: true
-								  } ;
-
-							self.dateOptions = {
-								    dateDisabled: disabled,
-								    formatYear: 'yy',
-								    maxDate: new Date(2020, 5, 22),
-								    minDate: new Date(),
-								    startingDay: 1
-								  };
-
-								  // Disable weekend selection
-							function disabled(data) {
-								    var date = data.date,
-								      mode = data.mode;
-								    return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-								  }
-
-						    function toggleMin() {
-								    self.inlineOptions.minDate = self.inlineOptions.minDate ? null : new Date();
-								    self.dateOptions.minDate = self.inlineOptions.minDate;
-								  };
-
-
-						   function open1() {
-								    self.popup1.opened = true;
-								  };
-
-						   function   open2() {
-								    self.popup2.opened = true;
-								  };
+							  function validEventDate(startDate,endDate) {
+								   
+								  //  var curDate = new Date();
+								    if(new Date(startDate) >= new Date(endDate)){
+								      self.errMessage = 'End Date should be greater than start date';
+								      return true;
+								    }
+								    return false;
+								   /* if(new Date(startDate) < curDate){
+								       $scope.errMessage = 'Start date should not be before today.';
+								       return false;
+								    }*/
+								};
+								
+								
 
 						  function eventAssignmentEdit(id){
 							  $state.go('main.eventAssignment.edit'); 
@@ -628,52 +614,7 @@ app
 							  self.eventAssignment.eventAssignmentDateTime = new Date(year, month, day);
 								  };
 
-							self.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-							self.format = self.formats[1];
-							self.altInputFormats = ['M!/d!/yyyy'];
-
-							self.popup1 = {
-								    opened: false
-								  };
-
-							self.popup2 = {
-								    opened: false
-								  };
-
-								  var tomorrow = new Date();
-								  tomorrow.setDate(tomorrow.getDate() + 1);
-								  var afterTomorrow = new Date();
-								  afterTomorrow.setDate(tomorrow.getDate() + 1);
-								  self.eventAssignmentss = [
-								    {
-								      date: tomorrow,
-								      status: 'full'
-								    },
-								    {
-								      date: afterTomorrow,
-								      status: 'partially'
-								    }
-								  ];
-
-								  function getDayClass(data) {
-								    var date = data.date,
-								      mode = data.mode;
-								    if (mode === 'day') {
-								      var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-								      for (var i = 0; i < self.eventAssignmentss.length; i++) {
-								        var currentDay = new Date(self.eventAssignmentss[i].date).setHours(0,0,0,0);
-
-								        if (dayToCheck === currentDay) {
-								          return self.eventAssignmentss[i].status;
-								        }
-								      }
-								    }
-
-								    return '';
-								  }
 								  
-								  
-	} 
-]);
+        }
+    ]);
    })();

@@ -32,7 +32,7 @@ import com.pfchoice.springboot.model.converter.ICDMeasureListConverter;
  */
 @Entity(name = "membership_claims")
 @NamedStoredProcedureQueries({
-		@NamedStoredProcedureQuery(name = "new_clm_report1",  procedureName = "NEW_CLM_REPORT", parameters = {
+		@NamedStoredProcedureQuery(name = "new_clm_report",  procedureName = "NEW_CLM_REPORT", parameters = {
 				@StoredProcedureParameter(name = "tableName", type = String.class),
 				@StoredProcedureParameter(name = "insId", type = Integer.class),
 				@StoredProcedureParameter(name = "prvdrId", type = String.class),

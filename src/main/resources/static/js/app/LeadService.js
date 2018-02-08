@@ -43,7 +43,7 @@ app.service('LeadService',
                 console.log('Fetching all leads');
                 var deferred = $q.defer();
                 var pageable = {
-                  		 page:0, size:20
+                		page:0, size:20
                   		};
 
                   		var config = {
@@ -66,10 +66,10 @@ app.service('LeadService',
             }
             
             function loadLeads(pageNo, length, search, order) {
-                console.log('Fetching  leads');
                 var deferred = $q.defer();
+                
                 var pageable = {
-                  		 page:pageNo, size:length,search: search||''
+                  		 page:pageNo, size:length,sort: order,search: search||''
                   		};
 
                   		var config = {
@@ -162,6 +162,7 @@ app.service('LeadService',
                     );
                 return deferred.promise;
             }
+
 
         }
     ]);

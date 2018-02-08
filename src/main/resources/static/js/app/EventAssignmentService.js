@@ -1,6 +1,7 @@
 (function(){
 'use strict';
 var app = angular.module('my-app');
+
 app.service('EventAssignmentService',
     ['$localStorage', '$http', '$q', 'urls',
         function ($localStorage, $http, $q, urls) {
@@ -31,23 +32,23 @@ app.service('EventAssignmentService',
                 $http.get(urls.EVENT_ASSIGNMENT_SERVICE_API,  config)
                     .then(
                         function (response) {
-                            console.log('Fetched successfully all events');
+                            console.log('Fetched successfully all eventAssignments');
                             $localStorage.eventAssignments = response.data.content;
-                            deferred.resolve(response.data.content);
+                            deferred.resolve(response);
                         },
                         function (errResponse) {
-                            console.error('Error while loading events');
+                            console.error('Error while loading eventAssignments');
                             deferred.reject(errResponse);
                         }
                     );
                 return deferred.promise;
             }
             
-            function loadEventAssignments(draw, length, search, order) {
-                console.log('Fetching  events');
+            function loadEventAssignments(pageNo, length, search, order) {
+                console.log('Fetching  eventAssignments');
                 var deferred = $q.defer();
                 var pageable = {
-                		page:draw, size:length,search: search||''
+                		page:pageNo, size:length,sort:order,search: search||''
                   		};
 
                   		var config = {
@@ -57,13 +58,13 @@ app.service('EventAssignmentService',
             return     $http.get(urls.EVENT_ASSIGNMENT_SERVICE_API,  config)
                     .then(
                         function (response) {
-                            console.log('Fetched successfully  events');
+                            console.log('Fetched successfully  eventAssignments');
                             $localStorage.eventAssignments = response.data.content;
-                            deferred.resolve(response.data.content);
-                         return     response ;
+                            deferred.resolve(response);
+                            return     response ;
                         },
                         function (errResponse) {
-                            console.error('Error while loading events');
+                            console.error('Error while loading eventAssignments');
                             deferred.reject(errResponse);
                            // return   errResponse ;
                         }
@@ -142,6 +143,7 @@ app.service('EventAssignmentService',
                     );
                 return deferred.promise;
             }
+
 
         }
     ]);

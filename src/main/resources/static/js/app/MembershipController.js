@@ -138,6 +138,7 @@ app.controller('MembershipController',
 			DTColumnBuilder.newColumn('dob').withTitle('BIRTHDAY').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('dob').withTitle('AGE').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', ''),
+			DTColumnBuilder.newColumn('status.description').withTitle('STATUS').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('contact.address').withTitle('ADDRESS').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', ''),
 			DTColumnBuilder.newColumn('rafScore').withTitle('RAFSCORE').withOption('defaultContent', '')

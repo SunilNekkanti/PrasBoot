@@ -1,6 +1,4 @@
-(function(){
 'use strict';
-var app = angular.module('my-app');
 
 app.service('EventService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -32,7 +30,7 @@ app.service('EventService',
                 $http.get(urls.EVENT_SERVICE_API,  config)
                     .then(
                         function (response) {
-                            console.log('Fetched successfully all events');
+                            console.log('Fetched successfully all event');
                             $localStorage.events = response.data.content;
                             deferred.resolve(response);
                         },
@@ -48,7 +46,7 @@ app.service('EventService',
                 console.log('Fetching  events');
                 var deferred = $q.defer();
                 var pageable = {
-                  		 page:pageNo, size:length,search: search||''
+                  		 page:pageNo, size:length,sort:order,search: search||''
                   		};
 
                   		var config = {
@@ -146,4 +144,3 @@ app.service('EventService',
 
         }
     ]);
-   })();

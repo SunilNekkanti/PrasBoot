@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  *
- * @author SarathGandluri
+ * @author Mohanasundharam
  */
 @Entity
 @Table(name = "lu_membership_status")

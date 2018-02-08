@@ -159,11 +159,12 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			}
 			
 			Resource loadFromCSVTable = getResource(
-					"classpath:static/sql/" + entityClassName + queryTypeLoad + configProperties.getSqlQueryExtn());
+					"classpath:static/sql/" + entityClassName  +insuranceCode+ queryTypeLoad + configProperties.getSqlQueryExtn());
 			sqlQuery = StreamUtils.copyToString(loadFromCSVTable.getInputStream(), StandardCharsets.UTF_8);
 
 			params.clear();
 			params.put("file", fileName);
+			logger.info("sqlQuery script: "+sqlQuery);
 			Integer loadedData = prasUtil.executeSqlScript(sqlQuery, params, false);
 			if (loadedData < 0) {
 				CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
@@ -190,7 +191,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			params.clear();
 			sqlQuery = String.format("truncate table %s ", tableName);
 			prasUtil.executeSqlScript(sqlQuery, params, false);
-			logger.info("cleared CSV Table " + tableName);
+			logger.info("cleared CSV Table " + tableName); 
 
 			logger.info("processed " + fileTypeDescription + " data " + new Date());
 			return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));

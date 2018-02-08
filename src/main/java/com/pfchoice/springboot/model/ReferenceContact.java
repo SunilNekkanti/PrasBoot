@@ -19,9 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author sarath
  */
-@Entity(name = "reference_contact")
+@Entity(name = "reference_contacts")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class ReferenceContact extends RecordDetails implements Serializable {
+public class ReferenceContact  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

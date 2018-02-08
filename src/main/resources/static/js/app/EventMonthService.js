@@ -1,6 +1,7 @@
 (function(){
 'use strict';
 var app = angular.module('my-app');
+
 app.service('EventMonthService',
     ['$localStorage', '$http', '$q', 'urls',
         function ($localStorage, $http, $q, urls) {

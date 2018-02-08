@@ -402,7 +402,7 @@
           <div class="row col-sm-12" style="padding-bottom:20px;">
             <div class="form-actions floatCenter col-sm-offset-9">
               <input type="submit" value="{{!ctrl.lead.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="ctrl.showAddorUpdateButton()"/>
-              <button type="button" ng-click="ctrl.cancelEdit()" class="btn btn-warning btn-sm"   ng-if="ctrl.lead.id"  >Cancel</button>
+              <button type="button" ng-click="ctrl.cancelEdit()" class="btn btn-warning btn-sm"   >Cancel</button>
               <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm"  ng-if="!ctrl.lead.id"  ng-disabled="myForm.$pristine">Reset Form</button>
             </div>
           </div>

@@ -26,7 +26,7 @@ LEFT OUTER JOIN contract c on FIND_IN_SET(replace(csv2BhClaim.PCPID,' ',''), rep
 where  csv2BhClaim.product_label='Medicare' ;
  
  
-INSERT INTO membership_claims
+replace INTO membership_claims
 (
 claim_id_number,mbr_id,prvdr_id,ins_id,report_month,Claim_Type,facility_type_code,bill_type_code,
 frequency_type_code,bill_type,dischargestatus,
@@ -46,7 +46,7 @@ case when STRING_TO_DATE(csv2BhClaim.ServiceStart) >= '2015-10-01' then 'ICD10' 
   join membership m on m.Mbr_MedicaidNo  = csv2BHClaim.MedicaidNumber  
 LEFT OUTER JOIN membership_claims mc on mc.claim_id_number =  csv2bhClaim.ClaimNum and mc.mbr_id=csv2bhClaim.mbr_id  and mc.ins_id= :insId and mc.prvdr_id=csv2bhClaim.prvdr_id and report_month= :activityMonth
    WHERE  mc.claim_id_number is null and STRING_TO_DATE(MemDOB) is not null    
-GROUP BY ClaimNum,csv2bhClaim.mbr_id, csv2bhClaim.prvdr_id;
+GROUP BY csv2bhClaim.mbr_id,csv2bhClaim.ClaimType, ClaimNum ;
 
    
  

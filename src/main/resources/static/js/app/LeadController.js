@@ -10,6 +10,7 @@ app
 						'GenderService',
 						'StateService',
 						'LeadStatusService',
+						'LeadStatusDetailService',
 						'LanguageService',
 						'InsuranceService',
 						'PlanTypeService',
@@ -29,10 +30,11 @@ app
 						'$localStorage',
 						'DTOptionsBuilder',
 						'DTColumnBuilder',
+						'$timeout',
 						function(LeadService, GenderService, StateService,
-								LeadStatusService, LanguageService,
+								LeadStatusService,LeadStatusDetailService, LanguageService,
 								InsuranceService, PlanTypeService, ProviderService, UserService, BestTimeToCallService, EventService, FileUploadService, $sce, $scope,$rootScope, $location, $stateParams, $compile, $state,$filter,
-								$localStorage, DTOptionsBuilder, DTColumnBuilder) {
+								$localStorage, DTOptionsBuilder, DTColumnBuilder,$timeout) {
 
 							var self = this;
 							self.myFile;
@@ -53,6 +55,7 @@ app
 							//$location.url('/');
 							self.languages = [];
 							self.statuses = [];
+							self.statusDetails = [];
 							self.insurances = [];
 							self.providers = [];
 							self.planTypes = [];
@@ -69,11 +72,13 @@ app
 							self.updateLead = updateLead;
 							self.removeLead = removeLead;
 							self.editLead = editLead;
+							self.resetAssignment = resetAssignment;
 							self.dtInstance = {};
 							self.leadId = null;
 							self.getAllGenders = getAllGenders;
 							self.getAllStates = getAllStates;
 							self.getAllLeadStatuses = getAllLeadStatuses;
+							self.getAllLeadStatusDetails = getAllLeadStatusDetails;
 							self.getAllLanguages = getAllLanguages;
 							self.getAllInsurances = getAllInsurances;
 							self.getAllBestTimeToCalls = getAllBestTimeToCalls;
@@ -98,63 +103,53 @@ app
 							self.cancelEdit = cancelEdit;
 							 configLeadEvent();
 							self.reset = reset;
-							self.today = today;
-							self.toggleMin = toggleMin;
 							self.successMessage = '';
 							self.errorMessage = '';
 							self.done = false;
 							self.onlyIntegers = /^\d+$/;
 							self.onlyNumbers = /^\d+([,.]\d+)?$/;
 							self.checkBoxChange = checkBoxChange;
-							self.reloadData = reloadData;
+							$localStorage.pageNumber ;
+							self.dtInstanceCallback = dtInstanceCallback;
+						    function dtInstanceCallback(dtInstance) {
+						        self.dtInstance = dtInstance;
+						    }
+						    
 							self.dtColumns = [
-									DTColumnBuilder.newColumn('firstName')
-											.withTitle('FIRSTNAME').renderWith(
+									DTColumnBuilder.newColumn('firstName','FIRSTNAME').renderWith(
 													function(data, type, full,
 															meta) {
 														 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.leadEdit(' +full.id+')">'+data+'</a>';
 													}).withClass("text-left"),
-									DTColumnBuilder.newColumn('lastName')
-											.withTitle('LASTNAME').withOption(
-													'defaultContent', ''),
+									DTColumnBuilder.newColumn('lastName','LASTNAME').withOption(),
 									DTColumnBuilder.newColumn(
-											'gender.description').withTitle(
-											'GENDER').withOption(
-													'defaultContent', ''),
+											'gender.description','GENDER'),
 									DTColumnBuilder.newColumn(
-											'language.description').withTitle(
-											'LANGUAGE').withOption(
-													'defaultContent', ''),
+											'language.description','LANGUAGE'),
 									DTColumnBuilder.newColumn(
-											'status.description').withTitle(
-											'STATUS').withOption(
-													'defaultContent', '')];
+											'status.description','STATUS'),
+									DTColumnBuilder.newColumn(
+													'statusDetail.description','STATUS_DETAIL').withOption('defaultContent', '')];
 
-							self.dtOptions = DTOptionsBuilder
-									.newOptions()
+							self.dtOptions = DTOptionsBuilder.newOptions()
 									 .withDisplayLength(20)
-									.withOption(
-											'ajax',
-											{
-												url : '/Pras/api/lead/',
-												type : 'GET'
-											}).withDataProp('data').withOption('bServerSide', true)
+									.withOption('bServerSide', true)
+											.withOption('responsive', true)
 											.withOption("bLengthChange", false)
 											.withOption("bPaginate", true)
 											.withOption('bProcessing', true)
 											.withOption('bSaveState', true)
+											.withOption('searchDelay', 1000)
 										    .withOption('createdRow', createdRow)
 									        .withPaginationType('full_numbers')
-									        
-									        .withFnServerData(serverData)
-									        .withOption('order', []).withOption('bDestroy',true).withOption('deferRender',true)
-									         ;
-
-							
+									        .withOption('ordering', true)
+											.withOption('order', [[0,'ASC'],[1,'ASC']])
+											.withOption('aLengthMenu', [[15, 20, -1],[ 15, 20, "All"]])
+											.withOption('bDeferRender', true)
+									        .withFnServerData(serverData);
 							if(self.display){
 								 addLead();
 						    }
-							
 							
 							function createdRow(row, data, dataIndex) {
 								// Recompiling so we can bind Angular directive
@@ -175,14 +170,27 @@ app
 								// All the parameters you need is in the aoData
 								// variable
 								var order = aoData[2].value;
-								var page = aoData[3].value / aoData[4].value;
+								var page = 	aoData[3].value / aoData[4].value;
 								var length = aoData[4].value;
 								var search = aoData[5].value;
 
+								var paramMap = {};
+								for ( var i = 0; i < aoData.length; i++) {
+								  paramMap[aoData[i].name] = aoData[i].value;
+								}
+								
+								var sortCol ='';
+								var sortDir ='';
+								// extract sort information
+								 if(paramMap['columns'] !== undefined && paramMap['columns'] !== null && paramMap['order'] !== undefined && paramMap['order'] !== null ){
+									 sortCol = paramMap['columns'][paramMap['order'][0]['column']].data;
+									  sortDir = paramMap['order'][0]['dir'];
+								 }
+								 
 								// Then just call your service to get the
 								// records from server side
 								LeadService
-										.loadLeads(page, length, search.value, order)
+										.loadLeads(page, length, search.value, sortCol+','+sortDir )
 										.then(
 												function(result) {
 													var records = {
@@ -193,13 +201,7 @@ app
 													fnCallback(records);
 												});
 							}
-
-							 function reloadData() {
-								var resetPaging = false;
-								self.dtInstance.reloadData(callback,
-										resetPaging);
-							} 
-
+							
 							function callback(json) {
 								console.log(json);
 							}
@@ -212,6 +214,8 @@ app
 										});
 									
 									self.lead.agentLeadAppointmentList.push(self.selectedAgentLeadAppointment);
+									
+									console.log('Submitting agentLeadAppointmentList'+JSON.stringify(self.lead.agentLeadAppointmentList));
 								}
 								
 								 if(self.notes && self.notes != ''){
@@ -254,10 +258,11 @@ app
 													self.done = true;
 													self.display = false;
 													self.lead = {};
+													self.selectedAgentLeadAppointment = {};
 													self.notes ='';
 													clearFiles();
 													self.dtInstance.reloadData();
-							                        self.dtInstance.rerender();
+							                       // self.dtInstance.rerender();
 							                        $state.go('main.lead');
 												},
 												function(errResponse) {
@@ -280,12 +285,13 @@ app
 													self.successMessage = 'Lead updated successfully';
 													self.errorMessage = '';
 													self.done = true;
-													self.display = false;
 													self.notes ='';
 													clearFiles();
 													self.dtInstance.reloadData();
-							                        self.dtInstance.rerender();
+							                      //  self.dtInstance.rerender();
+													self.selectedAgentLeadAppointment = {};
 							                        $state.go('main.lead');
+							                        self.display = false;
 												},
 												function(errResponse) {
 													console
@@ -308,7 +314,7 @@ app
 																	+ id
 																	+ ' removed successfully');
 													self.dtInstance.reloadData();
-							                        self.dtInstance.rerender();
+							                      //  self.dtInstance.rerender();
 												},
 												function(errResponse) {
 													console
@@ -344,6 +350,7 @@ app
 													self.states = getAllStates();
 													self.languages = getAllLanguages();
 													self.statuses = getAllLeadStatuses();
+													self.statusDetails = getAllLeadStatusDetails();
 													self.insurances = getAllInsurances();
 													self.planTypes = getAllPlanTypes();
 													self.providers = getAllProviders();
@@ -360,7 +367,9 @@ app
 							}
 
 							function addLead() {
-									self.errorMessage = '';
+								self.errorMessage = '';
+								self.successMessage = '';
+								if(self.display){
 									self.providers = getAllProviders();
 									self.users = getAllAgents();
 									self.events = getAllEvents();
@@ -369,16 +378,35 @@ app
 									self.states = getAllStates();
 									self.languages = getAllLanguages();
 									self.statuses = getAllLeadStatuses();
+									self.statusDetails = getAllLeadStatusDetails();
 									self.insurances = getAllInsurances();
 									self.planTypes = getAllPlanTypes();
 									self.display = true;
-								 
+								}else{
+									var trans =  $state.go('main.lead.edit').transition;
+									 trans.onSuccess({}, function() {   
+										 self.providers = getAllProviders();
+											self.users = getAllAgents();
+											self.events = getAllEvents();
+											self.genders = getAllGenders();
+											self.bestTimeToCalls = getAllBestTimeToCalls(); 
+											self.states = getAllStates();
+											self.languages = getAllLanguages();
+											self.statuses = getAllLeadStatuses();
+											self.statusDetails = getAllLeadStatusDetails();
+											self.insurances = getAllInsurances();
+											self.planTypes = getAllPlanTypes();
+											self.display = true;
+									 }, { priority: -1 });
+								}
+									
 							}
 
 							function reset() {
 								self.successMessage = '';
 								self.errorMessage = '';
 								self.lead = {};
+								self.selectedAgentLeadAppointment = {};
 								$scope.myForm.$setPristine(); // reset Form
 							}
 							
@@ -386,8 +414,10 @@ app
 					            self.successMessage='';
 					            self.errorMessage='';
 					            self.lead={};
+					            self.selectedAgentLeadAppointment = {};
 					            self.display = false;
-					            $state.go('main.lead');
+								$state.go('main.lead', {}, {reload: true});
+					            
 					        }
 
 							function uploadFile() {
@@ -455,7 +485,7 @@ app
 						        }
 						    
 						    function showAgentAssignment(){
-						    	if(  $localStorage.loginUser.roleName != 'AGENT' && $localStorage.loginUser.roleName != 'EVENT_COORDINATOR'){
+						    	if(   $localStorage.loginUser.roleName != 'EVENT_COORDINATOR'){
 						    		return true;
 						    	}else{
 						    		return false;
@@ -535,7 +565,7 @@ app
 							function getAllGenders() {
 								return GenderService.getAllGenders();
 							}
-
+							
 							function getAllBestTimeToCalls() {
 								return BestTimeToCallService.getAllBestTimeToCalls();
 							}
@@ -548,6 +578,10 @@ app
 								return LeadStatusService.getAllLeadStatuses();
 							}
 
+							function getAllLeadStatusDetails() {
+								return LeadStatusDetailService.getAllLeadStatusDetails();
+							}
+							
 							function getAllLanguages() {
 								return LanguageService
 										.getAllLanguages();
@@ -583,7 +617,7 @@ app
 							
 							function leadEdit(id){
 								var params = {'leadDisplay':true};
-								var trans =  $state.go('main.lead.edit',params).transition;
+								var trans =  $state.go('lead.edit',params).transition;
 								trans.onSuccess({}, function() { editLead(id); }, { priority: -1 });
 								 
 							}
@@ -596,100 +630,29 @@ app
 									    });
 							}
 							
-							function today() {
-								    self.bestTimeToCall = new Date();
+							function resetAssignment(status){
+								if(self.lead.agentLeadAppointmentList === undefined || self.lead.agentLeadAppointmentList.length ===0){
+									
+									if(status === 'Converted'){
+										self.lead.agentLeadAppointmentList =[];
+										self.selectedAgentLeadAppointment = {appointmentTime:new Date(), user:{id:$localStorage.loginUser.userId}, prvdr:self.selectedAgentLeadAppointment.prvdr,insurance:self.selectedAgentLeadAppointment.insurance,effectiveFrom:self.selectedAgentLeadAppointment.effectiveFrom};
+										console.log('Converted agent record'+JSON.stringify(self.selectedAgentLeadAppointment) );
+										
+									}else{
+										self.selectedAgentLeadAppointment= {} ;
+									}
+								} 			
+								else{
+									self.selectedAgentLeadAppointments = self.lead.agentLeadAppointmentList;
+									//self.selectedAgentLeadAppointments = $filter("filter")(self.lead.agentLeadAppointmentList, {activeInd :'Y'});	
+									if(self.selectedAgentLeadAppointments.length>0){
+										
+										self.selectedAgentLeadAppointment = self.selectedAgentLeadAppointments[0];
+									}
+							   }
 							}
-								  
-
-							function clear() {
-								self.bestTimeToCall  = null;
-							}
 
 
-							self.inlineOptions = {
-								    customClass: getDayClass,
-								    minDate: new Date(),
-								    showWeeks: true
-								  } ;
-
-							self.dateOptions = {
-								    dateDisabled: disabled,
-								    formatYear: 'yy',
-								    maxDate: new Date(2020, 5, 22),
-								    minDate: new Date(),
-								    startingDay: 1
-								  };
-
-								  // Disable weekend selection
-							function disabled(data) {
-								    var date = data.date,
-								      mode = data.mode;
-								    return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-								  }
-
-						    function toggleMin() {
-								    self.inlineOptions.minDate = self.inlineOptions.minDate ? null : new Date();
-								    self.dateOptions.minDate = self.inlineOptions.minDate;
-								  };
-
-
-						   function open1() {
-								    self.popup1.opened = true;
-								  };
-
-						   function   open2() {
-								    self.popup2.opened = true;
-								  };
-
-								  
-						  function setDate(year, month, day) {
-							  self.bestTimeToCall = new Date(year, month, day);
-								  };
-
-							self.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-							self.format = self.formats[1];
-							self.altInputFormats = ['M!/d!/yyyy'];
-
-							self.popup1 = {
-								    opened: false
-								  };
-
-							self.popup2 = {
-								    opened: false
-								  };
-
-								  var tomorrow = new Date();
-								  tomorrow.setDate(tomorrow.getDate() + 1);
-								  var afterTomorrow = new Date();
-								  afterTomorrow.setDate(tomorrow.getDate() + 1);
-								  self.events = [
-								    {
-								      date: tomorrow,
-								      status: 'full'
-								    },
-								    {
-								      date: afterTomorrow,
-								      status: 'partially'
-								    }
-								  ];
-
-								  function getDayClass(data) {
-								    var date = data.date,
-								      mode = data.mode;
-								    if (mode === 'day') {
-								      var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-								      for (var i = 0; i < self.events.length; i++) {
-								        var currentDay = new Date(self.events[i].date).setHours(0,0,0,0);
-
-								        if (dayToCheck === currentDay) {
-								          return self.events[i].status;
-								        }
-								      }
-								    }
-
-								    return '';
-								  }
-	} 
-]);
+        }
+    ]);
    })();

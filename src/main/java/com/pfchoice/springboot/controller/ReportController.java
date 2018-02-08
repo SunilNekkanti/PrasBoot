@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.pfchoice.springboot.service.MedicalLossRatioService;
 import com.pfchoice.springboot.util.PrasUtil;
 
 @RestController
@@ -27,11 +26,6 @@ import com.pfchoice.springboot.util.PrasUtil;
 public class ReportController {
 
 	public static final Logger logger = LoggerFactory.getLogger(ReportController.class);
-
-	@Autowired
-	MedicalLossRatioService medicalLossRatioService; // Service which will do
-														// all data
-	// retrieval/manipulation work
 
 	@Autowired
 	PrasUtil prasUtil;

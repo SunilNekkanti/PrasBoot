@@ -39,7 +39,7 @@ public class FileUploadContent extends RecordDetails implements Serializable, Fi
 	@Column(name = "content_type")
 	private String contentType;
 
-	@Column(name = "file_data", nullable = false, columnDefinition = "mediumblob")
+	@Column(name = "file_data", nullable = false, columnDefinition = "longblob")
 	private byte[] data;
 
 	@JsonIgnore

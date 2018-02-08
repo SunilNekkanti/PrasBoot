@@ -49,14 +49,17 @@ public class RiskScore  implements Serializable {
 	@Transient
 	private String icdCode;
 	
-	@Column(name = "raf" )
-	private BigDecimal raf ;
+	@Column(name = "community_raf" )
+	private BigDecimal commRAF ;
+	
+	@Column(name = "inst_raf" )
+	private BigDecimal instRAF ;
 	
 	@Column(name = "effective_year" )
 	private Integer effectiveYear;
 	
 	@Column(name = "override" )
-	private Character override ;
+	private String override ;
 
 	/**
 	 * 
@@ -73,14 +76,14 @@ public class RiskScore  implements Serializable {
 		this.code = code;
 	}
 	
-	public RiskScore(final Integer effectiveYear,final String icdCode, final Integer code,final String description,final Character override ,final BigDecimal raf ) {
+	public RiskScore(final Integer effectiveYear,final String icdCode, final Integer code,final String description,final String override ,final BigDecimal commRAF ) {
 		super();
 		this.effectiveYear = effectiveYear;
 		this.icdCode = icdCode;
 		this.code = code;
 		this.description = description;
 		this.override = override;
-		this.raf = raf;
+		this.commRAF = commRAF;
 	}
 	
 	/**
@@ -127,17 +130,31 @@ public class RiskScore  implements Serializable {
 	}
 
 	/**
-	 * @return the raf
+	 * @return the commRAF
 	 */
-	public BigDecimal getRaf() {
-		return raf;
+	public BigDecimal getCommRAF() {
+		return commRAF;
 	}
 
 	/**
-	 * @param raf the raf to set
+	 * @param commRAF the commRAF to set
 	 */
-	public void setRaf(BigDecimal raf) {
-		this.raf = raf;
+	public void setCommRAF(BigDecimal commRAF) {
+		this.commRAF = commRAF;
+	}
+
+	/**
+	 * @return the instRAF
+	 */
+	public BigDecimal getInstRAF() {
+		return instRAF;
+	}
+
+	/**
+	 * @param instRAF the instRAF to set
+	 */
+	public void setInstRAF(BigDecimal instRAF) {
+		this.instRAF = instRAF;
 	}
 
 	/**
@@ -157,14 +174,14 @@ public class RiskScore  implements Serializable {
 	/**
 	 * @return the override
 	 */
-	public Character getOverride() {
+	public String getOverride() {
 		return override;
 	}
 
 	/**
 	 * @param override the override to set
 	 */
-	public void setOverride(Character override) {
+	public void setOverride(String override) {
 		this.override = override;
 	}
 

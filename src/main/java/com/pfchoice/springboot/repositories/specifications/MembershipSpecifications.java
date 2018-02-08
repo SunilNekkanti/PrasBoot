@@ -44,7 +44,8 @@ public class MembershipSpecifications implements Specification<Membership> {
 
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions().add(cb.or(cb.like(cb.lower(root.get("firstName")), containsLikePattern),
-					cb.like(cb.lower(root.get("lastName")), containsLikePattern)));
+					cb.like(cb.lower(root.get("lastName")), containsLikePattern),
+					cb.like(cb.lower(root.join("status").get("description")), containsLikePattern)));
 		}
 
 		if (insId != null) {

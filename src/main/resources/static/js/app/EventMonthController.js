@@ -1,6 +1,7 @@
 (function(){
 'use strict';
 var app = angular.module('my-app');
+
 app.controller('EventMonthController',
     ['EventMonthService', '$scope',  function( EventMonthService, $scope) {
 
@@ -124,7 +125,8 @@ app.controller('EventMonthController',
             self.eventMonth={};
             $scope.myForm.$setPristine(); //reset Form
         }
-    }
 
+
+        }
     ]);
    })();

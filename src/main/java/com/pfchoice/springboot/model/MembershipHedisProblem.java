@@ -37,7 +37,7 @@ public class MembershipHedisProblem extends RecordDetails implements Serializabl
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
-	@Column(name = "mbr_pbm_id", nullable = false)
+	@Column(name = "mbr_hedis_pbm_id", nullable = false)
 	private Integer id;
 
 	@JsonIgnore

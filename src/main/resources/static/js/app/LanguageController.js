@@ -51,7 +51,7 @@ app.controller('LanguageController',
 		.withOption(
 				'ajax',
 				{
-					url : '/Pras/api/language/',
+					url : '/LeadManagement/api/language/',
 					type : 'GET'
 				}).withDataProp('data').withOption('bServerSide', true)
 				.withOption("bLengthChange", false)
@@ -221,8 +221,6 @@ app.controller('LanguageController',
         }
         
     
-    }
-    
-
+        }
     ]);
    })();

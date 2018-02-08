@@ -120,7 +120,7 @@ public class ApplicationMailer {
 
 		try {
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress("skumar@infocus.com"));
+			message.setFrom(new InternetAddress("leadmanagement@infocusonline.net"));
 
 			// Set To: header field of the header.
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));

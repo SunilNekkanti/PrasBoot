@@ -21,19 +21,11 @@ app.service('LanguageService',
             function loadAllLanguages() {
                 console.log('Fetching all Languages');
                 var deferred = $q.defer();
-                var pageable = {
-                 		 page:0, size:100
-                 		};
-
-                 		var config = {
-                 		 params: pageable,
-                 		 headers : {'Accept' : 'application/json'}
-                 		};
-                $http.get(urls.LANGUAGE_SERVICE_API,  config)
+                $http.get(urls.LANGUAGE_SERVICE_API)
                     .then(
                         function (response) {
                             console.log('Fetched successfully all Languages');
-                            $localStorage.languages = response.data.content;
+                            $localStorage.Languages = response.data.content;
                             deferred.resolve(response);
                         },
                         function (errResponse) {
@@ -46,7 +38,6 @@ app.service('LanguageService',
 
             function loadLanguages(pageNo, length, search, order) {
                 console.log('Fetching  Languages');
-                var deferred = $q.defer();
                 var pageable = {
                   		 page:pageNo, size:length,search: search||''
                   		};
@@ -58,8 +49,7 @@ app.service('LanguageService',
             return     $http.get(urls.LANGUAGE_SERVICE_API,  config)
                     .then(
                         function (response) {
-                        	 $localStorage.languages = response.data.content;
-                        	 deferred.resolve(response);
+                        	
                             console.log('Fetched successfully  languages');
                          return     response ;
                         },

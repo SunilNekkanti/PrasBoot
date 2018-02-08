@@ -125,8 +125,8 @@ app.controller('EventFrequencyController',
             self.eventFrequency={};
             $scope.myForm.$setPristine(); //reset Form
         }
-    }
 
 
+        }
     ]);
    })();

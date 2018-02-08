@@ -1,4 +1,3 @@
- use pfchoices_final_20171005;
  
 drop table if exists temp_simply_membership ;
 
@@ -17,7 +16,8 @@ case when Member_Term is not null then  Member_Term
      else '12/31/2099' end  memeffenddate,
 PCP_Eff pcpstartdate,
 PCP_Term pcpenddate, 
-:fileId fileId, now() created_date, now() updated_date, 'sarath' created_by, 'sarath' updated_by ,
+:insId insId,
+:fileId fileId, now() created_date, now() updated_date, :username created_by, :username updated_by ,
  Phone phone, Member_County MemberCounty ,   REPLACE(upper(SUBSTRING(Member_Physical__Address, 1, LOCATE(SUBSTRING_INDEX(Member_Physical__Address, ',', -3),Member_Physical__Address)-2)), 'TEMPLE', '') address1, REPLACE(upper(SUBSTRING_INDEX(SUBSTRING_INDEX(Member_Physical__Address, ',', -3), ',', 1)), 'TERRACE', 'TEMPLE TERRACE') city,   trim(SUBSTRING_INDEX(SUBSTRING_INDEX(Member_Physical__Address, ',', -2), ',', 1)) state, 
  SUBSTRING(  SUBSTRING_INDEX(SUBSTRING_INDEX(Member_Physical__Address, ',', -1), ',', -1), 1,6) zipcode from csv2table_simply_roster
  join lu_gender g on g.code = sex;
@@ -30,21 +30,8 @@ alter table temp_simply_membership add key MEMBEREFFDT(pcpstartdate);
 alter table temp_simply_membership add key MEMBERTERMDT(pcpenddate);
 alter table temp_simply_membership add key address(state,zipcode);
   
-  update membership m
-  join 
-   (
- select m.mbr_id,m.SRC_SYS_MBR_NBR,tm.mbrstatus,tm.firstname,tm.lastname,tm.dob  from   temp_simply_membership tm
-  join membership m on  tm.MCDMCR=m.SRC_SYS_MBR_NBR
-  group by tm.MCDMCR
-   having max(STRING_TO_DATE(memeffstartdate))
- ) a on a.mbr_id = m.mbr_id
- set m.mbr_status= a.mbrstatus,
-   m.Mbr_FirstName = a.firstname,
-   m.Mbr_lastName = a.lastname,
-   m.Mbr_dob =  a.dob  ;
-   
   
-insert ignore into membership (  Mbr_LastName,Mbr_FirstName,Mbr_GenderID,Mbr_CountyCode,Mbr_DOB,Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,file_id,created_date,updated_date,created_by,updated_by)
+replace into membership (  Mbr_LastName,Mbr_FirstName,Mbr_GenderID,Mbr_CountyCode,Mbr_DOB,Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,file_id,created_date,updated_date,created_by,updated_by)
 select lastname,firstname, gender_id,MemberCounty, 
 case when tm.dob    > current_date   then  DATE_SUB( tm.dob ,INTERVAL 100 YEAR)   else  tm.dob  end  dob ,
 tm.mbrstatus,tm.MCDMCR,tm.MCDMCR, tm.fileId ,tm.created_date,tm.updated_date,tm.created_by,tm.updated_by   from  temp_simply_membership tm
