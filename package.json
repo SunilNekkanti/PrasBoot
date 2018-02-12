@@ -1,0 +1,29 @@
+{
+  "name": "pras",
+  "version": "1.0.0",
+  "description": "pras",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.1.0",
+    "jshint": "^2.9.5"
+  },
+  "devDependencies": {
+    "gulp-freemarker": "^0.1.5",
+    "gulp-jshint": "^2.1.0",
+    "jshint": "^2.9.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gandlurisk/PrasBoot.git"
+  },
+  "author": "sarath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gandlurisk/PrasBoot/issues"
+  },
+  "homepage": "https://github.com/gandlurisk/PrasBoot#readme"
+}
