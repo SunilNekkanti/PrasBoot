@@ -1,9 +1,11 @@
-'use strict';
+(function() {
+  'use strict';
+  var app = angular.module('my-app');
 
 app.controller('EventWeekDayController',
     ['EventWeekDayService', '$scope',  function( EventWeekDayService, $scope) {
 
-    	
+
         var self = this;
         self.eventWeekDay = {};
         self.eventWeekDays=[];
@@ -109,21 +111,22 @@ app.controller('EventWeekDayController',
                 }
             );
         }
-        
+
         function addEventWeekDay() {
             self.successMessage='';
             self.errorMessage='';
             self.display =true;
         }
-        
-        
+
+
         function reset(){
             self.successMessage='';
             self.errorMessage='';
             self.eventWeekDay={};
             $scope.myForm.$setPristine(); //reset Form
         }
-    }
 
 
+      }
     ]);
+})();

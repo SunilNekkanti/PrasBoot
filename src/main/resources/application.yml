@@ -71,7 +71,7 @@ envProperties:
       queryTypeInsertLevel2: _insert_level2
 datasource:
   pras:
-    url: jdbc:mysql://localhost:3308/pfchoices_final_20180205?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3308/pfchoices_final_20180117?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: root
     password: test123
     driverClassName: com.mysql.jdbc.Driver

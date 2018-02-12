@@ -1,9 +1,11 @@
-'use strict';
+(function() {
+  'use strict';
+  var app = angular.module('my-app');
 
 app.controller('EventWeekNumberController',
     ['EventWeekNumberService', '$scope',  function( EventWeekNumberService, $scope) {
 
-    	
+
         var self = this;
         self.eventWeekNumber = {};
         self.eventWeekNumbers=[];
@@ -109,21 +111,22 @@ app.controller('EventWeekNumberController',
                 }
             );
         }
-        
+
         function addEventWeekNumber() {
             self.successMessage='';
             self.errorMessage='';
             self.display =true;
         }
-        
-        
+
+
         function reset(){
             self.successMessage='';
             self.errorMessage='';
             self.eventWeekNumber={};
             $scope.myForm.$setPristine(); //reset Form
         }
-    }
 
 
+      }
     ]);
+})();

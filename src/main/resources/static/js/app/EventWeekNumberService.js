@@ -1,4 +1,6 @@
-'use strict';
+(function() {
+  'use strict';
+  var app = angular.module('my-app');
 
 app.service('EventWeekNumberService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -106,5 +108,6 @@ app.service('EventWeekNumberService',
                 return deferred.promise;
             }
 
-        }
-    ]);
+          }
+        ]);
+    })();

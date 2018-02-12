@@ -23,7 +23,7 @@
     <button type="button" ng-click="ctrl.cancelEdit()" class="btn btn-warning btn-sm floatRight"   >Cancel</button>
     <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm floatRight" ng-disabled="myForm.$pristine" ng-if="ctrl.adminOrManager() && !ctrl.event.id" >Reset Form</button>
     <input type="button" value="{{!ctrl.event.id ? 'Add' : 'Update'}}" ng-click="ctrl.submit()" class="btn btn-primary btn-sm floatRight" ng-disabled="myForm.$invalid || myForm.$pristine" ng-show="ctrl.adminOrManager()">{{!ctrl.event.id ? 'Add' : 'Update'}}</button>
-            
+
    </div>
     <div class="panel-body">
       <div class="formcontainer">
@@ -34,7 +34,7 @@
 
           <div class="panel-heading">
             <div class="form-actions floatCenter col-md-offset-4">
-              
+
             </div>
           </div>
 
@@ -115,7 +115,7 @@
                   <input class="form-control input-md" type="file" name="files" file-model="ctrl.myFiles" ng-model="ctrl.myFiles" multiple />
                 </div>
               </div>
-              
+
                <div class="form-group col-md-12 uploadedFiles" ng-if="ctrl.event.id">
                 <div require>
                   <label class="col-md-2  control-label" for="contactEmail">Uploaded Files</label>
@@ -126,8 +126,8 @@
         				</a>
                 </div>
               </div>
-              
-              
+
+
             </div>
           </div>
            <div class="form-group col-sm-6 cntInfo">

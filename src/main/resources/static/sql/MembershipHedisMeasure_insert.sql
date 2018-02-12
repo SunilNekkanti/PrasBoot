@@ -98,7 +98,7 @@
    from hedis_due_dates bhm 
     join (
  select * from membership_activity_month where activity_month >= 201601 group by mbr_id having count(mbr_id) >3) mam on mam.mbr_id = bhm.mbr_id
-  LEFT Join membership_problems mp on mp.mbr_id=bhm.mbr_id 
+  LEFT Join membership_hedis_problems mp on mp.mbr_id=bhm.mbr_id 
    LEFT join (select group_concat(cpt_id) cpt_ids , hedis_msr_rule_Id from hedis_cpt_measure group by hedis_msr_rule_Id) hcptm on hcptm.hedis_msr_rule_Id = bhm.hedis_msr_rule_Id 
    left join (select replace(im.code, '.','') icd_code , hedis_msr_rule_Id from hedis_icd_measure hicdm
    join icd_measure im on im.icd_id = hicdm.icd_id ) hicdm on hicdm.hedis_msr_rule_Id = bhm.hedis_msr_rule_Id 

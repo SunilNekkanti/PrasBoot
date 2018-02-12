@@ -55,12 +55,9 @@
     BESTTIMETOCALL_SERVICE_API: '/Pras/api/bestTimeToCall/',
     CALCULATE_RISK_SCORE_SERVICE_API: '/Pras/api/calculateRiskScore/',
     MLR_REPORTING_YEARS_SERVICE_API: '/Pras/api/newMedicalLossRatio/reportingYears/',
-    LEAD_SERVICE_API: '/Pras/api/lead/',
     LEADSTATUS_SERVICE_API: '/Pras/api/leadStatus/',
     LEADSTATUS_DETAIL_SERVICE_API: '/Pras/api/leadStatusDetail/',
-    EVENTTYPE_SERVICE_API: '/Pras/api/eventType/',
-    EVENT_WEEKNUMBER_SERVICE_API: '/Pras/api/eventWeekNumber/',
-    BESTTIMETOCALL_SERVICE_API: '/Pras/api/bestTimeToCall/'
+    EVENTTYPE_SERVICE_API: '/Pras/api/eventType/'
   });
 
   app.controller('NavbarController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService', '$localStorage', '$window', function($rootScope, $scope, $state, $stateParams, UserService, $localStorage, $window) {
@@ -82,7 +79,7 @@
               $rootScope.loginUser = $localStorage.loginUser;
             },
             function(errResponse) {
-              callMe('logout')
+              callMe('logout');
               $rootScope.displayNavbar = false;
               console
                 .error('Error while fetching loginUser');
@@ -107,7 +104,7 @@
       } else {
         $state.go(url);
       }
-    }
+    };
   }]);
 
 
@@ -136,7 +133,7 @@
         }, {
           serie: true,
           name: 'main.lead',
-          files: ['js/app/FileUploadService.js', 'js/app/BestTimeToCallService.js', 'js/app/LeadStatusService.js', 'js/app/LeadStatusDetailService.js', 'js/app/LeadService.js', 'js/app/EventService.js', 'js/app/LeadController.js']
+          files: ['js/app/EventService.js','js/app/FileUploadService.js', 'js/app/BestTimeToCallService.js', 'js/app/LeadStatusService.js', 'js/app/LeadStatusDetailService.js', 'js/app/LeadService.js', 'js/app/LeadController.js']
         }, {
           serie: true,
           name: 'main.leadStatus',
@@ -515,7 +512,8 @@
           controller: 'EventController',
           controllerAs: 'ctrl',
           params: {
-
+            'id': '',
+            'eventDisplay': false
           },
           resolve: {
             loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
@@ -884,7 +882,7 @@
           templateUrl: 'partials/planType_list',
           controller: 'PlanTypeController',
           controllerAs: 'ctrl',
-          resolve: {  }
+          resolve: {          }
         })
         .state('main.planType.edit', {
           url: '/',
@@ -1357,7 +1355,7 @@
         }
       });
       return out;
-    }
+    };
   });
 
   app.filter('filterFromArray', function() {
@@ -1471,7 +1469,7 @@
             filteredObject.push(prvdr);
           }
         });
-      })
+      });
       return filteredObject;
     };
   });

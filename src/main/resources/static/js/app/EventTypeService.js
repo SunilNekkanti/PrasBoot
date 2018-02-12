@@ -29,7 +29,7 @@ app.service('EventTypeService',
                  		 params: pageable,
                  		 headers : {'Accept' : 'application/json'}
                  		};
-            return     $http.get(urls.FACILITYTYPE_SERVICE_API, config)
+            return     $http.get(urls.EVENTTYPE_SERVICE_API, config)
                     .then(
                         function (response) {
                             console.log('Fetched successfully  eventTypes');
@@ -48,7 +48,7 @@ app.service('EventTypeService',
             function loadAllEventTypes() {
                 console.log('Fetching all eventTypes');
                 var deferred = $q.defer();
-                $http.get(urls.FACILITYTYPE_SERVICE_API)
+                $http.get(urls.EVENTTYPE_SERVICE_API)
                     .then(
                         function (response) {
                             console.log('Fetched successfully all eventTypes');
@@ -71,7 +71,7 @@ app.service('EventTypeService',
             function getEventType(id) {
                 console.log('Fetching EventType with id :'+id);
                 var deferred = $q.defer();
-                $http.get(urls.FACILITYTYPE_SERVICE_API + id)
+                $http.get(urls.EVENTTYPE_SERVICE_API + id)
                     .then(
                         function (response) {
                             console.log('Fetched successfully EventType with id :'+id);
@@ -88,7 +88,7 @@ app.service('EventTypeService',
             function createEventType(user) {
                 console.log('Creating EventType');
                 var deferred = $q.defer();
-                $http.post(urls.FACILITYTYPE_SERVICE_API, user)
+                $http.post(urls.EVENTTYPE_SERVICE_API, user)
                     .then(
                         function (response) {
                         	loadEventTypes(0,20,'',null);
@@ -105,7 +105,7 @@ app.service('EventTypeService',
             function updateEventType(user, id) {
                 console.log('Updating EventType with id '+id);
                 var deferred = $q.defer();
-                $http.put(urls.FACILITYTYPE_SERVICE_API + id, user)
+                $http.put(urls.EVENTTYPE_SERVICE_API + id, user)
                     .then(
                         function (response) {
                         	loadEventTypes(0,20,'',null);
@@ -122,7 +122,7 @@ app.service('EventTypeService',
             function removeEventType(id) {
                 console.log('Removing EventType with id '+id);
                 var deferred = $q.defer();
-                $http.delete(urls.FACILITYTYPE_SERVICE_API + id)
+                $http.delete(urls.EVENTTYPE_SERVICE_API + id)
                     .then(
                         function (response) {
                         	loadEventTypes(0,20,'',null);

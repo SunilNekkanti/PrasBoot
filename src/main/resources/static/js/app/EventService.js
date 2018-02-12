@@ -1,4 +1,6 @@
-'use strict';
+(function() {
+  'use strict';
+  var app = angular.module('my-app');
 
 app.service('EventService',
     ['$localStorage', '$http', '$q', 'urls',
@@ -41,7 +43,7 @@ app.service('EventService',
                     );
                 return deferred.promise;
             }
-            
+
             function loadEvents(pageNo, length, search, order) {
                 console.log('Fetching  events');
                 var deferred = $q.defer();
@@ -142,5 +144,6 @@ app.service('EventService',
                 return deferred.promise;
             }
 
-        }
-    ]);
+          }
+        ]);
+    })();

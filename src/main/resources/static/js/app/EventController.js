@@ -46,7 +46,7 @@
         self.eventMonths = [];
         self.eventMonth = {};
         self.users = [];
-        self.display = $stateParams.eventDisplay || false;;
+        self.display = $stateParams.eventDisplay || false;
         self.states = [];
         self.displayEditButton = false;
         self.submit = submit;
@@ -157,7 +157,7 @@
 
         function checkBoxChange(checkStatus, eventId) {
           self.displayEditButton = checkStatus;
-          self.eventId = eventId
+          self.eventId = eventId;
 
         }
 
@@ -412,8 +412,8 @@
             // createEvent(self.event);
           }, function() {
             self.serverResponse = 'An error has occurred';
-          })
-        };
+          });
+        }
 
         function eventrrule() {
           var rrule = [];
@@ -423,7 +423,7 @@
           var byDay;
 
           if (self.event.frequency == 'WEEKLY' && self.selectedWeekDays.length > 0) {
-            self.selectedWeekDays = $filter('orderBy')(self.selectedWeekDays, 'id')
+            self.selectedWeekDays = $filter('orderBy')(self.selectedWeekDays, 'id');
             byDay = ';BYDAY=' + self.selectedWeekDays.map(o => o.shortName).join();
             if (byDay) rrule.push(byDay);
           }
@@ -454,14 +454,14 @@
 
           }
 
-          var interval = ';INTERVAL=' + self.event.interval
+          var interval = ';INTERVAL=' + self.event.interval;
           if (self.event.interval) rrule.push(interval);
-
+          var count;
           if (self.eventEndOption == 'After') {
-            var count = ';COUNT=' + self.eventEndCount;
+            count = ';COUNT=' + self.eventEndCount;
             rrule.push(count);
           } else if (self.eventEndOption == 'On date') {
-            var count = ';UNTIL=' + self.eventUntil;
+            count = ';UNTIL=' + self.eventUntil;
             rrule.push(count);
           }
 
@@ -484,7 +484,7 @@
                     break;
                   case "UNTIL":
                     self.eventUntil = ruleType[1];
-                    self.eventEndOption == 'On date';
+                    self.eventEndOption = 'On date';
                     break;
                   case 'INTERVAL':
                     self.eventInterval = ruleType[1];
@@ -515,7 +515,7 @@
                     break;
 
                   default:
-                    self.eventEndOption == 'Never';
+                    self.eventEndOption = 'Never';
                 }
               }
 
@@ -655,7 +655,7 @@
           self.errMessage = '';
           return false;
 
-        };
+        }
 
 
         function clear() {
@@ -682,7 +682,7 @@
               break;
             }
           return match;
-        };
+        }
 
 
         function sync(bool, item) {
@@ -698,7 +698,7 @@
               }
             }
           }
-        };
+        }
 
         function findWeekDaysByShortNames(shortNames) {
           self.selectedWeekDays = self.eventOnWeekDays.filter(function(weekday) {

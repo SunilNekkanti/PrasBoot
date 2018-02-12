@@ -1,4 +1,4 @@
-INSERT INTO membership_problems (
+INSERT INTO membership_hedis_problems (
 mbr_id,pbm_id,start_date,resolved_date,created_date,updated_date,
 created_by,updated_by,active_ind,file_id
  )
@@ -9,7 +9,7 @@ SELECT  mc.mbr_id, p.pbm_id, min(mcd.claim_start_date) start_date, null resolved
 JOIN problems p ON p.ins_id=:insId and effective_year = year(CONCAT(mcd.activity_month,'01'))
 JOIN problems_icd  pbmicd ON p.pbm_id = pbmicd.pbm_id
 JOIN icd_measure  icd ON icd.icd_id = pbmicd.icd_id AND INSTR(Diagnoses, REPLACE(code, ".","")) 
-LEFT OUTER JOIN membership_problems mp ON mp.mbr_id= mc.mbr_id and mp.pbm_id =p.pbm_id   
+LEFT OUTER JOIN membership_hedis_problems mp ON mp.mbr_id= mc.mbr_id and mp.pbm_id =p.pbm_id   
 where mc.DX_TYPE_CD = 'ICD10' and  mc.report_month = :activityMonth
 and case when mp.mbr_id is not null   
           then   case when  mp.pbm_id is not null 
