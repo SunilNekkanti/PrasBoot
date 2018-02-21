@@ -19,13 +19,16 @@ public class LeadSpecifications implements Specification<LeadMembership> {
 	private String searchTerm;
 	private Integer userId;
 	private String username;
+	private String selectedTab;
 
-	public LeadSpecifications(Integer userId, String username, String roleName, String searchTerm) {
+	public LeadSpecifications(Integer userId, String username, String roleName, String searchTerm, String selectedTab) {
 		super();
 		this.roleName = roleName;
 		this.searchTerm = searchTerm;
 		this.userId = userId;
 		this.username = username;
+		this.selectedTab = selectedTab;
+
 	}
 
 	public Predicate toPredicate(Root<LeadMembership> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -43,9 +46,30 @@ public class LeadSpecifications implements Specification<LeadMembership> {
 
 			));
 		}
-		
+
 		if (!"ADMIN".equals(roleName)) {
 			p.getExpressions().add(cb.and(cb.notEqual(cb.upper(root.join("status").get("description")), "HOLD")));
+		}
+
+		if ("CARE_COORDINATOR".equals(roleName)) {
+
+			switch (selectedTab) {
+
+			case "ToBeScheduled":
+				p.getExpressions().add(cb.and(cb.equal(root.join("status").get("description"), "Converted"),
+						cb.equal(root.join("leadMembershipFlag").get("scheduledFlag"), 'N')));
+				break;
+
+			case "ScheduledInactive":
+				p.getExpressions().add(cb.and(cb.equal(root.join("status").get("description"), "Inactive"),
+						cb.equal(root.join("leadMembershipFlag").get("scheduledFlag"), 'Y')));
+				break;
+
+			default:
+				p.getExpressions().add(cb.and(cb.equal(root.join("status").get("description"), "Active"),
+						cb.or(cb.equal(root.join("leadMembershipFlag").get("engagedFlag"), 'N'),cb.equal(root.join("leadMembershipFlag").get("scheduledFlag"), 'N'))));
+				;
+			}
 		}
 
 		if ("EVENT_COORDINATOR".equals(roleName)) {
@@ -61,10 +85,11 @@ public class LeadSpecifications implements Specification<LeadMembership> {
 					cb.literal(1440));
 
 			p.getExpressions().add(cb.lessThanOrEqualTo(appointmentTime, allocationEndTime));
-			p.getExpressions().add(cb.and(cb.equal(root.join("agentLeadAppointmentList", JoinType.LEFT).get("activeInd"), 'Y')));
+			p.getExpressions()
+					.add(cb.and(cb.equal(root.join("agentLeadAppointmentList", JoinType.LEFT).get("activeInd"), 'Y')));
 		}
 		p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
-	
+
 		return p;
 
 	}

@@ -18,7 +18,7 @@
     PAYMENT_YEARS_SERVICE_API: '/Pras/api/paymentYears/',
     LANGUAGE_SERVICE_API: '/Pras/api/language/',
     PLANTYPE_SERVICE_API: '/Pras/api/planType/',
-    FILE_TYPE_SERVICE_API: '/Pras/api//fileType/',
+    FILE_TYPE_SERVICE_API: '/Pras/api/fileType/',
     FILE_SERVICE_API: '/Pras/api/file/',
     FREQUENCY_TYPE_SERVICE_API: '/Pras/api/frequencyType/',
     MLR_SERVICE_API: '/Pras/api/medicalLossRatio/',
@@ -46,6 +46,7 @@
     LOGIN_USER: '/Pras/getloginInfo',
     FILE_UPLOADER: '/Pras/api/fileUpload/fileProcessing.do',
     CONTRACT_FILE_UPLOADER: '/Pras/api/contractFileUpload/fileProcessing.do',
+    CONSENT_FORM_FILE_UPLOADER: '/Pras/api/fileUpload/consentFormFileProcessing.do',
     COUNTY_SERVICE_API: '/Pras/api/county/',
     EVENT_FREQUENCY_SERVICE_API: '/Pras/api/eventFrequency/',
     EVENT_MONTH_SERVICE_API: '/Pras/api/eventMonth/',
@@ -56,6 +57,7 @@
     CALCULATE_RISK_SCORE_SERVICE_API: '/Pras/api/calculateRiskScore/',
     MLR_REPORTING_YEARS_SERVICE_API: '/Pras/api/newMedicalLossRatio/reportingYears/',
     LEADSTATUS_SERVICE_API: '/Pras/api/leadStatus/',
+    LEAD_FLAG_SERVICE_API: '/Pras/api/leadMembershipFlag/',
     LEADSTATUS_DETAIL_SERVICE_API: '/Pras/api/leadStatusDetail/',
     EVENTTYPE_SERVICE_API: '/Pras/api/eventType/'
   });
@@ -133,23 +135,11 @@
         }, {
           serie: true,
           name: 'main.lead',
-          files: ['js/app/EventService.js','js/app/FileUploadService.js', 'js/app/BestTimeToCallService.js', 'js/app/LeadStatusService.js', 'js/app/LeadStatusDetailService.js', 'js/app/LeadService.js', 'js/app/LeadController.js']
+          files: ['js/app/LeadMembershipFlagModalInstanceController.js','js/app/LeadMembershipFlagService.js', 'js/app/FileUploadService.js', 'js/app/BestTimeToCallService.js', 'js/app/LeadStatusService.js', 'js/app/LeadStatusDetailService.js', 'js/app/LeadService.js', 'js/app/LeadController.js']
         }, {
           serie: true,
           name: 'main.leadStatus',
           files: ['js/app/LeadStatusService.js', 'js/app/LeadStatusController.js']
-        }, {
-          serie: true,
-          name: 'main.event',
-          files: ['js/app/FileUploadService.js', 'js/app/EventService.js', 'js/app/EventTypeService.js', 'js/app/EventFrequencyService.js', 'js/app/EventMonthService.js', 'js/app/EventWeekDayService.js', 'js/app/EventWeekNumberService.js', 'js/app/EventController.js']
-        }, {
-          serie: true,
-          name: 'main.eventType',
-          files: ['js/app/EventTypeService.js']
-        }, {
-          serie: true,
-          name: 'main.eventAssignment',
-          files: ['js/app/EventAssignmentService.js', 'js/app/EventService.js', 'js/app/EventFrequencyService.js', 'js/app/EventMonthService.js', 'js/app/EventWeekDayService.js', 'js/app/EventWeekNumberService.js', 'js/app/EventAssignmentController.js']
         }, {
           serie: true,
           name: 'main.membership',
@@ -401,13 +391,6 @@
             loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
               return $ocLazyLoad.load('main.lead');
             }],
-            events: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var EventService = $injector.get("EventService");
-              console.log('Load all  events');
-              var deferred = $q.defer();
-              EventService.loadAllEvents().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }],
             statuses: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
               var LeadStatusService = $injector.get("LeadStatusService");
               console.log('Load all  statuses');
@@ -524,70 +507,6 @@
               console.log('Load all  eventTypes');
               var deferred = $q.defer();
               EventTypeService.loadEventTypes(0, 20, '', null).then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }]
-          }
-        })
-        .state('main.event.edit', {
-          url: '/',
-          templateUrl: 'partials/event_list',
-          controller: 'EventController',
-          controllerAs: 'ctrl',
-          resolve: {}
-        })
-        .state('main.eventAssignment', {
-          url: '/eventAssignment',
-          templateUrl: 'partials/eventAssignment_list',
-          controller: 'EventAssignmentController',
-          controllerAs: 'ctrl',
-          params: {
-            'id': '',
-            'eventAssignmentDisplay': false
-          },
-          resolve: {
-            loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
-              return $ocLazyLoad.load('main.eventAssignment');
-            }],
-            events: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var EventService = $injector.get("EventService");
-              console.log('Load all  events');
-              var deferred = $q.defer();
-              EventService.loadAllEvents().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }]
-          }
-        })
-        .state('main.eventAssignment.edit', {
-          url: '/',
-          templateUrl: 'partials/eventAssignment_list',
-          controller: 'EventAssignmentController',
-          controllerAs: 'ctrl',
-          params: {
-            'eventAssignmentDisplay': true,
-          },
-          resolve: {
-            loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
-              return $ocLazyLoad.load('main.eventAssignment');
-            }],
-            eventMonths: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var EventMonthService = $injector.get("EventMonthService");
-              console.log('Load all  eventMonths');
-              var deferred = $q.defer();
-              EventMonthService.loadAllEventMonths().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }],
-            eventWeekDays: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var EventWeekDayService = $injector.get("EventWeekDayService");
-              console.log('Load all  eventWeekDays');
-              var deferred = $q.defer();
-              EventWeekDayService.loadAllEventWeekDays().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }],
-            eventWeekNumbers: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var EventWeekNumberService = $injector.get("EventWeekNumberService");
-              console.log('Load all  eventWeekDays');
-              var deferred = $q.defer();
-              EventWeekNumberService.loadAllEventWeekNumbers().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
             }]
           }
@@ -1265,7 +1184,32 @@
     };
   });
 
+ // DatePicker -> NgModel
+  app.directive('date2Picker', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attr, ngModel) {
+        $(element).datetimepicker({
+          locale: 'en-us',
+          format: 'YYYYMM',
+          parseInputDate: function(data) {
+            if (data instanceof Date) {
+              return moment(data);
+            } else {
+              return moment(new Date(data));
+            }
+          },
+          minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+          maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+        });
 
+        $(element).on("dp.change", function(e) {
+          ngModel.$viewValue = moment(e.date).format('YYYYMM');
+          ngModel.$commitViewValue();
+        });
+      }
+    };
+  });
 
   app.directive('fileModel', ['$parse', function($parse) {
     return {

@@ -15,7 +15,7 @@ app.service('LeadService',
                 updateLead: updateLead,
                 removeLead: removeLead,
                 loginUser : loginUser
-               
+
             };
 
             return factory;
@@ -23,7 +23,7 @@ app.service('LeadService',
             function loginUser() {
                 console.log('Fetching loginUser');
                 var deferred = $q.defer();
-                
+
                 $http.get(urls.LOGIN_USER)
                     .then(
                         function (response) {
@@ -38,7 +38,7 @@ app.service('LeadService',
                     );
                 return deferred.promise;
             }
-            
+
             function loadAllLeads() {
                 console.log('Fetching all leads');
                 var deferred = $q.defer();
@@ -64,12 +64,12 @@ app.service('LeadService',
                     );
                 return deferred.promise;
             }
-            
-            function loadLeads(pageNo, length, search, order) {
+
+            function loadLeads(pageNo, length, search, selectedTab,  order) {
                 var deferred = $q.defer();
-                
+
                 var pageable = {
-                  		 page:pageNo, size:length,sort: order,search: search||''
+                  		 page:pageNo, size:length,sort: order,selectedTab:selectedTab,search: search||''
                   		};
 
                   		var config = {
@@ -118,7 +118,7 @@ app.service('LeadService',
                 $http.post(urls.LEAD_SERVICE_API, lead)
                     .then(
                         function (response) {
-                        	loadLeads(0,20,'',null);
+                       // 	loadLeads(0,20,'',null);
                             deferred.resolve(response.data);
                         },
                         function (errResponse) {
@@ -135,7 +135,7 @@ app.service('LeadService',
                 $http.put(urls.LEAD_SERVICE_API + id, lead)
                     .then(
                         function (response) {
-                        	loadLeads(0,20,'',null);
+                        //	loadLeads(0,20,'',null);
                             deferred.resolve(response.data);
                         },
                         function (errResponse) {

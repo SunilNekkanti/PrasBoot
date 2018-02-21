@@ -9,6 +9,7 @@
     "jshint": "^2.9.5"
   },
   "devDependencies": {
+    "gulp-directory-sync": "^1.2.3",
     "gulp-freemarker": "^0.1.5",
     "gulp-jshint": "^2.1.0",
     "jshint": "^2.9.5"

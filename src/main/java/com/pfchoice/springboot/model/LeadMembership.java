@@ -27,6 +27,8 @@ import org.hibernate.annotations.FetchMode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pfchoice.springboot.util.JsonDateAndTimeDeserializer;
+import com.pfchoice.springboot.util.JsonDateAndTimeSerializer;
 import com.pfchoice.springboot.util.JsonDateDeserializer;
 import com.pfchoice.springboot.util.JsonDateSerializer;
 
@@ -50,17 +52,17 @@ public class LeadMembership extends RecordDetails implements Serializable {
 	@Column(name = "lead_Mbr_LastName")
 	private String lastName;
 
-	@Fetch(FetchMode.SELECT)
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "lead")
-	private List<AgentLeadAppointment> agentLeadAppointmentList;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "insurance_type_id", referencedColumnName = "plan_type_id")
 	private PlanType planType;
 
+
 	@Column(name = "present_insurance")
 	private String initialInsurance;
 
+	@OneToOne(cascade = { CascadeType.ALL },  mappedBy = "lead")
+	private LeadMembershipFlag  leadMembershipFlag;
+	
 	@JsonSerialize(using = JsonDateSerializer.class)
 	@JsonDeserialize(using = JsonDateDeserializer.class)
 	@Column(name = "lead_Mbr_DOB")
@@ -89,7 +91,7 @@ public class LeadMembership extends RecordDetails implements Serializable {
 	private BestTimeToCall bestTimeToCall;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "lead_Mbr_Status", referencedColumnName = "code", insertable = false)
+	@JoinColumn(name = "lead_Mbr_Status", referencedColumnName = "code")
 	private LeadStatus status;
 	
 	@OneToOne(fetch = FetchType.LAZY)
@@ -101,10 +103,6 @@ public class LeadMembership extends RecordDetails implements Serializable {
 			@JoinColumn(name = "lead_mbr_id", referencedColumnName = "lead_mbr_id", nullable = false ) }, inverseJoinColumns = {
 					@JoinColumn(name = "contact_id", referencedColumnName = "cnt_id", nullable = false, unique = true) })
 	private Contact contact;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "event_id", referencedColumnName = "event_id")
-	private Event event;
 
 	@Column(name = "consent_form_signed")
 	private Character consentFormSigned = new Character('N');
@@ -119,7 +117,26 @@ public class LeadMembership extends RecordDetails implements Serializable {
 
 	@javax.persistence.Transient
 	private String notesHistory;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id")
+	private Provider prvdr;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ins_id", referencedColumnName = "insurance_id")
+	private Insurance insurance;
+
+	@Column(name = "effective_from")
+	private Integer effectiveFrom;
+
+	@Column(name = "transportation", insertable = false)
+	private Character transportation = new Character('N');
+
+	@JsonSerialize(using = JsonDateAndTimeSerializer.class)
+	@JsonDeserialize(using = JsonDateAndTimeDeserializer.class)
+	@Column(name = "dr_appointment_time")
+	private Date drAppointmentTime;
+	
 	/**
 	 * 
 	 */
@@ -317,25 +334,6 @@ public class LeadMembership extends RecordDetails implements Serializable {
 		this.bestTimeToCall = bestTimeToCall;
 	}
 
-	/**
-	 * @return the agentLeadAppointmentList
-	 */
-	public List<AgentLeadAppointment> getAgentLeadAppointmentList() {
-		return agentLeadAppointmentList;
-	}
-
-	/**
-	 * @param agentLeadAppointmentList
-	 *            the agentLeadAppointmentList to set
-	 */
-	public void setAgentLeadAppointmentList(List<AgentLeadAppointment> agentLeadAppointmentList) {
-		for (AgentLeadAppointment agentLeadAppointment : agentLeadAppointmentList) {
-			agentLeadAppointment.setLead(this);
-			agentLeadAppointment.setCreatedBy("Sarath");
-			agentLeadAppointment.setUpdatedBy("Sarath");
-		}
-		this.agentLeadAppointmentList = agentLeadAppointmentList;
-	}
 
 	/**
 	 * @return the contact
@@ -350,21 +348,6 @@ public class LeadMembership extends RecordDetails implements Serializable {
 	 */
 	public void setContact(Contact contact) {
 		this.contact = contact;
-	}
-
-	/**
-	 * @return the event
-	 */
-	public Event getEvent() {
-		return event;
-	}
-
-	/**
-	 * @param event
-	 *            the event to set
-	 */
-	public void setEvent(Event event) {
-		this.event = event;
 	}
 
 	/**
@@ -459,6 +442,91 @@ public class LeadMembership extends RecordDetails implements Serializable {
 	public void setNotesHistory(String notesHistory) {
 		this.notesHistory = leadNotes.stream().map(ln -> ln.getNotes()).reduce("", String::concat);
 
+	}
+
+	
+	/**
+	 * @return the prvdr
+	 */
+	public Provider getPrvdr() {
+		return prvdr;
+	}
+
+	/**
+	 * @param prvdr the prvdr to set
+	 */
+	public void setPrvdr(Provider prvdr) {
+		this.prvdr = prvdr;
+	}
+
+	/**
+	 * @return the insurance
+	 */
+	public Insurance getInsurance() {
+		return insurance;
+	}
+
+	/**
+	 * @param insurance the insurance to set
+	 */
+	public void setInsurance(Insurance insurance) {
+		this.insurance = insurance;
+	}
+
+	/**
+	 * @return the effectiveFrom
+	 */
+	public Integer getEffectiveFrom() {
+		return effectiveFrom;
+	}
+
+	/**
+	 * @param effectiveFrom the effectiveFrom to set
+	 */
+	public void setEffectiveFrom(Integer effectiveFrom) {
+		this.effectiveFrom = effectiveFrom;
+	}
+
+	/**
+	 * @return the transportation
+	 */
+	public Character getTransportation() {
+		return transportation;
+	}
+
+	/**
+	 * @param transportation the transportation to set
+	 */
+	public void setTransportation(Character transportation) {
+		this.transportation = transportation;
+	}
+
+	/**
+	 * @return the drAppointmentTime
+	 */
+	public Date getDrAppointmentTime() {
+		return drAppointmentTime;
+	}
+
+	/**
+	 * @return the leadMembershipFlag
+	 */
+	public LeadMembershipFlag getLeadMembershipFlag() {
+		return leadMembershipFlag;
+	}
+
+	/**
+	 * @param leadMembershipFlag the leadMembershipFlag to set
+	 */
+	public void setLeadMembershipFlag(LeadMembershipFlag leadMembershipFlag) {
+		this.leadMembershipFlag = leadMembershipFlag;
+	}
+
+	/**
+	 * @param drAppointmentTime the drAppointmentTime to set
+	 */
+	public void setDrAppointmentTime(Date drAppointmentTime) {
+		this.drAppointmentTime = drAppointmentTime;
 	}
 
 	@Override

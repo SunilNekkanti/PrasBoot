@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -220,6 +221,47 @@ public class FileUploadContentController implements ResourceLoaderAware {
 
 	}
 
+	
+	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
+	@RequestMapping(value = { "/fileUpload/consentFormFileProcessing.do" }, method = RequestMethod.POST)
+	public List<FileUpload> uploadConsentFormFileProcessing(Model model, @RequestParam MultipartFile[] files) throws IOException {
+		logger.info("started file processsing" + files.toString());
+		logger.info("fileUploadContent.length:" + files.length);
+		List<FileUploadContent> fileUploadContenters = new ArrayList<>();
+		List<FileUpload> fileUploaders = new ArrayList<>();
+
+		for (MultipartFile fileUploadContent : files) {
+			logger.info("fileUploadContent.getOriginalFilename() :" + fileUploadContent.getOriginalFilename());
+			if (fileUploadContent != null && !"".equals(fileUploadContent.getOriginalFilename())) {
+
+				String fileName = fileUploadContent.getOriginalFilename();
+
+				try {
+					// String ext = FilenameUtils.getExtension(fileName);
+					logger.info("fileName is : " + fileName);
+					FileUploadContent fileUploadContenter = new FileUploadContent();
+					fileUploadContenter.setFileName(fileName);
+					fileUploadContenter.setContentType(fileUploadContent.getContentType());
+					fileUploadContenter.setData(fileUploadContent.getBytes());
+					fileUploadContentService.saveFileUploadContent(fileUploadContenter);
+					
+					FileUpload fileupload = new FileUpload();
+					fileupload.setId(fileUploadContenter.getId());
+					fileupload.setFileName(fileUploadContenter.getFileName());
+					fileupload.setContentType(fileUploadContenter.getContentType());
+					fileUploaders.add(fileupload);
+					fileUploadContenters.add(fileUploadContenter);
+
+				} catch (IOException e) {
+					logger.warn(e.getCause().getMessage());
+				}
+
+			}
+		}
+		return fileUploaders;
+
+	}
+	
 	@Secured({ "ROLE_ADMIN", "ROLE_AGENT", "ROLE_MANAGER", "ROLE_EVENT_COORDINATOR", "ROLE_CARE_COORDINATOR" })
 	@RequestMapping(value = { "/fileUpload/fileProcessing.do" }, method = RequestMethod.POST)
 	public void uploadFileProcessing(@ModelAttribute("username") String username,

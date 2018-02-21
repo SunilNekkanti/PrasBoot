@@ -250,7 +250,9 @@ app.controller('NewMedicalLossRatioController',
 									});
 									console.log('rowTotals:',rowTotals);
 								}
-								self.finalData.push(rowTotals);
+								if(Object.keys(rowTotals).length > 0){
+									self.finalData.push(rowTotals);
+								}
 							  	
 								var records = {
 									'recordsTotal' : result.data.totalElements||0,

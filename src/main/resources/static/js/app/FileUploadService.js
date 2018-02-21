@@ -7,7 +7,8 @@ var app = angular.module('my-app');
     	 var factory = {
     			 getFileUpload : getFileUpload,
     			 uploadFileToUrl: uploadFileToUrl,
-    			 uploadContractFileToUrl: uploadContractFileToUrl
+    			 uploadContractFileToUrl: uploadContractFileToUrl,
+    			 uploadConsentFormFileToUrl : uploadConsentFormFileToUrl
              };
 
              return factory;
@@ -40,6 +41,37 @@ var app = angular.module('my-app');
          }
     	 
 
+	    function uploadConsentFormFileToUrl(files) {
+            //FormData, object of key/value pair for form fields and values
+        	
+    		
+            var fileFormData = new FormData();
+            if(files.length>0 ){
+            	   //  fileFormData.append('files', files);
+           	 $.each(files, function(i, file) {
+           		fileFormData.append('files', file);
+           	  });
+            }else{
+            	fileFormData.append('files', files);
+            }
+            
+             
+            var deffered = $q.defer();
+             		
+            $http.post(urls.CONSENT_FORM_FILE_UPLOADER, fileFormData, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+
+            }).success(function (response) {
+                deffered.resolve(response);
+
+            }).error(function (response) {
+                deffered.reject(response);
+            });
+
+            return deffered.promise;
+        }
+        
     	 function uploadFileToUrl(files, insId, fileTypeId,activityMonth) {
             //FormData, object of key/value pair for form fields and values
         	

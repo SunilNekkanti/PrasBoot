@@ -16,7 +16,7 @@ public class CurrentUserServiceImpl implements CurrentUserService {
 	private CurrentUserRepository userRepository;
 
 	public CurrentUser findById(Integer id) {
-		return userRepository.findOne(id);
+		return  userRepository.findByUserId(id);
 	}
 
 	public CurrentUser findByCurrentUsername(String name) {

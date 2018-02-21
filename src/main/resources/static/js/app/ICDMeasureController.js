@@ -48,7 +48,7 @@ app.controller('ICDMeasureController',
 		.withOption("bPaginate", true)
 		.withOption('bProcessing', true)
 		.withOption('bSaveState', true)
-		.withOption('searchDelay', 1000)
+		.withOption('searchDelay', 3000)
 	    .withOption('createdRow', createdRow)
         .withPaginationType('full_numbers')
         .withOption('ordering', true)

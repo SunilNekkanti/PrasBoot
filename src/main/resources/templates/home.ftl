@@ -75,13 +75,6 @@
           <li><a ui-sref="main.insurance" ui-sref-active="active">Insurances</a> </li>
           <li><a ui-sref="main.provider" ui-sref-active="active">Providers</a> </li>
           <li><a ui-sref="main.membership" ui-sref-active="active">Memberships</a> </li>
-          <li class="dropdown" dropdown ng-if="loginUser.roleName !== 'AGENT'">
-            <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">Events <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a ui-sref="main.event" ui-sref-active="active">Event List</a></li>
-              <li ng-if="(loginUser.roleName === 'ADMIN' || loginUser.roleName === 'MANAGER')"> <a ui-sref="main.eventAssignment" ui-sref-active="active">Event Assignments</a> </li>
-            </ul>
-          </li>
           <li><a ui-sref="main.lead" ui-sref-active="active">Leads</a></li>
           <li class="dropdown" dropdown ng-if="(loginUser.roleName === 'ADMIN' || loginUser.roleName === 'MANAGER')">
             <a href="#" class="dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">Admin <span class="caret"></span></a>

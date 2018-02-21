@@ -369,8 +369,7 @@
       function serverData4History(sSource, aoData, fnCallback) {
         var filteredArr1 = self.membership.mbrProblemList || [];
         filteredArr1 = filteredArr1.filter(function(item) {
-          console.log('item', item)
-          return item.resolvedDate !== undefined && item.resolvedDate !== null && item.resolvedDate !== '';
+            return item.resolvedDate !== undefined && item.resolvedDate !== null && item.resolvedDate !== '';
         });
         var records = {
           'data': filteredArr1

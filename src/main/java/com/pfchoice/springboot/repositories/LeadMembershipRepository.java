@@ -18,4 +18,8 @@ public interface LeadMembershipRepository
 	public List<LeadMembership> findLeadMembershipByLastNameFirstNameDob(@Param("firstName") String firstName,
 			@Param("lastName") String lastName, @Param("address") String address,   @Param("phoneNumber") String phoneNumber);
 
+	
+	@Query("SELECT l FROM LeadMembership l WHERE id = :id")
+	public  LeadMembership  findById(@Param("id") Integer id);
+
 }
