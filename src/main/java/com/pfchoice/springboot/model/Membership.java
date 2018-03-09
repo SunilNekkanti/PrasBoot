@@ -83,10 +83,16 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 
 	@Fetch(FetchMode.SELECT)
 	@BatchSize(size = 25)
-	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
 	@OrderBy("dueDate")
 	private List<MembershipHedisMeasure> mbrHedisMeasureList;
-
+	
+	@Fetch(FetchMode.SELECT)
+	@BatchSize(size = 25)
+	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
+	@OrderBy("reportMonth, activityMonth")
+	private List<MembershipLevelSummary> mbrLevelSummaryList;
+	
 	@Column(name = "mbr_dob")
 	@Temporal(TemporalType.DATE)
 	private Date dob;
@@ -125,11 +131,21 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("startDate")
 	private List<MembershipProblem> mbrProblemList;
+	
 
 	@Fetch(FetchMode.SELECT)
+	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
 	@Where(clause = "active_ind ='Y'")
 	private List<MembershipActivityMonth> mbrActivityMonthList;
+	
+
+	@Fetch(FetchMode.SELECT)
+	@BatchSize(size = 25)
+	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
+	@OrderBy("rafPeriod")
+	private List<MembershipRafScore> mbrRafScores;
+	
 
 	@OneToOne(optional = true,cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "reference_contacts", joinColumns = {
@@ -527,7 +543,33 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 		}
 	}
 
- 
+	/**
+	 * @return the mbrLevelSummaryList
+	 */
+	public List<MembershipLevelSummary> getMbrLevelSummaryList() {
+		return mbrLevelSummaryList;
+	}
+
+	/**
+	 * @param mbrLevelSummaryList the mbrLevelSummaryList to set
+	 */
+	public void setMbrLevelSummaryList(List<MembershipLevelSummary> mbrLevelSummaryList) {
+		this.mbrLevelSummaryList = mbrLevelSummaryList;
+	}
+	
+	/**
+	 * @return the mbrRafScores
+	 */
+	public List<MembershipRafScore> getMbrRafScores() {
+		return mbrRafScores;
+	}
+
+	/**
+	 * @param mbrRafScores the mbrRafScores to set
+	 */
+	public void setMbrRafScores(List<MembershipRafScore> mbrRafScores) {
+		this.mbrRafScores = mbrRafScores;
+	}
 
 	public void setFieldHandler(FieldHandler fieldHandler) {
 		this.fieldHandler = fieldHandler;

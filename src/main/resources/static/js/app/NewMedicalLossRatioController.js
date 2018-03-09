@@ -18,7 +18,6 @@ app.controller('NewMedicalLossRatioController',
         self.selectedReportMonths =[];
         self.selectedReportingYears = [];
         self.selectedCategories =[];
-        self.isChecked = isChecked;
         self.isCheckedQuarter = isCheckedQuarter;
         self.isCheckedMonth = isCheckedMonth;
         self.display =false;
@@ -31,8 +30,8 @@ app.controller('NewMedicalLossRatioController',
 		self.prvdrId = null;
         self.reset = reset;
         self.sync =sync;
-         self.syncQuarters =syncQuarters;
-         self.syncMonths = syncMonths;
+        self.syncQuarters =syncQuarters;
+        self.syncMonths = syncMonths;
         self.isChecked = isChecked;
         self.getAllInsurances = getAllInsurances;
         self.getAllProviders = getAllProviders;

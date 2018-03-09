@@ -86,7 +86,7 @@ app.controller('MembershipProblemController',
     	// Then just call your service to get the
     	// records from server side
     	MembershipService
-    			.loadMemberships(page, length, search.value, sortCol+','+sortDir,insId,prvdrId, effectiveYear,problemIds)
+    			.loadMemberships(page, length, search.value, sortCol+','+sortDir,insId,prvdrId, null,null,null,null, effectiveYear,problemIds)
     			.then(
     					function(result) {
     						var records = {

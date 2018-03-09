@@ -1,6 +1,7 @@
 (function() {
   'use strict';
-  var app = angular.module('my-app', ['datatables', 'ui.bootstrap', 'datatables.bootstrap', , 'datatables.buttons', 'datatables.fixedcolumns', 'ui.router', 'ngStorage', 'ngAnimate', 'ngSanitize', 'btorfs.multiselect', 'oc.lazyLoad', 'ui.select']);
+  var app = angular.module('my-app', ['datatables', 'ui.bootstrap', 'datatables.bootstrap', , 'datatables.buttons', 'datatables.fixedcolumns', 'ui.router', 'ngStorage', 'ngAnimate', 'ngSanitize', 'btorfs.multiselect', 'oc.lazyLoad', 'ui.select','chart.js']);
+
   app.constant('urls', {
     BASE: '/Pras',
     USER_SERVICE_API: '/Pras/api/user/',
@@ -61,6 +62,8 @@
     LEADSTATUS_DETAIL_SERVICE_API: '/Pras/api/leadStatusDetail/',
     EVENTTYPE_SERVICE_API: '/Pras/api/eventType/'
   });
+
+
 
   app.controller('NavbarController', ['$rootScope', '$scope', '$state', '$stateParams', 'UserService', '$localStorage', '$window', function($rootScope, $scope, $state, $stateParams, UserService, $localStorage, $window) {
     $rootScope.displayNavbar = false;
@@ -123,7 +126,7 @@
         'modules': [{
           serie: true,
           name: 'main',
-          files: ['js/app/InsuranceService.js', 'js/app/ProviderService.js', 'js/app/GenderService.js', 'js/app/StateService.js', 'js/app/LanguageService.js', 'js/app/PlanTypeService.js', 'js/app/MedicalLossRatioService.js']
+          files: ['js/app/InsuranceService.js', 'js/app/ProviderService.js', 'js/app/GenderService.js', 'js/app/StateService.js', 'js/app/LanguageService.js', 'js/app/PlanTypeService.js', 'js/app/NewMedicalLossRatioService.js', 'js/app/MedicalLossRatioService.js']
         }, {
           serie: true,
           name: 'login',
@@ -322,6 +325,13 @@
               var MedicalLossRatioService = $injector.get("MedicalLossRatioService");
               var deferred = $q.defer();
               MedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+              return deferred.promise;
+            }],
+            reportYears: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
+              console.log('Load all reportYears');
+              var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
+              var deferred = $q.defer();
+              NewMedicalLossRatioService.loadAllReportingYears().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
             }]
           }
@@ -585,6 +595,10 @@
           templateUrl: 'partials/membership_list',
           controller: 'MembershipController',
           controllerAs: 'ctrl',
+          params: {
+            'id': '',
+            'display': false,
+          },
           resolve: {
             loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
               return $ocLazyLoad.load('main.membership'); // Resolve promise and load before view
@@ -595,8 +609,21 @@
               var deferred = $q.defer();
               ICDMeasureService.loadAllICDMeasures().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
+            }],
+            reportMonths: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
+              console.log('Load all reportMonths');
+              var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
+              var deferred = $q.defer();
+              NewMedicalLossRatioService.loadAllReportMonths().then(deferred.resolve, deferred.resolve);
+              return deferred.promise;
+            }],
+            reportingYears: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
+              console.log('Load all reportingYears');
+              var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
+              var deferred = $q.defer();
+              NewMedicalLossRatioService.loadAllReportingYears().then(deferred.resolve, deferred.resolve);
+              return deferred.promise;
             }]
-
           }
         })
         .state('main.membership.edit', {
@@ -1417,6 +1444,26 @@
       return filteredObject;
     };
   });
+
+  app.filter('providerFilterByInsurances', function() {
+    return function(prvdrs, insurances) {
+      var filteredObject = [];
+      if(insurances !== undefined && insurances !== null && insurances.length >  0) {
+	      prvdrs.forEach(function(prvdr) {
+	        var filteredRefContractObject = [];
+	        prvdr.prvdrRefContracts.forEach(function(refContract) {
+	           insurances.forEach(function(insurance){
+		           if (refContract.ins !== null && refContract.ins.id === insurance.id && filteredObject.indexOf(prvdr) == -1) {
+		              filteredObject.push(prvdr);
+		           }
+	          });
+	        });
+	      });
+	  }
+      return filteredObject;
+    };
+  });
+
 
   app.filter('sumByKey', function() {
     return function(data, key) {

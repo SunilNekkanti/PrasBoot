@@ -10,31 +10,103 @@
       <div class="panel-body">
         <div class="panel-body">
           <div class="formcontainer">
-            <div class="col-sm-3">
+            <div class="col-sm-2">
               <div class="form-group col-sm-12">
                 <label for="plan">Insurance</label>
-                <select class=" form-control" ng-model="ctrl.insurance" ng-options="insurance.name for insurance in ctrl.insurances | orderBy:'name' track by insurance.name"></select>
+                <multiselect ng-model="ctrl.selectedInsurances"  ng-change="ctrl.setProviders()" placeholder="Choose Insurance(s)"   options="ctrl.insurances" id-prop="id" display-prop="name" show-search="true" show-select-all="true" show-unselect-all="true" search-limit="10"></multiselect>
+            
               </div>
             </div>
-
-            <div class="col-sm-3">
+    
+            <div class="col-sm-2">
               <div class="form-group col-sm-12">
                 <label for="plan">Provider</label>
-                <select class=" form-control" ng-model="ctrl.prvdr" ng-options="provider.name for provider in ctrl.prvdrs  | providerFilter: ctrl.insurance.id | orderBy:'name' track by provider.name"> </select>
+                <multiselect ng-model="ctrl.selectedPrvdrs"  placeholder="Choose Provider(s)"   options="ctrl.providers" id-prop="id" display-prop="name"  show-search="true" show-select-all="true" show-unselect-all="true" search-limit="10"></multiselect>
+            
+                </div>
+            </div>
+            
+             <div class="col-sm-1">
+              <div class="form-group col-sm-12">
+                <label for="plan">MLR From</label>
+                <input type="text" ng-model="ctrl.mlrFrom" name="mlrFrom" class="username form-control input-sm" placeholder="Enter  MLR From" required ng-minlength="1" />
+                <label for="plan">MLR To</label>
+                <input type="text" ng-model="ctrl.mlrTo" name="mlrTo" class="username form-control input-sm" placeholder="Enter  MLR To" required ng-minlength="1" />
+                </div>
+            </div>
+            
+            <div class="col-sm-1">
+              <div class="form-group col-sm-12">
+                <label for="plan">DataFile</label>
+                <multiselect ng-model="ctrl.selectedReportMonths"  ng-change="ctrl.reset()"  placeholder="Choose a DataFile" options="ctrl.reportMonths" show-search="true" show-select-all="true" show-unselect-all="true" selection-limit="1" search-limit="10"></multiselect>
               </div>
             </div>
-            <div class=" col-sm-6">
+              
+             <div class="col-sm-6">
+               <div class="form-group col-sm-12">
+                <label for="plan">Reporting Years:</label>
+                <div class="btn-group" role="group">
+                  <label ng-repeat="item in ctrl.reportingYears" btn-checkbox="item" class="item btn btn-default " id="{{item}}" ng-change="ctrl.sync(bool, item)"  ng-model="bool" ng-checked="ctrl.isChecked(item)">
+                   <div ng-show="false" > {{bool=ctrl.isChecked(item)||false}} </div>
+                    {{item}}
+                  </label>
+                </div>
+               </div>
+              
+               <div class="form-group col-sm-12">
+                <label for="plan">Reporting Quarters:</label>
+                <div class="btn-group" role="group">
+                  <label ng-repeat="item in ctrl.reportingQuarters" btn-checkbox="item" class="item btn btn-default " id="{{item.quarter}}" ng-change="ctrl.syncQuarters(bool, item)"  ng-model="bool" ng-checked="ctrl.isCheckedQuarter(item)">
+                   <div ng-show="false" > {{bool=ctrl.isCheckedQuarter(item)||false}} </div>
+                    {{item.quarter}}
+                  </label>
+                </div>
+ 			  </div>
+ 			  
+              <div class="form-group col-sm-12">
+                <label for="plan">Reporting Months:</label>
+                <div class="btn-group" role="group">
+                  <label   ng-repeat="item in ctrl.reportingMonths" btn-checkbox="item" class="item btn btn-default " id="{{item}}" ng-change="ctrl.syncMonths(bool, item)"  ng-model="bool" ng-checked="ctrl.isCheckedMonth(item)">
+                   <div ng-show="false" > {{bool=ctrl.isCheckedMonth(item)||false}} </div>
+                    {{item.month}}
+                  </label>
+                </div>
+              </div>
+              
+            </div>
+                 
+                    
+            <div class=" col-sm-3">
               <button type="button" ng-click="ctrl.generate()" class="btn btn-warning btn-xs align-bottom">Generate</button>
             </div>
           </div>
         </div>
+        
         <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns" dt-instance="ctrl.dtInstance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
-        cellspacing="0" width="100%"></table>
+        cellspacing="0" width="100%">
+        <thead>
+                <tr>
+                    <th rowspan="2">INSURANCE</th>
+                    <th rowspan="2">PROVIDER</th>
+                    <th rowspan="2">LAST NAME</th>
+                    <th rowspan="2">FIRST NAME</th>
+                    <th rowspan="2">AGE</th>
+                    <th rowspan="2">GENDER</th>
+                    <th rowspan="2">PHONE</th>
+                    <th rowspan="2">CURRENT_MRA</th>
+                    <th rowspan="1">PROJECTED_MRA</th>
+                </tr>
+                <tr>
+                    <th  rowspan="1">2017 &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 2018</th>
+                </tr>
+            </thead>
+        </table>
 
       </div>
     </div>
   </div>
-
+ <div style="height:600px" ng-if="!ctrl.displayTable"> </div> 
+       
 
   <div class="panel panel-success" ng-if="ctrl.display">
     <!-- Default panel contents -->
@@ -327,6 +399,20 @@
 
       </tab>
     </tabset>
+
+
+       <div class="panel panel-success" ng-if="ctrl.display">
+          <div class="panel panel-success panel-heading"><span class="membership">Membership Utilization Report </span> </div>
+          <div class="table-responsive">
+            <div class="panel-body">
+				<canvas class="chart chart-line"  data="ctrl.graph.data"  labels="ctrl.graph.labels"  series="ctrl.graph.series"  options="ctrl.graph.options"  legend="ctrl.graph.legend">   </canvas>
+				
+				<canvas id="line" class="chart chart-line" chart-data="ctrl.data"  chart-labels="ctrl.labels" chart-series="ctrl.series" chart-options="ctrl.options" chart-dataset-override="ctrl.datasetOverride" chart-click="ctrl.onClick"  </canvas>   
+      
+            </div>
+          </div>
+        </div>
+
 
 
 

@@ -20,6 +20,9 @@ import javax.persistence.StoredProcedureParameter;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,6 +34,14 @@ import com.pfchoice.springboot.model.converter.ICDMeasureListConverter;
  * @author sarath
  */
 @Entity(name = "membership_claims")
+@FilterDef(
+	    name = "reportMonthFilter", 
+	    parameters = @ParamDef(name = "reportMonth", type = "int")
+	)
+	@Filter(
+	    name = "reportMonthFilter", 
+	    condition = "reportMonth  = :reportMonth"
+	)
 @NamedStoredProcedureQueries({
 		@NamedStoredProcedureQuery(name = "new_clm_report",  procedureName = "NEW_CLM_REPORT", parameters = {
 				@StoredProcedureParameter(name = "tableName", type = String.class),
@@ -59,6 +70,9 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	@Column(name = "claim_id_number")
 	private String claimNumber;
 
+	@Column(name = "report_month")
+	private Integer report_month;
+	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mbr_id", referencedColumnName = "mbr_id")
@@ -68,7 +82,7 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id")
 	@Where(clause = "active_ind ='Y'")
 	private Provider prvdr;
-
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", referencedColumnName = "insurance_id")
 	@Where(clause = "active_ind ='Y'")
@@ -710,6 +724,20 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	 */
 	public void setIcdCodesList(List<ICDMeasure> icdCodesList) {
 		this.icdCodesList = icdCodesList;
+	}
+
+	/**
+	 * @return the report_month
+	 */
+	public Integer getReport_month() {
+		return report_month;
+	}
+
+	/**
+	 * @param report_month the report_month to set
+	 */
+	public void setReport_month(Integer report_month) {
+		this.report_month = report_month;
 	}
 
 	@Override

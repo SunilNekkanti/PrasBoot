@@ -51,10 +51,10 @@ app.service('MembershipService',
                 return deferred.promise;
             }
 
-            function loadMemberships(pageNo, length, search, order, insId, prvdrId, effectiveYear,problemIds) {
+            function loadMemberships(pageNo, length, search, order, insIds, prvdrIds, mlrFrom, mlrTo, reportMonths, activityMonths, effectiveYear, problemIds) {
                 console.log('Fetching  Memberships');
                 var pageable = {
-                		 page:pageNo, size:length,sort: order,search: search||'',insId:insId,prvdrId:prvdrId, effectiveYear:effectiveYear ,problemIds:problemIds
+                		 page:pageNo, size:length,sort: order,search: search||'',insIds:insIds,prvdrIds:prvdrIds, effectiveYear:effectiveYear ,problemIds:problemIds,mlrFrom:mlrFrom,mlrTo:mlrTo,reportMonths:reportMonths,activityMonths:activityMonths
                   		};
 
                   		var config = {

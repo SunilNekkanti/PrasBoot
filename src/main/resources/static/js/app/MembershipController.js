@@ -2,7 +2,7 @@
   'use strict';
   var app = angular.module('my-app');
 
-  app.controller('MembershipController', ['MembershipService', 'ProviderService', 'MembershipProblemService', 'ICDMeasureService', 'GenderService', 'StateService', 'InsuranceService', 'MembershipStatusService', '$scope', '$compile', '$state', '$stateParams', '$filter', 'DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, ProviderService, MembershipProblemService, ICDMeasureService, GenderService, StateService, InsuranceService, MembershipStatusService, $scope, $compile, $state, $stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
+  app.controller('MembershipController', ['MembershipService','NewMedicalLossRatioService', 'ProviderService', 'MembershipProblemService', 'ICDMeasureService', 'GenderService', 'StateService', 'InsuranceService', 'MembershipStatusService', '$scope', '$compile', '$state', '$stateParams', '$filter', 'DTOptionsBuilder', 'DTColumnBuilder', function(MembershipService, NewMedicalLossRatioService, ProviderService, MembershipProblemService, ICDMeasureService, GenderService, StateService, InsuranceService, MembershipStatusService, $scope, $compile, $state, $stateParams, $filter, DTOptionsBuilder, DTColumnBuilder) {
 
       var self = this;
       $scope.localNavbar = true;
@@ -10,14 +10,31 @@
       self.memberships = [];
       self.prvdrs = [];
       self.display = false;
+      self.displayTable = false;
       self.displayEditButton = false;
       self.submit = submit;
       self.pbmsubmit = pbmsubmit;
+      self.mlrFrom = 0.0;
+      self.mlrTo = 1000.0;
       self.genders = [];
       self.states = [];
       self.insurances = [];
       self.statuses = [];
       self.icdMeasures = [];
+      self.reportMonths = [];
+      self.reportingQuarters = [{quarter:'Q1', months:['01','02','03']},{quarter:'Q2',months:['04','05','06']},{quarter:'Q3',months:['07','08','09']},{quarter:'Q4',months:['10','11','12']}];
+      self.selectedReportingQuarters =[];
+      self.selectedReportMonths =[];
+      self.selectedReportingYears = [];
+      self.selectedActivityMonths  = [];
+      self.isChecked = isChecked;
+      self.isCheckedQuarter = isCheckedQuarter;
+      self.isCheckedMonth = isCheckedMonth;
+      self.reportingYears = [];
+      self.sync =sync;
+      self.syncQuarters =syncQuarters;
+      self.syncMonths = syncMonths;
+      self.isChecked = isChecked;
       self.getAllMemberships = getAllMemberships;
       self.createMembership = createMembership;
       self.updateMembership = updateMembership;
@@ -27,6 +44,8 @@
       self.updateMembershipForPbms = updateMembershipForPbms;
       self.addMembershipProblem = addMembershipProblem;
       self.getAllICDMeasures = getAllICDMeasures;
+      self.getAllReportMonths = getAllReportMonths;
+      self.getAllReportingYears = getAllReportingYears;
       self.dtInstance = {};
       self.dt1Instance = {};
       self.dt2Instance = {};
@@ -56,6 +75,8 @@
       self.insurances = getAllInsurances();
       self.icdMeasures = getAllICDMeasures();
       self.prvdrs = getAllProviders();
+      self.reportMonths = getAllReportMonths();
+      self.reportingYears = getAllReportingYears()
       self.generate = generate;
       self.dt1InstanceCallback = dt1InstanceCallback;
       self.dt2InstanceCallback = dt2InstanceCallback;
@@ -71,12 +92,66 @@
       self.setProviders = setProviders;
       self.membershipProblems = [];
       self.add = add;
+      self.getAge = getAge;
       self.resetMbrPrblm = resetMbrPrblm;
       self.displayProblem = false;
 
+	  self.selectedReportMonths.push(self.reportMonths[0]);
+      self.reportingMonths = [{month:'Jan',value:'01'},{month:'Feb',value:'02'},{month:'Mar',value:'03'},{month:'Apr',value:'04'},{month:'May',value:'05'},{month:'Jun',value:'06'},{month:'Jul',value:'07'},{month:'Aug',value:'08'},{month:'Sep',value:'09'},{month:'Oct',value:'10'},{month:'Nov',value:'11'},{month:'Dec',value:'12'}];
+      self.selectedReportingMonths = [];
+      self.onClick =  onClick;
 
 
+  self.graph = {};
+  self.graph.visible = false;
+  
+  self.showGraph = function(yesOrNo) {
+   self.graph.visible = yesOrNo;
+  }
+  
+  self.graph.data = [[1, 2, 3, 4, 5],[3, 4, 5, 6, 7]];
+  self.graph.labels = ['hoi', 'doei', 'hallo', 'hee', 'hoi'];
+  self.graph.options = {
+    animation: false
+  };
+  self.graph.series = ['Series1','Series2']
+  // $scope.graph.colours;
+  self.graph.legend = true;
+  
+  
+      self.labels = ["January", "February", "March", "April", "May", "June", "July"];
+      self.series = ['Series A', 'Series B'];
+      self.data = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
 
+ self.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+ self.options = {
+    scales: {
+      yAxes: [
+        {
+          id: 'y-axis-1',
+          type: 'linear',
+          display: true,
+          position: 'left'
+        },
+        {
+          id: 'y-axis-2',
+          type: 'linear',
+          display: true,
+          position: 'right'
+        }
+      ]
+    }
+    };
+    
+   function onClick (points, evt) {
+    console.log(points, evt);
+  } 
+
+
+    
       function add() {
         var mbrPrm = {
           icdMeasure: {},
@@ -137,20 +212,63 @@
       }
 
       self.dtColumns = [
+       DTColumnBuilder.newColumn('mbrActivityMonthList').withTitle('INSURANCE').renderWith(
+          function(data, type, full,
+            meta) {
+            return data[0].ins.name;
+          }).withClass("text-left").withOption('defaultContent', ''),
+        DTColumnBuilder.newColumn('mbrActivityMonthList').withTitle('PROVIDER').renderWith(
+          function(data, type, full,
+            meta) {
+            return data[0].prvdr.name;
+          }).withClass("text-left").withOption('defaultContent', ''),
         DTColumnBuilder.newColumn('lastName').withTitle('LAST NAME').renderWith(
           function(data, type, full,
             meta) {
             return '<a href="javascript:void(0)" class="' + full.id + '" ng-click="ctrl.membershipEdit(' + full.id + ')">' + data + '</a>';
           }).withClass("text-left"),
         DTColumnBuilder.newColumn('firstName').withTitle('FIRST NAME').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('dob').withTitle('BIRTHDAY').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('dob').withTitle('AGE').withOption('defaultContent', ''),
+         DTColumnBuilder.newColumn('dob').withTitle('AGE').renderWith(
+          function(data, type, full,
+            meta) {
+            return  getAge(data);
+          }).withClass("text-left").withOption('defaultContent', ''),
         DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('status.description').withTitle('STATUS').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('contact.address').withTitle('ADDRESS').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('rafScore').withTitle('RAFSCORE').withOption('defaultContent', '')
-
+         DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', ''),
+        DTColumnBuilder.newColumn('rafScore').withOption('defaultContent', ''),
+        DTColumnBuilder.newColumn('mbrRafScores').renderWith(
+          function(data, type, full, meta) {
+            var rafscores=[];
+            var rafscores2017=[];
+            var rafscores2018=[];
+            var reportMonths = self.selectedReportMonths.join();
+                    
+        	if(data !== undefined && data !== null ){
+        		for(var i = 0, j = 0; i<data.length ; i++)
+                {
+        			if(data[i] == null || data[i].reportMonth != reportMonths || data[i].rafPeriod != 2017) continue;
+        			rafscores2017[j++] =  ' '+data[i].rafScore;
+                }
+        	}else{
+        	rafscores2017[0] ='\t ';
+        	}
+			 rafscores.push(rafscores2017.join(' '));
+			 
+        	if(data !== undefined && data !== null ){
+        		for(var i = 0, j = 0; i<data.length ; i++)
+                {
+        			if(data[i] == null || data[i].reportMonth != reportMonths || data[i].rafPeriod != 2018) continue;
+        			rafscores2018[j++] =  ' '+data[i].rafScore;
+        			
+                }
+        	}
+        	else{
+        	rafscores2018[0] ='\t';
+        	}
+        	
+        	rafscores.push(rafscores2018.join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '));
+        	return rafscores.join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ') ;
+          }).withClass("text-left").withOption('defaultContent', ' ')
       ];
 
 
@@ -179,15 +297,20 @@
 
       function serverData(sSource, aoData, fnCallback) {
 
-
         // All the parameters you need is in the aoData
         // variable
         var order = aoData[2].value;
         var page = aoData[3].value / aoData[4].value;
         var length = aoData[4].value;
         var search = aoData[5].value;
-        var insId = (self.insurance === undefined || self.insurance === null) ? 0 : self.insurance.id;
-        var prvdrId = (self.prvdr === undefined || self.prvdr === null) ? 0 : self.prvdr.id;
+        var mlrFrom = self.mlrFrom  ;
+        var mlrTo = self.mlrTo  ;
+        var activityMonths = self.selectedActivityMonths.join() ;
+        var reportMonths = self.selectedReportMonths.join();
+
+        var prvdrIds = (self.selectedPrvdrs === undefined || self.selectedPrvdrs === null)? 0 :  self.selectedPrvdrs.map(a => a.id);
+        var insIds = (self.selectedInsurances === undefined || self.selectedInsurances === null)? 0 :  self.selectedInsurances.map(a => a.id);
+
         var paramMap = {};
         for (var i = 0; i < aoData.length; i++) {
           paramMap[aoData[i].name] = aoData[i].value;
@@ -205,7 +328,7 @@
         // Then just call your service to get the
         // records from server side
         MembershipService
-          .loadMemberships(page, length, search.value, sortCol + ',' + sortDir, insId, prvdrId)
+          .loadMemberships(page, length, search.value, sortCol + ',' + sortDir, insIds, prvdrIds, mlrFrom, mlrTo, reportMonths, activityMonths,null, null)
           .then(
             function(result) {
 
@@ -215,6 +338,7 @@
                 'data': result.data.content || {}
               };
               fnCallback(records);
+              self.displayTable =true;
             });
       }
 
@@ -529,6 +653,22 @@
       }
 
       function generate() {
+      self.selectedActivityMonths = [];
+       self.selectedReportingYears.forEach(function(reportYear){
+
+		        if(self.selectedReportingQuarters != null && self.selectedReportingQuarters.length> 0){
+			         self.selectedReportingQuarters.forEach(function(reportingQuarter){
+			            reportingQuarter.months.forEach(function(reportMonth) {
+			            self.selectedActivityMonths.push(''+reportYear+reportMonth);
+			            });
+			         });
+		        } else if(self.selectedReportingMonths != null && self.selectedReportingMonths.length> 0){
+		        	self.selectedReportingMonths.forEach(function(reportMonth) {
+			            self.selectedActivityMonths.push(''+reportYear+reportMonth.value);
+			            });
+		        }
+
+        }) ;
         self.dtInstance.rerender();
       }
 
@@ -669,6 +809,15 @@
         return MembershipStatusService.getAllMembershipStatuses();
       }
 
+	  function getAllReportingYears() {
+        	self.reportingYears = NewMedicalLossRatioService.getAllReportingYears();
+        	return self.reportingYears;
+	  }
+
+      function getAllReportMonths() {
+        	self.reportMonths = NewMedicalLossRatioService.getAllReportMonths();
+        	return self.reportMonths;
+		}
 
       function editMembership(id) {
         self.successMessage = '';
@@ -749,16 +898,18 @@
         self.display = true;
       }
 
-      function setProviders() {
-        self.providers = $filter('filter')(self.prvdrs, {
-          prvdrRefContracts: [{
-            ins: {
-              id: self.insurance.id
-            }
-          }]
-        }, true);
+        function setProviders() {
+
+	 	   self.selectedPrvdrs = [];
+	       self.providers = $filter('providerFilterByInsurances')(self.prvdrs, self.selectedInsurances);
+	       if(self.providers !== undefined && self.providers !== null && self.providers.length > 0){
+		       self.providers.forEach(function(prvdr){
+		           self.selectedPrvdrs.push(prvdr);
+		       });
+	       }
 
       }
+
 
       function addMembershipProblem() {
         self.displayProblem = true;
@@ -788,6 +939,105 @@
             }
           );
       }
+
+
+   function isChecked(item){
+							      var match = false;
+							      for(var i=0 ; i < self.selectedReportingYears.length; i++)
+							        if(self.selectedReportingYears[i] == item){
+							           match = true;
+							          break;
+							        }
+							      return match;
+							  };
+
+
+         function sync(bool, item){
+								  reset();
+								    if(bool){
+								    	self.selectedReportingYears.push(item);
+								    } else {
+								      // remove item
+								      for(var i=0 ; i < self.selectedReportingYears.length; i++) {
+								        if(self.selectedReportingYears[i] == item){
+								        	self.selectedReportingYears.splice(i,1);
+								        }
+								      }
+								    }
+								  };
+
+		function syncQuarters(bool, item){
+		 reset();
+								    if(bool){
+								    	self.selectedReportingQuarters.push(item);
+								    	self.reportingMonths.forEach(function(reportingMonth){
+								    	 syncMonths(false, reportingMonth);
+								    	  });
+								    } else {
+								      // remove item
+								      for(var i=0 ; i < self.selectedReportingQuarters.length; i++) {
+								        if(self.selectedReportingQuarters[i].quarter == item.quarter){
+								        	self.selectedReportingQuarters.splice(i,1);
+								        }
+								      }
+								    }
+								  };
+
+         function isCheckedQuarter(item){
+							      var match = false;
+							      for(var i=0 ; i < self.selectedReportingQuarters.length; i++)
+							        if(self.selectedReportingQuarters[i].quarter == item.quarter){
+							           match = true;
+							          break;
+							        }
+							      return match;
+							  };
+
+		function syncMonths(bool, item){
+								  reset();
+								    if(bool){
+								    	self.selectedReportingMonths.push(item);
+								    	 self.reportingQuarters.forEach(function(reportingQuarterrr){
+								    	    syncQuarters(false,reportingQuarterrr);
+								    	  });
+								    } else {
+								      // remove item
+								      for(var i=0 ; i < self.selectedReportingMonths.length; i++) {
+								        if(self.selectedReportingMonths[i].month == item.month){
+								        	self.selectedReportingMonths.splice(i,1);
+								        }
+								      }
+								    }
+								  };
+
+         function isCheckedMonth(item){
+							      var match = false;
+							      for(var i=0 ; i < self.selectedReportingMonths.length; i++)
+							        if(self.selectedReportingMonths[i].month == item.month){
+							           match = true;
+							          break;
+							        }
+							      return match;
+							  };
+
+	function getAge(dateString)
+	{
+	    var today = new Date();
+	    var birthDate = new Date(dateString);
+	    var age = today.getFullYear() - birthDate.getFullYear();
+	    var m = today.getMonth() - birthDate.getMonth();
+	    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate()))
+	    {
+	        age--;
+	    }
+    return age;
+    }
+
+
+
+
+
+
 
     }
 

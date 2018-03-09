@@ -64,11 +64,15 @@ public class MembershipController {
 											// retrieval/manipulation work
 
 	@Autowired
-	ICDMeasureService icdMeasureService; // Service which will do all data  retrieval/manipulation work
+	ICDMeasureService icdMeasureService; // Service which will do all data
+											// retrieval/manipulation work
 
 	@Autowired
-	MembershipProblemService membershipProblemService; // Service which will do all  retrieval/manipulation work
-	
+	MembershipProblemService membershipProblemService; // Service which will do
+														// all
+														// retrieval/manipulation
+														// work
+
 	@Autowired
 	FileTypeService fileTypeService;
 
@@ -84,14 +88,18 @@ public class MembershipController {
 	@RequestMapping(value = "/membership/", method = RequestMethod.GET)
 	public ResponseEntity<Page<Membership>> listAllMemberships(
 			@PageableDefault(page = 0, size = 100) Pageable pageRequest,
-			@RequestParam(value = "insId", required = false) Integer insId,
-			@RequestParam(value = "prvdrId", required = false) Integer prvdrId,
+			@RequestParam(value = "insIds", required = false) List<Integer> insIds,
+			@RequestParam(value = "prvdrIds", required = false) List<Integer> prvdrIds,
+			@RequestParam(value = "mlrTo", required = false) Integer mlrTo,
+			@RequestParam(value = "mlrFrom", required = false) Integer mlrFrom,
+			@RequestParam(value = "reportMonths", required = false) List<Integer> reportMonths,
+			@RequestParam(value = "activityMonths", required = false) List<Integer> activityMonths,
 			@RequestParam(value = "effectiveYear", required = false) Integer effectiveYear,
 			@RequestParam(value = "problemIds", required = false) List<Integer> problemIds,
 			@RequestParam(value = "search", required = false) String search) {
 
-		Specification<Membership> spec = new MembershipSpecifications(search, insId, prvdrId, effectiveYear,
-				problemIds);
+		Specification<Membership> spec = new MembershipSpecifications(search, insIds, prvdrIds, mlrFrom, mlrTo, reportMonths,
+				activityMonths, effectiveYear, problemIds);
 		Page<Membership> memberships = membershipService.findAllMembershipsByPage(spec, pageRequest);
 
 		if (memberships.getTotalElements() == 0) {
@@ -159,27 +167,27 @@ public class MembershipController {
 		currentMembership.setLastName(membership.getLastName());
 		currentMembership.setDob(membership.getDob());
 		currentMembership.setHasDisability(membership.getHasDisability());
-		currentMembership.setHasMedicaid( membership.getHasMedicaid());
+		currentMembership.setHasMedicaid(membership.getHasMedicaid());
 
 		logger.info("Updating Membership with id {}", membership.getMbrProblemList());
 		currentMembership.getMbrProblemList().clear();
 
-		 for(MembershipProblem membershipProblem :membership.getMbrProblemList()){
-			  
-			  if (membershipProblemService.isMembershipProblemExist(membershipProblem ,id)) {
-					logger.error("Unable to create. A MembershipProblem with name {} already exist",
-							membershipProblem.getIcdMeasure());
-					
-					currentMembership.getMbrProblemList().remove(membershipProblem);
-					 
-				}
-		    	membershipProblem.setMbr(currentMembership);
-				membershipProblem.setCreatedBy(username);
-				membershipProblem.setUpdatedBy(username);
-		  }
-		 
+		for (MembershipProblem membershipProblem : membership.getMbrProblemList()) {
+
+			if (membershipProblemService.isMembershipProblemExist(membershipProblem, id)) {
+				logger.error("Unable to create. A MembershipProblem with name {} already exist",
+						membershipProblem.getIcdMeasure());
+
+				currentMembership.getMbrProblemList().remove(membershipProblem);
+
+			}
+			membershipProblem.setMbr(currentMembership);
+			membershipProblem.setCreatedBy(username);
+			membershipProblem.setUpdatedBy(username);
+		}
+
 		currentMembership.getMbrProblemList().addAll(membership.getMbrProblemList());
-		
+
 		membershipService.updateMembership(currentMembership);
 		return new ResponseEntity<Membership>(currentMembership, HttpStatus.OK);
 	}

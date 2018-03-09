@@ -106,7 +106,7 @@ app.controller('MembershipActivityMonthController',
 				// Then just call your service to get the
 				// records from server side
 				MembershipService
-						.loadMemberships(page, length, search.value, sortCol+','+sortDir,insId,prvdrId, effectiveYear)
+						.loadMemberships(page, length, search.value, sortCol+','+sortDir,insId,prvdrId,null,null,null,null, effectiveYear)
 						.then(
 								function(result) {
 									 

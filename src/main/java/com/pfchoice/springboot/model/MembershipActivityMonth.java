@@ -17,6 +17,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.bytecode.internal.javassist.FieldHandled;
+import org.hibernate.bytecode.internal.javassist.FieldHandler;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -27,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "membership_activity_month")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class MembershipActivityMonth extends RecordDetails implements Serializable {
+public class MembershipActivityMonth extends RecordDetails implements Serializable, FieldHandled {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +44,7 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	private Integer activityMonth;
 
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mbr_id", nullable = false, referencedColumnName = "mbr_id")
 	private Membership mbr;
 
@@ -65,13 +68,17 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	private Character isCap;
 	
 	@Column(name = "raf_score" )
-	private BigDecimal rafScore ;
+ 	private BigDecimal rafScore ;
 
 	@Transient
 	private String mbrFullName;
 
 	@Transient
 	private String prvdrName;
+	
+	@JsonIgnore
+	private FieldHandler fieldHandler;
+	
 
 	/**
 	 * 
@@ -121,6 +128,9 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	 * @return the mbr
 	 */
 	public Membership getMbr() {
+		if (fieldHandler != null) {
+			return (Membership) fieldHandler.readObject(this, "mbr", mbr);
+		}
 		return mbr;
 	}
 
@@ -129,6 +139,10 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	 *            the mbr to set
 	 */
 	public void setMbr(Membership mbr) {
+		if (fieldHandler != null) {
+			this.mbr = (Membership) fieldHandler.writeObject(this, "mbr", this.mbr, mbr);
+			return;
+		}
 		this.mbr = mbr;
 	}
 
@@ -249,6 +263,14 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 		this.prvdrName = prvdrName;
 	}
 
+	public void setFieldHandler(FieldHandler fieldHandler) {
+		this.fieldHandler = fieldHandler;
+	}
+
+	public FieldHandler getFieldHandler() {
+		return fieldHandler;
+	}
+	
 	@Override
 	public int hashCode() {
 		int hash = 0;
