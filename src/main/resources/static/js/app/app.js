@@ -1,7 +1,18 @@
-(function() {
+(function( ) {
   'use strict';
   var app = angular.module('my-app', ['datatables', 'ui.bootstrap', 'datatables.bootstrap', , 'datatables.buttons', 'datatables.fixedcolumns', 'ui.router', 'ngStorage', 'ngAnimate', 'ngSanitize', 'btorfs.multiselect', 'oc.lazyLoad', 'ui.select','chart.js']);
 
+ app.config(['ChartJsProvider', function (ChartJsProvider) {
+    // Configure all charts
+    ChartJsProvider.setOptions({
+      chartColors: ['#46BFBD', '#00ADF9', '#DCDCDC',  '#FDB45C', '#FF5252','#949FB1', '#4D5360', '#FF8A80' ]  
+    });
+    // Configure all line charts
+    ChartJsProvider.setOptions('line', {
+      showLines: true
+    });
+  }]);
+  
   app.constant('urls', {
     BASE: '/Pras',
     USER_SERVICE_API: '/Pras/api/user/',
@@ -1465,6 +1476,63 @@
   });
 
 
+  app.filter('mbrLvlSummaryFilterByActivityMonths', function() {
+    return function(mbrLevelSummaryList, activityMonths) {
+      var filteredObject = [];
+      if(activityMonths !== undefined && activityMonths !== null && activityMonths.length >  0) {
+	      mbrLevelSummaryList.forEach(function(mbrLevelSummary) {
+	       if(activityMonths.indexOf(''+mbrLevelSummary.activityMonth) > -1) {
+		           filteredObject.push(mbrLevelSummary);
+		      }
+	      });
+	  }
+      return filteredObject;
+    };
+  });
+  
+   app.filter('mbrRafScoresFilterByYears', function() {
+    return function(mbrRafScoreList) {
+      var filteredObject = [];
+      if(mbrRafScoreList !== undefined && mbrRafScoreList !== null && mbrRafScoreList.length >  0) {
+	      mbrRafScoreList.forEach(function(mbrRafScore) {
+	       if(mbrRafScore.rafPeriod.indexOf('H') === -1 && mbrRafScore.rafPeriod.indexOf('Q') === -1) {
+		           filteredObject.push(mbrRafScore);
+		      }
+	      });
+	  }
+      return filteredObject;
+    };
+  });
+  
+ app.filter('mbrRafScoresFilterByHalfYearly', function() {
+    return function(mbrRafScoreList) {
+      var filteredObject = [];
+      if(mbrRafScoreList !== undefined && mbrRafScoreList !== null && mbrRafScoreList.length >  0) {
+	      mbrRafScoreList.forEach(function(mbrRafScore) {
+	       if(mbrRafScore.rafPeriod.indexOf('H')> -1 ) {
+		           filteredObject.push(mbrRafScore);
+		      }
+	      });
+	  }
+      return filteredObject;
+    };
+  });
+  
+  
+   app.filter('mbrRafScoresFilterByQuaterly', function() {
+    return function(mbrRafScoreList) {
+      var filteredObject = [];
+      if(mbrRafScoreList !== undefined && mbrRafScoreList !== null && mbrRafScoreList.length >  0) {
+	      mbrRafScoreList.forEach(function(mbrRafScore) {
+	       if(mbrRafScore.rafPeriod.indexOf('Q') > -1) {
+		           filteredObject.push(mbrRafScore);
+		      }
+	      });
+	  }
+      return filteredObject;
+    };
+  });
+  
   app.filter('sumByKey', function() {
     return function(data, key) {
       if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {

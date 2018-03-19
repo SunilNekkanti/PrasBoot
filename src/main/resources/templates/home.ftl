@@ -19,15 +19,18 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-  <script src="js/lib/angular.min.js"></script>
-  <script src="js/lib/angular-resource.min.js"></script>
+  <!-- script src="js/lib/angular.min.js"></script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular.js"></script>
+  <!-- script src="js/lib/angular-resource.min.js"></script -->
+  <script src=" https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular-resource.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/bootstrap/angular-datatables.bootstrap.min.js"></script>
   <script src="js/lib/moment-with-locales.js"></script>
   <script src="js/lib/bootstrap.min.js"></script>
   <script src="js/lib/bootstrap-datepicker.min.js"></script>
   <script src="js/lib/bootstrap-datetimepicker.min.js"></script>
   <script src="js/lib/dataTables.bootstrap.min.js"></script>
-  <script src="js/lib/angular-animate.js"></script>
+  <!-- script src="js/lib/angular-animate.js"></script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular-animate.min.js"></script>
   <script src="js/lib/angular-sanitize.min.js"></script>
   <script src="js/lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
   <script src="js/lib/angular-datatables.min.js"></script>

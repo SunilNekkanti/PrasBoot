@@ -511,6 +511,55 @@ public class MembershipLevelSummary extends RecordDetails implements Serializabl
 		return fieldHandler;
 	}
 
+	/**
+	 * @return the exp
+	 */
+	public Double getExp() {
+		return exp;
+	}
+
+	/**
+	 * @param exp the exp to set
+	 */
+	public void setExp(Double exp) {
+		this.exp = exp;
+	}
+
+	/**
+	 * @return the mlr
+	 */
+	public Double getMlr() {
+		return mlr;
+	}
+
+	/**
+	 * @param mlr the mlr to set
+	 */
+	public void setMlr(Double mlr) {
+		this.mlr = mlr;
+	}
+
+	/**
+	 * @return the avgmlr
+	 */
+	public Double getAvgmlr() {
+		return avgmlr;
+	}
+
+	/**
+	 * @param avgmlr the avgmlr to set
+	 */
+	public void setAvgmlr(Double avgmlr) {
+		this.avgmlr = avgmlr;
+	}
+
+	/**
+	 * @param pharm the pharm to set
+	 */
+	public void setPharm(Double pharm) {
+		this.pharm = pharm;
+	}
+
 	@Override
 	public int hashCode() {
 		int hash = 0;

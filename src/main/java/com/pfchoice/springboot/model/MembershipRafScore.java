@@ -2,6 +2,7 @@ package com.pfchoice.springboot.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -12,7 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Formula;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,14 +27,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author sarath
  */
 @Entity(name = "membership_raf_scores")
-/*@FilterDef(
-	    name = "reportMonthFilter", 
-	    parameters = @ParamDef(name = "reportMonth", type = "int")
-	)
-	@Filter(
-	    name = "reportMonthFilter", 
-	    condition = "reportMonth  = :reportMonth"
-	)*/
+/*
+ * @FilterDef( name = "reportMonthFilter", parameters = @ParamDef(name =
+ * "reportMonth", type = "int") )
+ * 
+ * @Filter( name = "reportMonthFilter", condition =
+ * "reportMonth  = :reportMonth" )
+ */
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class MembershipRafScore extends RecordDetails implements Serializable {
 
@@ -41,13 +45,12 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	@Column(name = "mbr_raf_score_id", nullable = false)
 	private Integer id;
 
-
 	@Column(name = "report_month")
 	private Integer reportMonth;
-	
+
 	@Column(name = "raf_period")
 	private String rafPeriod;
-	
+
 	@Column(name = "activity_months")
 	private String activityMonths;
 
@@ -58,11 +61,15 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 
 	@Column(name = "raf_score")
 	private BigDecimal rafScore;
-	
+
 	@Column(name = "file_id")
 	private Integer fileId;
-	
-	
+
+	//@Formula("STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-',case when SUBSTRING(raf_period, 5, 1) = 'H'  then  ( SUBSTRING(raf_period, 6, 1)  - 1)*6 + 1   when SUBSTRING(raf_period, 5, 1) = 'Q'  then  ( SUBSTRING(raf_period, 6, 1)  - 1)*3 + 1 else '01' end ,'-','01')  , '%Y-%c-%d')")
+	@Formula("if(SUBSTRING(raf_period, 5, 1) = 'H' , ADDDATE( STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-',(  SUBSTRING(raf_period, 6, 1)  )*6+1 ,'-','01')  , '%Y-%c-%d'), -1 ) , if( SUBSTRING(raf_period, 5, 1) = 'Q'  ,  ADDDATE( STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-',( SUBSTRING(raf_period, 6, 1)   )*3+1,'-','01')  , '%Y-%c-%d'), -1 )    ,  STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-','12','-','31')  , '%Y-%c-%d') ))")
+	@Temporal(TemporalType.DATE)
+	private Date rafPeriodDate;
+
 	/**
 	 * 
 	 */
@@ -92,7 +99,6 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 		this.id = id;
 	}
 
-
 	/**
 	 * @return the mbr
 	 */
@@ -107,7 +113,7 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	public void setMbr(Membership mbr) {
 		this.mbr = mbr;
 	}
-	
+
 	/**
 	 * @return the rafPeriod
 	 */
@@ -116,7 +122,8 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param rafPeriod the rafPeriod to set
+	 * @param rafPeriod
+	 *            the rafPeriod to set
 	 */
 	public void setRafPeriod(String rafPeriod) {
 		this.rafPeriod = rafPeriod;
@@ -130,7 +137,8 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param rafScore the rafScore to set
+	 * @param rafScore
+	 *            the rafScore to set
 	 */
 	public void setRafScore(BigDecimal rafScore) {
 		this.rafScore = rafScore;
@@ -144,12 +152,13 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param report_month the report_month to set
+	 * @param report_month
+	 *            the report_month to set
 	 */
 	public void setReportMonth(Integer reportMonth) {
 		this.reportMonth = reportMonth;
 	}
-	
+
 	/**
 	 * @return the activityMonths
 	 */
@@ -158,7 +167,8 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param activityMonths the activityMonths to set
+	 * @param activityMonths
+	 *            the activityMonths to set
 	 */
 	public void setActivityMonths(String activityMonths) {
 		this.activityMonths = activityMonths;
@@ -172,10 +182,26 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	}
 
 	/**
-	 * @param fileId the fileId to set
+	 * @param fileId
+	 *            the fileId to set
 	 */
 	public void setFileId(Integer fileId) {
 		this.fileId = fileId;
+	}
+
+	/**
+	 * @return the rafPeriodDate
+	 */
+	public Date getRafPeriodDate() {
+		return rafPeriodDate;
+	}
+
+	/**
+	 * @param rafPeriodDate
+	 *            the rafPeriodDate to set
+	 */
+	public void setRafPeriodDate(Date rafPeriodDate) {
+		this.rafPeriodDate = rafPeriodDate;
 	}
 
 	@Override

@@ -95,28 +95,21 @@
       self.getAge = getAge;
       self.resetMbrPrblm = resetMbrPrblm;
       self.displayProblem = false;
-
+      self.select = select;
+      self.deselect = deselect;
 	  self.selectedReportMonths.push(self.reportMonths[0]);
       self.reportingMonths = [{month:'Jan',value:'01'},{month:'Feb',value:'02'},{month:'Mar',value:'03'},{month:'Apr',value:'04'},{month:'May',value:'05'},{month:'Jun',value:'06'},{month:'Jul',value:'07'},{month:'Aug',value:'08'},{month:'Sep',value:'09'},{month:'Oct',value:'10'},{month:'Nov',value:'11'},{month:'Dec',value:'12'}];
       self.selectedReportingMonths = [];
       self.onClick =  onClick;
 
 
-  self.graph = {};
-  self.graph.visible = false;
+	  self.graph = {};
+	  self.graph.visible = false;
+	  
+	  self.showGraph = function(yesOrNo) {
+	   self.graph.visible = yesOrNo;
+	  }
   
-  self.showGraph = function(yesOrNo) {
-   self.graph.visible = yesOrNo;
-  }
-  
-  self.graph.data = [[1, 2, 3, 4, 5],[3, 4, 5, 6, 7]];
-  self.graph.labels = ['hoi', 'doei', 'hallo', 'hee', 'hoi'];
-  self.graph.options = {
-    animation: false
-  };
-  self.graph.series = ['Series1','Series2']
-  // $scope.graph.colours;
-  self.graph.legend = true;
   
   
       self.labels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -145,10 +138,6 @@
       ]
     }
     };
-    
-   function onClick (points, evt) {
-    console.log(points, evt);
-  } 
 
 
     
@@ -242,18 +231,18 @@
             var rafscores2017=[];
             var rafscores2018=[];
             var reportMonths = self.selectedReportMonths.join();
-                    
+                  
+                  rafscores2017[0] =' N\A ';  
         	if(data !== undefined && data !== null ){
         		for(var i = 0, j = 0; i<data.length ; i++)
                 {
         			if(data[i] == null || data[i].reportMonth != reportMonths || data[i].rafPeriod != 2017) continue;
         			rafscores2017[j++] =  ' '+data[i].rafScore;
                 }
-        	}else{
-        	rafscores2017[0] ='\t ';
-        	}
-			 rafscores.push(rafscores2017.join(' '));
+        	} 
+			 rafscores.push(rafscores2017.join('    '));
 			 
+			 rafscores2018[0] =' N\A ';
         	if(data !== undefined && data !== null ){
         		for(var i = 0, j = 0; i<data.length ; i++)
                 {
@@ -262,13 +251,10 @@
         			
                 }
         	}
-        	else{
-        	rafscores2018[0] ='\t';
-        	}
         	
         	rafscores.push(rafscores2018.join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '));
         	return rafscores.join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ') ;
-          }).withClass("text-left").withOption('defaultContent', ' ')
+          }).withClass("text-left").withOption('defaultContent', '')
       ];
 
 
@@ -533,7 +519,6 @@
       function serverData4RxHistory(sSource, aoData, fnCallback) {
         var filteredArr1 = self.membership.mbrProblemList || [];
         filteredArr1 = filteredArr1.filter(function(item) {
-          console.log('item', item)
           return item.resolvedDate !== undefined && item.resolvedDate !== null && item.resolvedDate !== '';
         });
         var records = {
@@ -829,6 +814,136 @@
             self.states = getAllStates();
             self.statuses = getAllMembershipStatuses();
             self.insurances = getAllInsurances();
+            var mbrLvlSummaryRecords =   $filter('filter')(self.membership.mbrLevelSummaryList, {reportMonth: self.selectedReportMonths[0]});
+            mbrLvlSummaryRecords = $filter('mbrLvlSummaryFilterByActivityMonths')(mbrLvlSummaryRecords,  self.selectedActivityMonths);
+	        var mbrActivityMonths =  mbrLvlSummaryRecords.map( a=> a.activityMonth);
+			var mbrFunding = mbrLvlSummaryRecords.map( a=> a.funding);
+			var mbrInst = mbrLvlSummaryRecords.map( a=> a.inst);
+			var mbrProf = mbrLvlSummaryRecords.map( a=> a.prof);
+			var mbrPharm = mbrLvlSummaryRecords.map( a=> a.pharm);
+			var mbrTotalExp = mbrLvlSummaryRecords.map( a=> a.exp);
+			  
+		   self.graph.data = [mbrFunding,mbrInst,mbrProf,mbrPharm,mbrTotalExp];
+		   self.graph.labels = mbrActivityMonths;
+		   self.graph.series = ['Funding','Inst','Prof','Phar', 'TotExp'];
+		   self.graph.legend = true;
+           self.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2'  }];
+           self.graph.options = {
+            legend: {display: true },
+	    		showLines: true,
+			    fill: false,
+	   			line: {
+	      				fill: false
+	    		 },
+			    scales: {
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left'
+			        }
+			      ]
+			    }
+			  };
+			 		  
+   
+           var mbrRafScoreRecords =   $filter('filter')(self.membership.mbrRafScores, {reportMonth: self.selectedReportMonths[0]});
+           var mbrRafPeriods =      mbrRafScoreRecords.map( a=> a.rafPeriodDate);
+           
+           var uniqueMbrRafPeriods = mbrRafPeriods.filter(function(elem, index, self) {
+                      			return index === self.indexOf(elem);
+           						});
+ 
+           mbrRafScoreRecords.map( a=> a.rafPeriodDate);
+       //    var mbrRafScoresPerYears = ($filter('mbrRafScoresFilterByYears')(mbrRafScoreRecords)).map(a=> a.rafScore);
+        //   var mbrRafScoresPerHalfYears = ($filter('mbrRafScoresFilterByHalfYearly')(mbrRafScoreRecords)).map(a=> a.rafScore);
+       //    var mbrRafScoresPerQuarterYears = ($filter('mbrRafScoresFilterByQuaterly')(mbrRafScoreRecords)).map(a=> a.rafScore);
+           
+           
+      //     var mbrRafPeriodPerYears = ($filter('mbrRafScoresFilterByYears')(mbrRafScoreRecords)).map(a=> a.rafPeriodDate);
+      //     var mbrRafPeriodPerHalfYears = ($filter('mbrRafScoresFilterByHalfYearly')(mbrRafScoreRecords)).map(a=> a.rafPeriodDate);
+      //     var mbrRafPeriodPerQuarterYears = ($filter('mbrRafScoresFilterByQuaterly')(mbrRafScoreRecords)).map(a=> a.rafPeriodDate);
+           
+           console.log('mbrRafPeriods',mbrRafPeriods);
+           console.log('mbrRafScoreRecords',mbrRafScoreRecords);
+           
+           self.graph.mraData =  [mbrRafScoreRecords] ;
+		   self.graph.mraLabels = mbrRafPeriods;
+		   self.graph.mraSeries = ['rafscores' ];
+		   
+		   self.graph.mraDatasetOverride = [
+		      {
+		        label: "Quaterly",
+		        borderWidth: 1,
+		        type: 'bar'
+		      },
+		      {
+		        label: "Half Yearly",
+		        borderWidth: 2,
+		        hoverBackgroundColor: "rgba(100,99,132,0.4)",
+		        hoverBorderColor: "rgba(100,99,132,1)",
+		        type: 'bar'
+		      },
+		      {
+		        label: "Annual",
+		        borderWidth: 4,
+		        hoverBackgroundColor: "rgba(255,99,132,0.4)",
+		        hoverBorderColor: "rgba(255,99,132,1)",
+		        type: 'line'
+		      }
+		    ];
+		    
+           self.graph.mraOptions = {
+                legend: {display: true },
+	    		showLines: true,
+			    fill: false,
+	   			line: {
+	      				fill: false
+	    		 },
+			    scales: {
+			    xAxes: [{
+						    type: 'time',
+						    ticks: {
+						        autoSkip: true,
+						        maxTicksLimit: 6
+						    }
+						}], 
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left'
+			        }
+			        
+			      ]
+			    }
+			  };
+			  
+			  
+	 self.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    self.data = [
+      [65, -59, 80, 81, -56, 55, -40],
+      [28, 48, -40, 19, 86, 27, 90]
+    ];
+   self.datasetOverride = [
+      {
+        label: "Bar chart",
+        borderWidth: 1,
+        type: 'bar'
+      },
+      {
+        label: "Line chart",
+        borderWidth: 3,
+        hoverBackgroundColor: "rgba(255,99,132,0.4)",
+        hoverBorderColor: "rgba(255,99,132,1)",
+        type: 'line'
+      }
+    ];
+
+
+            self.displayProblem = false;
             self.display = true;
           },
           function(errResponse) {
@@ -1034,11 +1149,21 @@
     }
 
 
+	
+	function   select() {
+	   self.chartTabShow = true;
+	} 
+	
+	function  deselect() {
+	   self.chartTabShow = false;
+	} 
 
 
-
-
-
+   function  onClick(points, evt) {
+    console.log(points, evt);
+    }
+  
+  
     }
 
 

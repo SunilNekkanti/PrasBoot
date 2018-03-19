@@ -60,40 +60,117 @@ group by mc.mbr_id,mc.ins_id,mc.prvdr_id,mcd.activity_Month;
    
    
    
-   REPLACE into membership_raf_scores  (mbr_raf_score_id, mbr_id, report_month, raf_period, activity_months, raf_score, file_id, created_date, updated_date, created_by, updated_by)
-   SELECT 
-   null,  m.mbr_id,  :activityMonth reportmonth,  concat(year( claim_start_date) ,'Q',quarter( claim_start_date)) raf_period,
-   group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month   SEPARATOR ',') activityMonths,  
-   `mbr_list_calculate_risk_score_function`( m.mbr_id,:activityMonth, group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month     SEPARATOR ','), 'Comm',   2016, lg.description, m.mbr_dob, 'NoMedicaid')  rafscore,
-   :fileId fileId,  now() created_date, now() updated_date,:username created_by,:username updated_by  
-    from membership m
-  join membership_activity_month mam on m.mbr_id = mam.mbr_id
-  join insurance i  on i.insurance_id = mam.ins_id
-  join provider p on p.prvdr_id = mam.prvdr_id
-  join lu_gender lg on lg.gender_id = m.mbr_genderid
-  join ( select c.*, rc.mbr_id  from contact c  join reference_contacts rc on rc.cnt_id = c.cnt_id)c on  c.mbr_id=m.mbr_id
-   join  ( select mc.report_month, mc.ins_id,mc.mbr_id , mc.Diagnoses, mcd.* from membership_claims mc  
-    join membership_claim_details mcd on mcd.mbr_claim_id = mc.mbr_claim_id)  mc on  (mc.report_month ,mc.ins_id,mc.mbr_id) =(:activityMonth, mam.ins_id, m.mbr_id)  and    mc.activity_month  =  mam.activity_month 
-    group by m.mbr_id ,raf_period
-UNION
-   (select 
-   null,
-    m.mbr_id,
-    :activityMonth  reportmonth,
-    concat(year( claim_start_date) ) raf_period,
-   group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month     SEPARATOR ',') activityMonths,  
-   `mbr_list_calculate_risk_score_function`( m.mbr_id,:activityMonth, group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month     SEPARATOR ','), 'Comm',   2016, lg.description, m.mbr_dob, 'NoMedicaid')  rafscore,
-   :fileId fileId,  now() created_date, now() updated_date,:username created_by,:username updated_by  
-    from membership m
-  join membership_activity_month mam on m.mbr_id = mam.mbr_id
-  join insurance i  on i.insurance_id = mam.ins_id
-  join provider p on p.prvdr_id = mam.prvdr_id
-  join lu_gender lg on lg.gender_id = m.mbr_genderid
-  join ( select c.*, rc.mbr_id  from contact c  join reference_contacts rc on rc.cnt_id = c.cnt_id)c on  c.mbr_id=m.mbr_id
-   join  ( select mc.report_month, mc.ins_id,mc.mbr_id , mc.Diagnoses, mcd.* from membership_claims mc  
-    join membership_claim_details mcd on mcd.mbr_claim_id = mc.mbr_claim_id)  mc on  (mc.report_month ,mc.ins_id,mc.mbr_id) =(:activityMonth, mam.ins_id, m.mbr_id)  and    mc.activity_month  =  mam.activity_month 
-    group by m.mbr_id ,raf_period
-    );
+   
+   
+   
+   REPLACE into membership_raf_scores    
+   SELECT   null, m.mbr_id,  :activityMonth,  raf_period,   activityMonths   
+   ,  calculate_risk_score_function(cast(a.Diagnoses as char), 'Comm',   2016, description, mbr_dob, 'NoMedicaid', case when mbr_dob > '1953-02-01' then 'Aged' else  'Disabled' end , case when mbr_dob > '1953-02-01' then  'Originally Disabled' else ''  end )  rafscore ,
+  :fileId fileId,now() created_date, now()updated_date,:username created_by ,:username  updated_by, 'Y' active
+from membership m 
+left  join (
+
+select mbr_id,   description,  reportmonth,  raf_period,   activityMonths, GROUP_CONCAT(DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(t.Diagnoses, ',', sub0.aNum), ',', -1)) Diagnoses
+from 
+(
+   SELECT lg.description, m.mbr_dob,  m.mbr_id,  :activityMonth reportmonth,  concat(year( concat(mam.activity_month,'01')) ,'Q',quarter( concat(mam.activity_month,'01'))) raf_period,
+ group_concat( distinct  Diagnoses) Diagnoses, 
+group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month   SEPARATOR ',') activityMonths    
+from membership m
+join membership_activity_month mam on m.mbr_id = mam.mbr_id  and mam.ins_id=:insId
+join insurance i  on i.insurance_id = mam.ins_id
+join provider p on p.prvdr_id = mam.prvdr_id
+join lu_gender lg on lg.gender_id = m.mbr_genderid  
+left join ( select c.*, rc.mbr_id  from contact c  join reference_contacts rc on rc.cnt_id = c.cnt_id)c on  c.mbr_id=m.mbr_id  
+left join  ( select mc.report_month, mc.ins_id,mc.mbr_id ,  group_concat( distinct mc.Diagnoses) Diagnoses, mcd.activity_month from membership_claims mc  
+join membership_claim_details mcd on mcd.mbr_claim_id = mc.mbr_claim_id group by report_month,mbr_id,activity_month)  mc on  (mc.report_month ,mc.ins_id,mc.mbr_id) =(:activityMonth, mam.ins_id, m.mbr_id)  and       mc.activity_month  =  mam.activity_month
+where   mod(quarter( concat(mam.activity_month,'01')),2) =1
+group by m.mbr_id ,raf_period  
+) t
+LEFT  JOIN
+(
+SELECT 1 + units.i + tens.i * 10 AS aNum, units.i + tens.i * 10 AS aSubscript
+FROM (SELECT 0 AS i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) units
+CROSS JOIN (SELECT 0 AS i UNION SELECT 1 UNION SELECT 2  UNION SELECT 3  UNION SELECT 4 ) tens
+) sub0
+ON (1 + LENGTH(t.Diagnoses) - LENGTH(REPLACE(t.Diagnoses, ',', ''))) >= sub0.aNum
+GROUP BY    mbr_id ,raf_period 
+) a on m.mbr_id =a.mbr_id
+where raf_period is not null
+union
+( SELECT   null, m.mbr_id,  :activityMonth,  raf_period,   activityMonths   
+   ,  calculate_risk_score_function(cast(a.Diagnoses as char), 'Comm',   2016, description, mbr_dob, 'NoMedicaid', case when mbr_dob > '1953-02-01' then 'Aged' else  'Disabled' end , case when mbr_dob > '1953-02-01' then  'Originally Disabled' else ''  end )  rafscore ,
+   :fileId fileId,now() created_date, now()updated_date,:username created_by ,:username  updated_by, 'Y' active
+from membership m 
+left  join (
+
+select mbr_id,   description,  reportmonth,  raf_period,   activityMonths, GROUP_CONCAT(DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(t.Diagnoses, ',', sub0.aNum), ',', -1)) Diagnoses
+from 
+(
+   SELECT lg.description, m.mbr_dob,  m.mbr_id,  :activityMonth reportmonth,  concat(year( concat(mam.activity_month,'01')) ,'H',CEIL(MONTH( concat(mam.activity_month,'01'))/6 )) raf_period,
+ group_concat( distinct  Diagnoses) Diagnoses, 
+group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month   SEPARATOR ',') activityMonths    
+from membership m
+join membership_activity_month mam on m.mbr_id = mam.mbr_id and mam.ins_id=:insId
+join insurance i  on i.insurance_id = mam.ins_id
+join provider p on p.prvdr_id = mam.prvdr_id
+join lu_gender lg on lg.gender_id = m.mbr_genderid  
+left join ( select c.*, rc.mbr_id  from contact c  join reference_contacts rc on rc.cnt_id = c.cnt_id)c on  c.mbr_id=m.mbr_id  
+left join  ( select mc.report_month, mc.ins_id,mc.mbr_id ,  group_concat( distinct mc.Diagnoses) Diagnoses, mcd.activity_month from membership_claims mc  
+join membership_claim_details mcd on mcd.mbr_claim_id = mc.mbr_claim_id group by report_month,mbr_id,activity_month)  mc on  (mc.report_month ,mc.ins_id,mc.mbr_id) =(:activityMonth, mam.ins_id, m.mbr_id)  and       mc.activity_month  =  mam.activity_month
+where   mod(CEIL(MONTH( concat(mam.activity_month,'01'))/6 ),2) =1
+group by m.mbr_id ,raf_period  
+) t
+LEFT  JOIN
+(
+SELECT 1 + units.i + tens.i * 10 AS aNum, units.i + tens.i * 10 AS aSubscript
+FROM (SELECT 0 AS i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) units
+CROSS JOIN (SELECT 0 AS i UNION SELECT 1 UNION SELECT 2  UNION SELECT 3  UNION SELECT 4 ) tens
+) sub0
+ON (1 + LENGTH(t.Diagnoses) - LENGTH(REPLACE(t.Diagnoses, ',', ''))) >= sub0.aNum
+GROUP BY    mbr_id ,raf_period 
+) a on m.mbr_id =a.mbr_id
+where raf_period is not null
+)
+union
+(
+SELECT   null, m.mbr_id,    :activityMonth,  raf_period,   activityMonths   
+   
+  ,  calculate_risk_score_function(cast(a.Diagnoses as char), 'Comm',   2016, description, mbr_dob, 'NoMedicaid', case when mbr_dob > '1953-02-01' then 'Aged' else  'Disabled' end , case when mbr_dob > '1953-02-01' then  'Originally Disabled' else ''  end )  rafscore ,
+  :fileId fileId,now() created_date, now()updated_date,:username created_by ,:username  updated_by, 'Y' active   
+from membership m 
+left  join (
+
+select mbr_id,   description,  reportmonth,  raf_period,   activityMonths, GROUP_CONCAT(DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(t.Diagnoses, ',', sub0.aNum), ',', -1)) Diagnoses
+from 
+(
+   SELECT lg.description, m.mbr_dob,  m.mbr_id,  :activityMonth reportmonth,  year( concat(mam.activity_month,'01'))  raf_period,
+ group_concat( distinct  Diagnoses) Diagnoses, 
+group_concat(distinct  mam.activity_month  ORDER BY mam.activity_month   SEPARATOR ',') activityMonths    
+from membership m
+join membership_activity_month mam on m.mbr_id = mam.mbr_id and mam.ins_id=:insId
+join insurance i  on i.insurance_id = mam.ins_id 
+join provider p on p.prvdr_id = mam.prvdr_id
+join lu_gender lg on lg.gender_id = m.mbr_genderid  
+left join ( select c.*, rc.mbr_id  from contact c  join reference_contacts rc on rc.cnt_id = c.cnt_id)c on  c.mbr_id=m.mbr_id  
+left join  ( select mc.report_month, mc.ins_id,mc.mbr_id ,  group_concat( distinct mc.Diagnoses) Diagnoses, mcd.activity_month from membership_claims mc  
+join membership_claim_details mcd on mcd.mbr_claim_id = mc.mbr_claim_id group by report_month,mbr_id,activity_month)  mc on  (mc.report_month ,mc.ins_id,mc.mbr_id) =(:activityMonth, mam.ins_id, m.mbr_id)  and       mc.activity_month  =  mam.activity_month 
+group by m.mbr_id ,raf_period  
+) t
+left  JOIN
+(
+SELECT 1 + units.i + tens.i * 10 AS aNum, units.i + tens.i * 10 AS aSubscript
+FROM (SELECT 0 AS i UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) units
+CROSS JOIN (SELECT 0 AS i UNION SELECT 1 UNION SELECT 2  UNION SELECT 3  UNION SELECT 4 ) tens
+) sub0
+ON (1 + LENGTH(t.Diagnoses) - LENGTH(REPLACE(t.Diagnoses, ',', ''))) >= sub0.aNum
+GROUP BY    mbr_id ,raf_period 
+) a on m.mbr_id =a.mbr_id 
+where raf_period is not null 
+);
+
+
  
+
     
   
