@@ -409,7 +409,102 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 		
 	}
 	
-	
+	@Async
+	public Future<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
+		synchronized(this){
+ 					Hashtable<String, Object> params = new Hashtable<>();
+					final FileType fileType = fileTypeService.findById(fileTypeId);
+					final String tableName = fileType.getTablesName();
+					final String fileTypeDescription = fileType.getDescription();
+					final String entityClassName = fileType.getEntityClassName();
+					final String insuranceCode = (fileType.getInsuranceCode() != null)?fileType.getInsuranceCode():"";
+					final String queryTypeLoad = configProperties.getQueryTypeLoad();
+					final String queryTypeInsert = configProperties.getQueryTypeInsert();
+
+					logger.info("tableName " + tableName);
+					String sqlQuery = "select BigToInt(count(*)> 0) from " + tableName;
+					logger.info("sqlQuery " + sqlQuery);
+					Integer dataExists = prasUtil.executeSqlScript(sqlQuery, params, true);
+					logger.info("dataExists " + dataExists);
+
+					if (dataExists > 0) {
+						logger.info("Previous file processing is incomplete ");
+						CustomErrorType errorMessage = new CustomErrorType("Previous file processing is incomplete");
+
+						return new AsyncResult<ResponseEntity<CustomErrorType>>(
+								new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+					} else {
+						Integer fileId = 0;
+						try {
+							File fileRecord = new File();
+							fileRecord.setFileName(fileName);
+							fileRecord.setFileType(fileType);
+							fileRecord.setCreatedBy(username);
+							fileRecord.setUpdatedBy(username);
+							fileService.saveFile(fileRecord);
+
+							fileId = fileRecord.getId();
+
+						} catch (Exception e) {
+							logger.warn(e.getCause().getMessage());
+							logger.info("Similar file already processed in past");
+							CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past");
+							return new AsyncResult<ResponseEntity<CustomErrorType>>(
+									new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+						}
+						logger.info("insuranceCode " + insuranceCode);
+						Resource loadFromCSVTable = getResource(
+								"classpath:static/sql/" + entityClassName + insuranceCode+ queryTypeLoad + configProperties.getSqlQueryExtn());
+						sqlQuery = StreamUtils.copyToString(loadFromCSVTable.getInputStream(), StandardCharsets.UTF_8);
+
+						String[] tokens = tableName.split(",", -1);
+						for(String tablename :tokens){
+							Object[] objArray =  {tablename, "'|'","'\"'","'\r\n'"};
+							MessageFormat mf = new MessageFormat(sqlQuery);
+							String formatedSqlQuery = mf.format(objArray);
+							params.clear();
+							params.put("file", fileName);
+							Integer loadedData = prasUtil.executeSqlScript(formatedSqlQuery, params, false);
+							if (loadedData < 0) {
+								CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
+								return new AsyncResult<ResponseEntity<CustomErrorType>>(
+										new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+							}
+
+							logger.info("loaded  " + loadedData + "  records into table " + tableName);
+						}
+
+						logger.info("processing " + fileTypeDescription + " data" + new Date());
+						params.clear();
+						params.put("insId", insId);
+						params.put("fileId", fileId);
+						params.put("activityMonth", activityMonth);
+						params.put("username", username);
+
+						
+						logger.info("insuranceCode " + insuranceCode);
+						
+						Resource insertIntoTable = getResource(
+								"classpath:static/sql/" + entityClassName +insuranceCode+ queryTypeInsert + configProperties.getSqlQueryExtn());
+						sqlQuery = StreamUtils.copyToString(insertIntoTable.getInputStream(), StandardCharsets.UTF_8);
+						logger.info("5555555  " + sqlQuery);
+						Integer noOfRecordsLoaded = prasUtil.executeSqlScript(sqlQuery, params, false);
+						logger.info("insertedData " + noOfRecordsLoaded + " records into " + entityClassName);
+
+						params.clear();
+						sqlQuery = String.format("truncate table %s ", tableName);
+						prasUtil.executeSqlScript(sqlQuery, params, false);
+						logger.info("cleared CSV Table " + tableName);
+
+						logger.info("processed " + fileTypeDescription + " data " + new Date());
+						return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));
+					}
+				}
+				
+			}		
+			
+			 	
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}

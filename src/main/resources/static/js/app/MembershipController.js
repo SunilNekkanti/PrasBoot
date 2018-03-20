@@ -109,37 +109,6 @@
 	  self.showGraph = function(yesOrNo) {
 	   self.graph.visible = yesOrNo;
 	  }
-  
-  
-  
-      self.labels = ["January", "February", "March", "April", "May", "June", "July"];
-      self.series = ['Series A', 'Series B'];
-      self.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
-
- self.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
- self.options = {
-    scales: {
-      yAxes: [
-        {
-          id: 'y-axis-1',
-          type: 'linear',
-          display: true,
-          position: 'left'
-        },
-        {
-          id: 'y-axis-2',
-          type: 'linear',
-          display: true,
-          position: 'right'
-        }
-      ]
-    }
-    };
-
-
     
       function add() {
         var mbrPrm = {
@@ -224,7 +193,12 @@
           }).withClass("text-left").withOption('defaultContent', ''),
         DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', ''),
          DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('rafScore').withOption('defaultContent', ''),
+        DTColumnBuilder.newColumn('mbrMMRList').renderWith(function(data, type, full, meta) { 
+            var latestMbrMMRRecord = data.reduce(function(prev, current) {
+              return (prev.activityMonth > current.activityMonth) ? prev : current
+                 });
+                 return latestMbrMMRRecord.riskAdjusterFactorA; 
+        }).withOption('defaultContent', ''),
         DTColumnBuilder.newColumn('mbrRafScores').renderWith(
           function(data, type, full, meta) {
             var rafscores=[];
@@ -232,7 +206,7 @@
             var rafscores2018=[];
             var reportMonths = self.selectedReportMonths.join();
                   
-                  rafscores2017[0] =' N\A ';  
+                  rafscores2017[0] ='&nbsp;&nbsp;&nbsp;N\A ';  
         	if(data !== undefined && data !== null ){
         		for(var i = 0, j = 0; i<data.length ; i++)
                 {
@@ -242,7 +216,7 @@
         	} 
 			 rafscores.push(rafscores2017.join('    '));
 			 
-			 rafscores2018[0] =' N\A ';
+			 rafscores2018[0] ='&nbsp;&nbsp;&nbsp;N\A ';
         	if(data !== undefined && data !== null ){
         		for(var i = 0, j = 0; i<data.length ; i++)
                 {
@@ -827,7 +801,7 @@
 		   self.graph.labels = mbrActivityMonths;
 		   self.graph.series = ['Funding','Inst','Prof','Phar', 'TotExp'];
 		   self.graph.legend = true;
-           self.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2'  }];
+           self.graph.datasetOverride = [{ fill:false }, { fill:false },{fill:false},{fill:false},{fill:false}];
            self.graph.options = {
             legend: {display: true },
 	    		showLines: true,
@@ -850,46 +824,17 @@
    
            var mbrRafScoreRecords =   $filter('filter')(self.membership.mbrRafScores, {reportMonth: self.selectedReportMonths[0]});
            var mbrRafPeriods =      mbrRafScoreRecords.map( a=> a.rafPeriodDate);
+           var mbrRafScores  =  mbrRafScoreRecords.map(a=> a.rafScore);
            
-           var uniqueMbrRafPeriods = mbrRafPeriods.filter(function(elem, index, self) {
-                      			return index === self.indexOf(elem);
-           						});
- 
-           mbrRafScoreRecords.map( a=> a.rafPeriodDate);
-       //    var mbrRafScoresPerYears = ($filter('mbrRafScoresFilterByYears')(mbrRafScoreRecords)).map(a=> a.rafScore);
-        //   var mbrRafScoresPerHalfYears = ($filter('mbrRafScoresFilterByHalfYearly')(mbrRafScoreRecords)).map(a=> a.rafScore);
-       //    var mbrRafScoresPerQuarterYears = ($filter('mbrRafScoresFilterByQuaterly')(mbrRafScoreRecords)).map(a=> a.rafScore);
-           
-           
-      //     var mbrRafPeriodPerYears = ($filter('mbrRafScoresFilterByYears')(mbrRafScoreRecords)).map(a=> a.rafPeriodDate);
-      //     var mbrRafPeriodPerHalfYears = ($filter('mbrRafScoresFilterByHalfYearly')(mbrRafScoreRecords)).map(a=> a.rafPeriodDate);
-      //     var mbrRafPeriodPerQuarterYears = ($filter('mbrRafScoresFilterByQuaterly')(mbrRafScoreRecords)).map(a=> a.rafPeriodDate);
-           
-           console.log('mbrRafPeriods',mbrRafPeriods);
-           console.log('mbrRafScoreRecords',mbrRafScoreRecords);
-           
-           self.graph.mraData =  [mbrRafScoreRecords] ;
+           self.graph.mraData =  [mbrRafScores] ;
 		   self.graph.mraLabels = mbrRafPeriods;
 		   self.graph.mraSeries = ['rafscores' ];
 		   
 		   self.graph.mraDatasetOverride = [
 		      {
-		        label: "Quaterly",
+		        fill: false,
+		        label: "MRA Scores",
 		        borderWidth: 1,
-		        type: 'bar'
-		      },
-		      {
-		        label: "Half Yearly",
-		        borderWidth: 2,
-		        hoverBackgroundColor: "rgba(100,99,132,0.4)",
-		        hoverBorderColor: "rgba(100,99,132,1)",
-		        type: 'bar'
-		      },
-		      {
-		        label: "Annual",
-		        borderWidth: 4,
-		        hoverBackgroundColor: "rgba(255,99,132,0.4)",
-		        hoverBorderColor: "rgba(255,99,132,1)",
 		        type: 'line'
 		      }
 		    ];
@@ -906,7 +851,7 @@
 						    type: 'time',
 						    ticks: {
 						        autoSkip: true,
-						        maxTicksLimit: 6
+						        maxTicksLimit: 19
 						    }
 						}], 
 			      yAxes: [
@@ -914,7 +859,11 @@
 			          id: 'y-axis-1',
 			          type: 'linear',
 			          display: true,
-			          position: 'left'
+			          position: 'left',
+			          ticks: {
+						        autoSkip: true,
+						        maxTicksLimit: 20
+						    }
 			        }
 			        
 			      ]

@@ -405,7 +405,7 @@
       <div class="panel panel-success panel-heading"><span class="membership">Membership Utilization Report </span> </div>
       <div class="table-responsive">
         <div class="panel-body">
-          <canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options" legend="ctrl.graph.legend" height="70"> </canvas>
+          <canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options" legend="ctrl.graph.legend"  chart-dataset-override="ctrl.graph.datasetOverride"  height="70"> </canvas>
         </div>
       </div>
     </div>
@@ -440,8 +440,6 @@
             </div>
           </tab>
           <tab heading="MRAChart" select="ctrl.select()" deselect="ctrl.deselect()">
-            <div class="panel-body">
-               </div>
           </tab>
         </tabset>
       </div>

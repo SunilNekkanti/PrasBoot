@@ -93,6 +93,13 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@OrderBy("reportMonth, activityMonth")
 	private List<MembershipLevelSummary> mbrLevelSummaryList;
 	
+	@Fetch(FetchMode.SELECT)
+	@BatchSize(size = 25)
+	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
+	@OrderBy("reportMonth, activityMonth")
+	private List<MembershipMMR> mbrMMRList;
+	
+	
 	@Column(name = "mbr_dob")
 	@Temporal(TemporalType.DATE)
 	private Date dob;
@@ -143,7 +150,7 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@Fetch(FetchMode.SELECT)
 	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
-	@OrderBy("rafPeriod")
+	@OrderBy("rafPeriodDate")
 	private List<MembershipRafScore> mbrRafScores;
 	
 
@@ -557,6 +564,20 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 		this.mbrLevelSummaryList = mbrLevelSummaryList;
 	}
 	
+	/**
+	 * @return the mbrMMRList
+	 */
+	public List<MembershipMMR> getMbrMMRList() {
+		return mbrMMRList;
+	}
+
+	/**
+	 * @param mbrMMRList the mbrMMRList to set
+	 */
+	public void setMbrMMRList(List<MembershipMMR> mbrMMRList) {
+		this.mbrMMRList = mbrMMRList;
+	}
+
 	/**
 	 * @return the mbrRafScores
 	 */

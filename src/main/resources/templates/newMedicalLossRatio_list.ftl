@@ -81,8 +81,14 @@
 	                    <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns"  dt-instance="ctrl.dtInstanceCallback" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
 	                    cellspacing="0" width="97%"></table>
 	 			</tab>
+	 			<tab  heading="Graph"    select="ctrl.select()" deselect="ctrl.deselect()" >
+	 			</tab>	
+	 				
 	 				
              </tabset>
+             <div  class="table-responsive" ng-show="ctrl.chartTabShow" >
+             <canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options"  chart-dataset-override="ctrl.graph.datasetOverride"   height="70"> </canvas>
+             </div>
          </div>
 
       </div>

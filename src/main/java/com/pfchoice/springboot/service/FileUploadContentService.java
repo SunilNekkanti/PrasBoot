@@ -33,4 +33,8 @@ public interface FileUploadContentService {
 	
 	Future<?> asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(String username, Integer insId, Integer fileTypeId,
 			Integer activityMonth, Integer reportMonth, String fileName) throws IOException, InterruptedException;
+	
+	Future<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException;
+	
 }

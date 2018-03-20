@@ -47,7 +47,7 @@ app.controller('ProviderController',
             DTColumnBuilder.newColumn('name').withTitle('PROVIDER').renderWith(
 					function(data, type, full,
 							meta) {
-						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.providerEdit('+full.id+')">'+data+'</a>';
+						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.editProvider('+full.id+')">'+data+'</a>';
 					}).withClass("text-left"),
 			DTColumnBuilder.newColumn('code').withTitle('NPI').withOption('defaultContent', '')
            /* DTColumnBuilder.newColumn('prvdrInsContracts').renderWith(function(data) {

@@ -7,11 +7,18 @@
  select :activityMonth into @reportMonth;
  
  INSERT INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB, Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,Mbr_MedicareNo,file_id,created_date,updated_date,created_by,updated_by	,active_ind )
- SELECT   substring_index(`MemberName`,',',1) lastname,substring_index(`MemberName`,',',-1) firstname, 4 ,STRING_TO_DATE(DateofBirth) dob, 4, MedicaidNumber, MedicaidNumber, '',:fileId,  now(),now(),:username,:username,'Y'  
+ SELECT   substring_index(`MemberName`,',',1) lastname,substring_index(`MemberName`,',',-1) firstname, 4 ,STRING_TO_DATE(DateofBirth) dob, 4,  mbrlevel.carriermemid, MedicaidNumber, '',:fileId,  now(),now(),:username,:username,'Y'  
   FROM csv2table_simply_member_level_temp mbrlevel
  LEFT OUTER JOIN membership m on    m.SRC_SYS_MBR_NBR = mbrlevel.carriermemid
  where m.mbr_id is null  group by mbrlevel.carriermemid;
    
+ 
+ update membership m
+ join   csv2table_simply_member_level_temp  mbrlevel on m.SRC_SYS_MBR_NBR = mbrlevel.carriermemid
+ set Mbr_MedicaidNo = MedicaidNumber;
+ 
+ 
+ 
  REPLACE into simply_member_level_summary 
  (mbr_level_id, report_month, ins_id, prvdr_id, mbr_id, IPA, SubIPA, QNXTMemberID, MemberName, EnrollID, PlanID, ProgramID, ContractID, MedicaidNumber, HICN, Gender, DateofBirth, CountyCode, PcpId, PcpName, Activity_Date, 
 		 Hospice, ESRD, Aged_Disabled_MSP, Institutional, NHC, New_Medicare_Bene_Medicaid_Flag, LTI_Flag, Medicaid_Indicator, Default_Risk_Factor_Code, Risk_Adjuster_Factor_A, Risk_Adjuster_Factor_B, ESRD_MSP_Flag, Frailty_Indicator, Enrollment_Source, EGHP_Flag, Part_D_RA_Factor, Medicaid_Premium, Payment_Adj_MSA_Start_Date, Total_Part_A_MA_Payment, Total_Part_B_MA_Payment, Total_MA_Payment, Rebate_Part_DBasicPremium_Reduct, Part_D_Basic_Premium_Amt, Part_D_DirectSubsidy_Payment_Amt, Reinsurance_Subsidy_Amt, LowIncomeSubsidyCostsharing_Amt, Total_Part_D_Payment, premium, Funding, INST, PROF, PHARM, OTC, PCPCap, speccap, ibnr, MSOAdmin, Surpluspct, Deficitpct, Contribution, Reserve, StoplossRate, StoplossCredit, Adjustments, RiskType, RiskEffDate, ipadistribution, hmodistribution, memcounty, product, product_label, risk, carrierid, carrier_description, progtype, program, planDesc, MemId, carriermemid, PayToAffiliation, PayToId, PayToName, ServLocAffiliation, ServiceLocationId, ServiceLocationName, file_id, created_date, updated_date, created_by, updated_by, active_ind)

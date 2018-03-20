@@ -3,7 +3,7 @@ drop table if exists temp_member_claims_full;
 create  temporary table temp_member_claims_full as
     select  csv2BhClaim.*, m.mbr_id, rc.prvdr_id 
    FROM  csv2Table_simply_Claim csv2BhClaim  
-  JOIN membership m on     m.Mbr_MedicaidNo  = csv2BhClaim.MedicaidNumber 
+  JOIN membership m on     m.SRC_SYS_MBR_NBR  = csv2BhClaim.MedicaidNumber 
   join membership_claims mc on mc.mbr_id = m.mbr_id and csv2BhClaim.ClaimNum = mc.claim_id_number
 LEFT OUTER JOIN contract c on FIND_IN_SET(replace(csv2BhClaim.PCPID,' ',''), replace(c.PCP_PROVIDER_NBR,' ',''))
  LEFT OUTER JOIN reference_contracts rc on  rc.insurance_id=:insId and    c.contract_Id = rc.contract_Id   

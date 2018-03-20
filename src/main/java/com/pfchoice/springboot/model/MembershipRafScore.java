@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -65,7 +64,6 @@ public class MembershipRafScore extends RecordDetails implements Serializable {
 	@Column(name = "file_id")
 	private Integer fileId;
 
-	//@Formula("STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-',case when SUBSTRING(raf_period, 5, 1) = 'H'  then  ( SUBSTRING(raf_period, 6, 1)  - 1)*6 + 1   when SUBSTRING(raf_period, 5, 1) = 'Q'  then  ( SUBSTRING(raf_period, 6, 1)  - 1)*3 + 1 else '01' end ,'-','01')  , '%Y-%c-%d')")
 	@Formula("if(SUBSTRING(raf_period, 5, 1) = 'H' , ADDDATE( STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-',(  SUBSTRING(raf_period, 6, 1)  )*6+1 ,'-','01')  , '%Y-%c-%d'), -1 ) , if( SUBSTRING(raf_period, 5, 1) = 'Q'  ,  ADDDATE( STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-',( SUBSTRING(raf_period, 6, 1)   )*3+1,'-','01')  , '%Y-%c-%d'), -1 )    ,  STR_TO_DATE( concat(SUBSTRING(raf_period, 1, 4) , '-','12','-','31')  , '%Y-%c-%d') ))")
 	@Temporal(TemporalType.DATE)
 	private Date rafPeriodDate;

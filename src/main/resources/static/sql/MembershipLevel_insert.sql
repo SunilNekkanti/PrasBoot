@@ -8,6 +8,7 @@ SELECT   MLNAME,MFNAME,lg.gender_id,STRING_TO_DATE(MBRDOB), 4,SRC_SYS_MEMBER_NBR
  where m.SRC_SYS_MBR_NBR is null
  group by csv2AmgMbrLvl.SRC_SYS_MEMBER_NBR;
 
+ 
  select :activityMonth into @reportMonth;
 
 replace into membership_level_claim_summary select  distinct :insId,:fileId, :activityMonth, IPA_CD, IPANAME, PCP_PROVIDER_NBR, PCPFIRSTNAME, PCPLASTNAME, CONTRACT_YR, 

@@ -41,7 +41,7 @@ app.controller('InsuranceController',
             DTColumnBuilder.newColumn('name').withTitle('INSURANCE').renderWith(
 					function(data, type, full,
 							meta) {
-						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.insuranceEdit('+full.id+')">'+data+'</a>';
+						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.editInsurance('+full.id+')">'+data+'</a>';
 					}).withClass("text-left"),
             DTColumnBuilder.newColumn('planType.description').withTitle('PLAN TYPE')
           ];

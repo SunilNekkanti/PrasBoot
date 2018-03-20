@@ -6,7 +6,7 @@ alter table csv2table_simply_pharmacy_temp add index MedicaidNumber(MedicaidNumb
 
  select :activityMonth into @reportMonth;
  
- INSERT INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB, Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,Mbr_MedicareNo,file_id,created_date,updated_date,created_by,updated_by	,active_ind )
+ INSERT IGNORE INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB, Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,Mbr_MedicareNo,file_id,created_date,updated_date,created_by,updated_by	,active_ind )
  SELECT   substring_index(`MemberName`,',',1) lastname,substring_index(`MemberName`,',',-1) firstname, 4 ,STRING_TO_DATE(DateofBirth) dob, 4, MedicaidNumber, MedicaidNumber, '',:fileId,  now(),now(),:username,:username,'Y'  
   FROM csv2table_simply_pharmacy_temp pharClaim
  LEFT OUTER JOIN membership m on    m.SRC_SYS_MBR_NBR = pharClaim.MedicaidNumber

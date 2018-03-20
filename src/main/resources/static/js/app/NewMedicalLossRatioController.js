@@ -55,6 +55,10 @@ app.controller('NewMedicalLossRatioController',
         self.dt1InstanceCallback = dt1InstanceCallback;
         self.reset = reset;
         self.selectedActivityMonths  = [];
+        self.select = select;
+      	self.deselect = deselect;
+        self.graph = {};
+      
         if(self.insurances != null && self.insurances.length > 0){
            self.insurance = self.insurance || self.insurances[0];
         }else  {
@@ -184,6 +188,7 @@ app.controller('NewMedicalLossRatioController',
 									'recordsFiltered' : result.data.totalElements||0,
 									'data' : self.finalData1||{}
 								};
+								
 								fnCallback(records);
 							});
 		}
@@ -258,6 +263,39 @@ app.controller('NewMedicalLossRatioController',
 									'recordsFiltered' : result.data.totalElements||0,
 									'data' : self.finalData||{}
 								};
+								
+								var summaryRecords =   $filter('filter')(self.finalData, {reportMonth: self.selectedReportMonths[0]});
+            summaryRecords = $filter('mbrLvlSummaryFilterByActivityMonths')(summaryRecords,  self.selectedActivityMonths);
+	        var activityMonths =  summaryRecords.map( a=> a.activityMonth);
+			var funding = summaryRecords.map( a=> a.funding);
+			var inst = summaryRecords.map( a=> a.amgInst);
+			var prof = summaryRecords.map( a=> a.amgProf);
+			var pharm = summaryRecords.map( a=> a.amgPhar);
+			var totalExp = summaryRecords.map( a=> a.totalExp);
+			  
+		   self.graph.data = [funding,inst,prof,pharm,totalExp];
+		   self.graph.labels = activityMonths;
+		   self.graph.series = ['Funding','Inst','Prof','Phar', 'TotExp'];
+		   self.graph.legend = true;
+           self.graph.datasetOverride = [{fill:false}, { fill:false} ,{fill:false},{fill:false},{fill:false}];
+           self.graph.options = {
+            legend: {display: true },
+	    		showLines: true,
+			    fill: false,
+	   			line: {
+	      				fill: false
+	    		 },
+			    scales: {
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left'
+			        }
+			      ]
+			    }
+			  };
 								fnCallback(records);
 							});
 		}
@@ -428,8 +466,19 @@ app.controller('NewMedicalLossRatioController',
 							      return match;
 							  };
 							  
+							  
+		function   select() {
+				self.chartTabShow = true;
+		} 
+		
+		
+		function  deselect() {
+	   			self.chartTabShow = false;
+		}			  
+				
+				
+							  
     }
-    
  					
     ]);
    })();
