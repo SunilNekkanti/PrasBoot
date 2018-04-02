@@ -364,37 +364,38 @@ public class FileUploadContentController implements ResourceLoaderAware {
 					for (File file : files) {
 					    if (!file.isFile()) continue;
 					 String  filename = foldername.replace("/", "\\")+"\\"+file.getName();
-					 if(file.getName().contains("memberlevel")){
+					  if(file.getName().contains("memberlevel")){
 						   logger.info("forwarding to member Level");
 						   FileType fileType3 = fileTypeService.findByDescriptionAndInsId("Membership Level", insId);
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType3.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);
-					   }  else   if( file.getName().contains("pharmacy")){
+					   }  else    if( file.getName().contains("pharmacy")){
 						   logger.info("forwarding to pharmacy"+file.getAbsolutePath());
 						   FileType  fileType2 = fileTypeService.findByDescriptionAndInsId("Membership Claims Pharmacy", insId);
-						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType2.getId(), activityMonth, reportMonth, filename);
-							futures.add(future);
-					   } else if(file.getName().contains("claims") ){
+							 Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+							        .asyncMbrLevelOrPrvdrAdjustFileUploadProcessing( username,insId,fileType2.getId(), activityMonth, reportMonth,  filename);
+							 futures.add(future);
+							 
+					   }   else if(file.getName().contains("claims") ){
 						   logger.info("forwarding to claims file.getAbsolutePath()"+file.getAbsolutePath());
 						   FileType fileType1 = fileTypeService.findByDescriptionAndInsId("Membership Claim", insId);
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType1.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);
-					   } else if( file.getName().contains("adjust")){
+					   }  else if( file.getName().contains("adjust")){
 						   logger.info("forwarding to adjust");
 						   FileType fileType4 = fileTypeService.findByDescription("AMG Adjust");
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType4.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);
-					   } else if( file.getName().contains("mmr")){
-						   logger.info("forwarding to mmr");
+					   }  else if( file.getName().contains("mmr")){
+						   logger.info("*******************forwarding to mmr******************");
 						   FileType fileType5 = fileTypeService.findByDescription("Simply Membership MMR");
 						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
 									.asyncMbrMedicalRiskAdjustFileUploadProcessing(username, insId, fileType5.getId(), activityMonth, reportMonth, filename);
 							futures.add(future);
-					   }
+					   }  
 					     
 					}
 					
@@ -426,7 +427,7 @@ public class FileUploadContentController implements ResourceLoaderAware {
 			
 		 Future<ResponseEntity<?>> finalFuture =null;
 		 Integer index =0;
-		
+		 logger.info("futures.size()",futures.size());
 			while (index < futures.size() && futures.get(index) != null && true) {
 				try {
 					if (futures.get(index).isDone()) {

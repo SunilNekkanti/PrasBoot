@@ -65,13 +65,15 @@ alter table temp_membership add key address(address1,address2,city,zip,fileId);
    m.Mbr_dob = a.dob ;
    
   
-insert ignore into membership (  Mbr_LastName,Mbr_FirstName,Mbr_GenderID,Mbr_CountyCode,Mbr_DOB,Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,file_id,created_date,updated_date,created_by,updated_by)
-select lastname,firstname, sex,county, 
+insert  into membership (  Mbr_LastName,Mbr_FirstName,Mbr_GenderID,Mbr_CountyCode,Mbr_DOB,Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,file_id,created_date,updated_date,created_by,updated_by)
+select * from (select lastname,firstname, sex,county, 
 case when tm.dob    > current_date   then  DATE_SUB( tm.dob ,INTERVAL 100 YEAR)   else  tm.dob  end  dob ,
 tm.status,tm.SBSB_ID,tm.MCDMCR, tm.fileId ,tm.created_date,tm.updated_date,tm.created_by,tm.updated_by   from  temp_membership tm
 LEFT join membership m on  m.SRC_SYS_MBR_NBR=tm.SBSB_ID 
 where m.Mbr_id is null
-group by tm.SBSB_ID;
+group by tm.SBSB_ID) x
+ON DUPLICATE KEY UPDATE Mbr_LastName =lastname ,Mbr_FirstName= firstname,Mbr_DOB= dob,Mbr_Status= status;
+
 
 
 update  membership_insurance mi
@@ -93,7 +95,7 @@ create table temp_cur_activity_month as
 select   @activityDate activitydate,:activityMonth  activityMonth;
 
   
-insert  into membership_insurance 
+insert ignore into membership_insurance 
 (
 ins_id,mbr_id,New_Medicare_Bene_Medicaid_Flag,activitydate,activityMonth,effective_strt_dt,effecctive_end_dt,
 product,product_label,planID,SRC_SYS_MBR_NBR,groupp,class,risk_flag,file_id,created_date,updated_date,created_by,updated_by)

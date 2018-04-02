@@ -37,19 +37,24 @@ now() created_date,now() updated_date,:username created_by,:username updated_by
   where   if( mam.mbr_id is not null , if(mam.prvdr_id is not null ,mam.activity_month is null,mam.prvdr_id is  null ),mam.mbr_id is   null)
 group by m.mbr_id,c.insurance_id,c.prvdr_id,csv2AmgMbrLvl.activityMonth; 
 
-replace  into new_medical_loss_ratio
-( ins_id, prvdr_id, report_month, activity_month, qmlr, amg_funding, amg_mbr_cnt, amg_inst, amg_prof, amg_phar, amg_sl_exp, amg_sl_credit, amg_vab_adj, amg_adj, amg_pcp_cap, amg_spec_cap, amg_dental_cap, amg_trans_cap, amg_vision_cap, amg_ibnr_inst, amg_ibnr_prof,  file_id, created_date, updated_date, created_by, updated_by, active_ind)
- select  c.insurance_id,c.prvdr_id , :activityMonth reportmonth,ACTIVITYMONTH, 
- qmlrfunction(:activityMonth, c.insurance_id,c.prvdr_id,ACTIVITYMONTH ,false,false) qmlr,
-sum(FUNDING) FUNDING, sum(MEMBER_MONTH_CNT)MEMBER_MONTH_CNT, sum(INST_CLAIMS)INST_CLAIMS, sum(PROF_CLAIMS)PROF_CLAIMS, sum(PHAR_CLAIMS)PHAR_CLAIMS,
- sum(STOPLOSS_CHARGE)STOPLOSS_CHARGE, sum(STOPLOSS_CREDIT_AMT)STOPLOSS_CREDIT_AMT, sum(VAB_ADJUSTMENT)VAB_ADJUSTMENT, mlr.amg_adj  ADJUSTMENT, sum(CAPITATION_PCP)CAPITATION_PCP,
- sum(CAPITATION_SPECIALIST)CAPITATION_SPECIALIST, sum(CAPITATION_DENTAL)CAPITATION_DENTAL, sum(CAPITATION_TRANSPORTATION)CAPITATION_TRANSPORTATION,
- sum(CAPITATION_VISION)CAPITATION_VISION, ifnull(mlr.amg_ibnr_inst,0), ifnull(mlr.amg_ibnr_prof,0),    :fileId fileId, now() creadted,now() updated, :username created_by , :username updated_by, 'Y' active
- from csv2table_amg_member_level  ml 
-JOIN  ( select c.*,rc.insurance_id,rc.prvdr_id from contract c 
-                        JOIN reference_contracts rc on  c.contract_Id = rc.contract_Id  and insurance_id =:insId
-				 ) c on FIND_IN_SET(ml.PCP_PROVIDER_NBR, c.PCP_PROVIDER_NBR)       
-  left join new_medical_loss_ratio mlr on mlr.report_month =:activityMonth and mlr.ins_id =c.insurance_id and mlr.prvdr_id =c.prvdr_id and mlr.activity_month = ml.ACTIVITYMONTH
-  where ml.activityMonth >201512
- group by  reportmonth,c.insurance_id,c.prvdr_id ,ACTIVITYMONTH
- order by  reportmonth,c.insurance_id,c.prvdr_id ,ACTIVITYMONTH;
+ replace  into new_medical_loss_ratio                            
+ ( ins_id, prvdr_id, report_month, activity_month, qmlr,qmlr_claims, amg_funding, mbr_cnt,  inst_claims, prof_claims, phar_claims,	 unwanted_claims,sl_credit_claims,
+		  amg_mbr_cnt, amg_inst, amg_prof, amg_phar, amg_sl_exp, amg_sl_credit, amg_vab_adj, amg_adj, amg_pcp_cap, amg_spec_cap,
+  amg_dental_cap, amg_trans_cap, amg_vision_cap, amg_ibnr_inst, amg_ibnr_prof,  file_id, created_date, updated_date, created_by, updated_by, active_ind)
+  select  c.insurance_id,c.prvdr_id , :activityMonth reportmonth,ACTIVITYMONTH, 
+  qmlrfunction(:activityMonth, c.insurance_id,c.prvdr_id,ACTIVITYMONTH ,false,false) qmlr, 
+   qmlr_claims_function(:activityMonth, c.insurance_id,c.prvdr_id,ACTIVITYMONTH ,false,false) qmlr_claims,
+ sum(FUNDING) FUNDING,
+   mlr.mbr_cnt,mlr.inst_claims, mlr.prof_claims, mlr.phar_claims,mlr.unwanted_claims,mlr.sl_credit_claims, 
+  sum(ml.MEMBER_MONTH_CNT)MEMBER_MONTH_CNT, sum(ml.INST_CLAIMS) amg_inst, sum(ml.PROF_CLAIMS) amg_prof, sum(ml.PHAR_CLAIMS) amg_phar,
+  sum(STOPLOSS_CHARGE)STOPLOSS_CHARGE, sum(STOPLOSS_CREDIT_AMT)STOPLOSS_CREDIT_AMT, sum(VAB_ADJUSTMENT)VAB_ADJUSTMENT, mlr.amg_adj  ADJUSTMENT, sum(CAPITATION_PCP)CAPITATION_PCP,
+  sum(CAPITATION_SPECIALIST)CAPITATION_SPECIALIST, sum(CAPITATION_DENTAL)CAPITATION_DENTAL, sum(CAPITATION_TRANSPORTATION)CAPITATION_TRANSPORTATION,
+  sum(CAPITATION_VISION)CAPITATION_VISION, ifnull(mlr.amg_ibnr_inst,0), ifnull(mlr.amg_ibnr_prof,0),    :fileId fileId, now() creadted,now() updated, :username created_by , :username updated_by, 'Y' active
+  from csv2table_amg_member_level  ml 
+ JOIN  ( select c.*,rc.insurance_id,rc.prvdr_id from contract c 
+                         JOIN reference_contracts rc on  c.contract_Id = rc.contract_Id  and insurance_id =:insId
+ 				 ) c on FIND_IN_SET(ml.PCP_PROVIDER_NBR, c.PCP_PROVIDER_NBR)       
+   left join new_medical_loss_ratio mlr on mlr.report_month =:activityMonth and mlr.ins_id =c.insurance_id and mlr.prvdr_id =c.prvdr_id and mlr.activity_month = ml.ACTIVITYMONTH
+   where ml.activityMonth >201512
+  group by  reportmonth,c.insurance_id,c.prvdr_id ,ACTIVITYMONTH
+  order by  reportmonth,c.insurance_id,c.prvdr_id ,ACTIVITYMONTH;

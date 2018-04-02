@@ -19,6 +19,12 @@ public interface NewMedicalLossRatioRepository
 	
 	 @Query(value ="SELECT NEW com.pfchoice.springboot.model.NewMedicalLossRatio( mlr.reportMonth , "
 	 		+ "mlr.activityMonth , "
+	 		+ " sum(mlr.mbrCnt) ,"
+	 		+ " sum(mlr.profClaims) ,"
+	 		+ " sum(mlr.instClaims),"
+			+ " sum(mlr.pharClaims) ,"
+			+ "sum(mlr.unwantedClaims),"
+			+ "sum(mlr.slCreditClaims),"
 	 		+ " sum(mlr.amgMbrCnt) ,"
 	 		+ " sum(mlr.funding) ,"
 	 		+ " sum(mlr.amgProf),"
@@ -37,9 +43,14 @@ public interface NewMedicalLossRatioRepository
 			+ " sum(mlr.ibnrInst) ,"
 			+ " sum(mlr.ibnrProf) ,"
 			+ " sum(mlr.totalExp),"
+			+ " sum(mlr.totalExpClaims),"
 			+ " sum(mlr.balance) ,"
 			+ " qmlrfunction( mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,true,true) , "
-			+ " qmlrfunction(  mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true)  ) from com.pfchoice.springboot.model.NewMedicalLossRatio mlr"
+			+ " qmlrfunction(  mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true) ," 			
+			+ " sum(mlr.balanceClaims) ,"
+			+ " qmlr_claims_function( mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,true,true) , "
+			+ " qmlr_claims_function(  mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true)  ) "
+			+" from com.pfchoice.springboot.model.NewMedicalLossRatio mlr"
 			+ " WHERE mlr.ins.id =:insId and mlr.prvdr.id in (:prvdrIds) and mlr.reportMonth in (:reportMonths) and mlr.activityMonth in (:activityMonths)"
 			+ "group by mlr.reportMonth,mlr.ins.name,mlr.activityMonth ")
 	 Page<NewMedicalLossRatio> findSummary(@Param("insId") Integer insId, @Param("prvdrIds") List<Integer> prvdrIds, 

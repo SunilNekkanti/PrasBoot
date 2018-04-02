@@ -13,5 +13,6 @@ public class MySQL5InnoDBDialect extends org.hibernate.dialect.MySQL5InnoDBDiale
 	 
 	    registerColumnType(Types.BOOLEAN, "BIT(1)"); 
 	    registerFunction("qmlrfunction", new SQLFunctionTemplate(BigDecimalType.INSTANCE, "qmlrfunction(?1, ?2, ?3, ?4, ?5, ?6)")); 
+	    registerFunction("qmlr_claims_function", new SQLFunctionTemplate(BigDecimalType.INSTANCE, "qmlr_claims_function(?1, ?2, ?3, ?4, ?5, ?6)")); 
 	  } 
 	}

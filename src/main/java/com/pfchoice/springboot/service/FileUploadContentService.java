@@ -37,4 +37,6 @@ public interface FileUploadContentService {
 	Future<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException;
 	
+	 Future<?> asyncMbrPharmacyClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+				final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException;
 }

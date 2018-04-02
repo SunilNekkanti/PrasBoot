@@ -140,7 +140,6 @@ public class PrasUtil {
 	public  <T> Integer executeSQLQuery(String  entityClassName, final String insuranceCode, final Map<String, Object>  params,  final String queryType) throws IOException, InterruptedException {
 			Resource insertIntoTable = getResource("classpath:static/sql/" + entityClassName +insuranceCode + queryType + configProperties.getSqlQueryExtn());
 			String sqlQuery = StreamUtils.copyToString(insertIntoTable.getInputStream(), StandardCharsets.UTF_8);
-		
 			Integer noOfRecordsLoaded = executeSqlScript(sqlQuery, params, false);
 			logger.info("insertedData " + noOfRecordsLoaded + " records into " + entityClassName);
 			return noOfRecordsLoaded;

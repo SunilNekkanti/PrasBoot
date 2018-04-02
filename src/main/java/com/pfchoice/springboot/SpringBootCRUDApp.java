@@ -29,7 +29,7 @@ public class SpringBootCRUDApp {
 	        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 	        executor.setCorePoolSize(2);
 	        executor.setMaxPoolSize(2);
-	        executor.setQueueCapacity(500);
+	        executor.setQueueCapacity(10);
 	        executor.setThreadNamePrefix("PrasBootFileUpload-");
 	        executor.initialize();
 	        return executor;

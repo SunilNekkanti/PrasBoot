@@ -57,6 +57,8 @@ app.controller('NewMedicalLossRatioController',
         self.selectedActivityMonths  = [];
         self.select = select;
       	self.deselect = deselect;
+      	self.select1 = select1;
+      	self.deselect1 = deselect1;
         self.graph = {};
       
         if(self.insurances != null && self.insurances.length > 0){
@@ -85,8 +87,17 @@ app.controller('NewMedicalLossRatioController',
         	DTColumnBuilder.newColumn('prvdr.name').withTitle('PROVIDER').withClass("text-left"),
  			DTColumnBuilder.newColumn('reportMonth').withTitle('DATAFILE').withClass("text-center"),
  			DTColumnBuilder.newColumn('activityMonth').withTitle('ACTIVITY_MONTH').withClass("text-center"),
- 			DTColumnBuilder.newColumn('amgMbrCnt').withTitle('MBR_CNT').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('mbrCnt').withTitle('MBR_CNT_CAP').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('funding').withTitle('FUNDING').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('totalExpClaims').withTitle('TOTAL_EXP_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('balanceClaims').withTitle('BALANCE_CLAIMS').withOption('defaultContent', ''),
+ 			DTColumnBuilder.newColumn('mlrClaims').withTitle('MLR_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('qmlrClaims').withTitle('QMLR_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('profClaims').withTitle('PROF_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('instClaims').withTitle('INST_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('pharClaims').withTitle('PHAR_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('slCreditClaims').withTitle('STOPLOSS_CREDIT_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('amgMbrCnt').withTitle('MBR_CNT').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('totalExp').withTitle('TOTAL_EXP').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('balance').withTitle('BALANCE').withOption('defaultContent', ''),
  			DTColumnBuilder.newColumn('mlr').withTitle('MLR').withOption('defaultContent', '').withClass("text-center"),
@@ -112,8 +123,17 @@ app.controller('NewMedicalLossRatioController',
         self.dt1Columns =[
  			DTColumnBuilder.newColumn('reportMonth').withTitle('DATAFILE').withClass("text-center"),
  			DTColumnBuilder.newColumn('activityMonth').withTitle('ACTIVITY_MONTH').withClass("text-center"),
- 			DTColumnBuilder.newColumn('amgMbrCnt').withTitle('MBR_CNT').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('mbrCnt').withTitle('MBR_CNT_CAP').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('funding').withTitle('FUNDING').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('totalExpClaims').withTitle('TOTAL_EXP_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('balanceClaims').withTitle('BALANCE_CLAIMS').withOption('defaultContent', ''),
+ 			DTColumnBuilder.newColumn('mlrClaims').withTitle('MLR_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('qmlrClaims').withTitle('QMLR_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('profClaims').withTitle('PROF_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('instClaims').withTitle('INST_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('pharClaims').withTitle('PHAR_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('slCreditClaims').withTitle('STOPLOSS_CREDIT_CLAIMS').withOption('defaultContent', '').withClass("text-center"),
+ 			DTColumnBuilder.newColumn('amgMbrCnt').withTitle('MBR_CNT').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('totalExp').withTitle('TOTAL_EXP').withOption('defaultContent', '').withClass("text-center"),
  			DTColumnBuilder.newColumn('balance').withTitle('BALANCE').withOption('defaultContent', ''),
  			DTColumnBuilder.newColumn('mlr').withTitle('MLR').withOption('defaultContent', '').withClass("text-center"),
@@ -142,25 +162,23 @@ app.controller('NewMedicalLossRatioController',
 		.withOption('ordering', false)
 	    .withOption('createdRow', createdRow)
 		.withOption('bDeferRender', true)
+		.withOption('bDestroy', true)
 		.withOption('scrollY', 450)
 		.withOption('scrollX', 750)
-		.withOption('bDestroy', true)
 		.withFixedColumns({
-							fixedColumns: {
-							            heightMatch: 'auto',
-					        			leftColumns: 3
-					    				}
-        			
-    				     })
+		                   heightMatch: 'none',
+        				   leftColumns: 4,
+        				   rightColumns: 1
+    						})
     	.withButtons([
             		   {
-            extend: 'excelHtml5',
-            text: 'Save as Excel',
-            customize: function( xlsx ) {
-                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                $('row:first c', sheet).attr( 's', '42' );
-            }
-        }
+				            extend: 'excelHtml5',
+				            text: 'Save as Excel',
+				            customize: function( xlsx ) {
+				                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+				                $('row:first c', sheet).attr( 's', '42' );
+				            }
+                       }
 					  ]
 					)
 		.withFnServerData(serverData);
@@ -273,6 +291,8 @@ app.controller('NewMedicalLossRatioController',
 			var pharm = summaryRecords.map( a=> a.amgPhar);
 			var totalExp = summaryRecords.map( a=> a.totalExp);
 			  
+			  
+			  
 		   self.graph.data = [funding,inst,prof,pharm,totalExp];
 		   self.graph.labels = activityMonths;
 		   self.graph.series = ['Funding','Inst','Prof','Phar', 'TotExp'];
@@ -296,6 +316,38 @@ app.controller('NewMedicalLossRatioController',
 			      ]
 			    }
 			  };
+			  
+			  
+			  
+			var instClaims = summaryRecords.map( a=> a.instClaims);
+			var profClaims = summaryRecords.map( a=> a.profClaims);
+			var pharmClaims = summaryRecords.map( a=> a.pharClaims);
+			var totalExpClaims = summaryRecords.map( a=> a.totalExpClaims);
+			  
+		   self.graph.data1 = [funding,instClaims,profClaims,pharmClaims,totalExpClaims];
+		   self.graph.labels1 = activityMonths;
+		   self.graph.series1 = ['Funding','Inst','Prof','Phar', 'TotExp'];
+		   self.graph.legend1 = true;
+           self.graph.datasetOverride1 = [{fill:false}, { fill:false} ,{fill:false},{fill:false},{fill:false}];
+           self.graph.options1 = {
+            legend: {display: true },
+	    		showLines: true,
+			    fill: false,
+	   			line: {
+	      				fill: false
+	    		 },
+			    scales: {
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left'
+			        }
+			      ]
+			    }
+			  };
+			  
 								fnCallback(records);
 							});
 		}
@@ -476,7 +528,13 @@ app.controller('NewMedicalLossRatioController',
 	   			self.chartTabShow = false;
 		}			  
 				
-				
+		function   select1() {
+				self.chartTabShow1 = true;
+		} 
+		
+		function  deselect1() {
+	   			self.chartTabShow1 = false;
+		}				
 							  
     }
  					

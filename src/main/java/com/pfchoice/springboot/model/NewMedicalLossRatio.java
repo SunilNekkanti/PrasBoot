@@ -53,7 +53,26 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	
 	@Column(nullable = true, name = "amg_funding")
 	private BigDecimal funding;
+	
+	@Column(nullable = true, name = "mbr_cnt")
+	private BigDecimal mbrCnt;
 
+
+	@Column(nullable = true, name = "prof_claims")
+	private BigDecimal profClaims;
+
+	@Column(nullable = true, name = "inst_claims")
+	private BigDecimal instClaims;
+
+	@Column(nullable = true, name = "phar_claims")
+	private BigDecimal pharClaims;
+
+	@Column(nullable = true, name = "unwanted_claims")
+	private BigDecimal unwantedClaims;
+
+	@Column(nullable = true, name = "sl_credit_claims")
+	private BigDecimal slCreditClaims;
+	
 	@Column(nullable = true, name = "amg_mbr_cnt")
 	private BigDecimal amgMbrCnt;
 
@@ -105,6 +124,9 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 
 	@Column(nullable = true, name = "amg_totalExp")
 	private BigDecimal totalExp;
+	
+	@Column(nullable = true, name = "totalExp_claims")
+	private BigDecimal totalExpClaims;
 
 	@Column(nullable = true, name = "balance")
 	private BigDecimal balance;
@@ -115,6 +137,16 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	@Column(nullable = true, name = "qmlr")
 	private BigDecimal qmlr;
 
+	@Column(nullable = true, name = "balance_claims")
+	private BigDecimal balanceClaims;
+
+	@Column(nullable = true, name = "mlr_claims")
+	private BigDecimal mlrClaims;
+
+	@Column(nullable = true, name = "qmlr_claims")
+	private BigDecimal qmlrClaims;
+
+	
 	/**
 	 * 
 	 */
@@ -133,6 +165,12 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 
 	public NewMedicalLossRatio( final Integer reportMonth, 
 			final Integer activityMonth, 
+			final BigDecimal mbrCnt,
+			final BigDecimal profClaims,
+			final BigDecimal instClaims, 
+			final BigDecimal pharClaims,
+			final BigDecimal unwantedClaims,
+			final BigDecimal slCreditClaims,
 			final BigDecimal amgMbrCnt,
 			final BigDecimal funding,
 			final BigDecimal amgProf,
@@ -151,17 +189,26 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 			final BigDecimal ibnrInst,
 			final BigDecimal ibnrProf,
 			final BigDecimal totalExp,
+			final BigDecimal totalExpClaims,
 			final BigDecimal balance, 
 			final BigDecimal mlr,
-			final BigDecimal qmlr) {
+			final BigDecimal qmlr,
+			final BigDecimal balanceClaims, 
+			final BigDecimal mlrClaims,
+			final BigDecimal qmlrClaims) {
 		this.reportMonth = reportMonth;
 		this.activityMonth = activityMonth;
+		this.mbrCnt = mbrCnt;
+		this.profClaims = profClaims;
+		this.instClaims = instClaims;
+		this.pharClaims = pharClaims;
+		this.unwantedClaims = unwantedClaims;
+		this.slCreditClaims = slCreditClaims;
 		this.amgMbrCnt = amgMbrCnt;
 		this.funding = funding;
 		this.amgProf = amgProf;
 		this.amgInst = amgInst;
 		this.amgPhar = amgPhar;
-		this.amgProf = amgProf;
 		this.ibnr = ibnr;
 		this.pcpCap = pcpCap;
 		this.specCap = specCap;
@@ -175,9 +222,13 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 		this.ibnrInst = ibnrInst;
 		this.ibnrProf = ibnrProf;
 		this.totalExp = totalExp;
+		this.totalExpClaims = totalExpClaims;
 		this.balance = balance;
 		this.mlr = mlr;
 		this.qmlr = qmlr;
+		this.balanceClaims = balanceClaims;
+		this.mlrClaims = mlrClaims;
+		this.qmlrClaims = qmlrClaims;
 	}
 
 	/**
@@ -488,6 +539,134 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	public void setDentalCap(BigDecimal dentalCap) {
 		this.dentalCap = dentalCap;
 	}
+	
+	
+
+	/**
+	 * @return the mbrCnt
+	 */
+	public BigDecimal getMbrCnt() {
+		return mbrCnt;
+	}
+
+	/**
+	 * @param mbrCnt the mbrCnt to set
+	 */
+	public void setMbrCnt(BigDecimal mbrCnt) {
+		this.mbrCnt = mbrCnt;
+	}
+
+	/**
+	 * @return the profClaims
+	 */
+	public BigDecimal getProfClaims() {
+		return profClaims;
+	}
+
+	/**
+	 * @param profClaims the profClaims to set
+	 */
+	public void setProfClaims(BigDecimal profClaims) {
+		this.profClaims = profClaims;
+	}
+
+	/**
+	 * @return the instClaims
+	 */
+	public BigDecimal getInstClaims() {
+		return instClaims;
+	}
+
+	/**
+	 * @param instClaims the instClaims to set
+	 */
+	public void setInstClaims(BigDecimal instClaims) {
+		this.instClaims = instClaims;
+	}
+
+	/**
+	 * @return the pharClaims
+	 */
+	public BigDecimal getPharClaims() {
+		return pharClaims;
+	}
+
+	/**
+	 * @param pharClaims the pharClaims to set
+	 */
+	public void setPharClaims(BigDecimal pharClaims) {
+		this.pharClaims = pharClaims;
+	}
+
+	/**
+	 * @return the unwantedClaims
+	 */
+	public BigDecimal getUnwantedClaims() {
+		return unwantedClaims;
+	}
+
+	/**
+	 * @param unwantedClaims the unwantedClaims to set
+	 */
+	public void setUnwantedClaims(BigDecimal unwantedClaims) {
+		this.unwantedClaims = unwantedClaims;
+	}
+
+	/**
+	 * @return the slCreditClaims
+	 */
+	public BigDecimal getSlCreditClaims() {
+		return slCreditClaims;
+	}
+
+	/**
+	 * @param slCreditClaims the slCreditClaims to set
+	 */
+	public void setSlCreditClaims(BigDecimal slCreditClaims) {
+		this.slCreditClaims = slCreditClaims;
+	}
+
+	/**
+	 * @return the balanceClaims
+	 */
+	public BigDecimal getBalanceClaims() {
+		return balanceClaims;
+	}
+
+	/**
+	 * @param balanceClaims the balanceClaims to set
+	 */
+	public void setBalanceClaims(BigDecimal balanceClaims) {
+		this.balanceClaims = balanceClaims;
+	}
+
+	/**
+	 * @return the mlrClaims
+	 */
+	public BigDecimal getMlrClaims() {
+		return mlrClaims;
+	}
+
+	/**
+	 * @param mlrClaims the mlrClaims to set
+	 */
+	public void setMlrClaims(BigDecimal mlrClaims) {
+		this.mlrClaims = mlrClaims;
+	}
+
+	/**
+	 * @return the qmlrClaims
+	 */
+	public BigDecimal getQmlrClaims() {
+		return qmlrClaims;
+	}
+
+	/**
+	 * @param qmlrClaims the qmlrClaims to set
+	 */
+	public void setQmlrClaims(BigDecimal qmlrClaims) {
+		this.qmlrClaims = qmlrClaims;
+	}
 
 	/**
 	 * @return the transCap
@@ -543,6 +722,20 @@ public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 	 */
 	public void setIbnrProf(BigDecimal ibnrProf) {
 		this.ibnrProf = ibnrProf;
+	}
+
+	/**
+	 * @return the totalExpClaims
+	 */
+	public BigDecimal getTotalExpClaims() {
+		return totalExpClaims;
+	}
+
+	/**
+	 * @param totalExpClaims the totalExpClaims to set
+	 */
+	public void setTotalExpClaims(BigDecimal totalExpClaims) {
+		this.totalExpClaims = totalExpClaims;
 	}
 
 	@Override

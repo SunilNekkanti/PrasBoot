@@ -71,7 +71,7 @@ envProperties:
       queryTypeInsertLevel2: _insert_level2
 datasource:
   pras:
-    url: jdbc:mysql://localhost:3306/pfchoices_final_20180205?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/pfchoices_final_20180327?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: root
     password: test123
     driverClassName: com.mysql.jdbc.Driver
@@ -133,7 +133,7 @@ envProperties:
       
 datasource:
   pras:
-    url: jdbc:mysql://pras.cp2ok1lxfh49.us-east-1.rds.amazonaws.com:3306/pfchoices_final_20180205?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://pras.cp2ok1lxfh49.us-east-1.rds.amazonaws.com:3306/pfchoices_final_20180320?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
     username: dbadmin
     password: prasdb20!8
     driverClassName: com.mysql.jdbc.Driver

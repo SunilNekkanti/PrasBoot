@@ -13,11 +13,14 @@ where pa.PRVDR_ADJ_ID is null
  ;
   
  
- replace  into new_medical_loss_ratio 
- ( ins_id, prvdr_id, report_month, activity_month, qmlr,  amg_funding, amg_mbr_cnt, amg_inst, amg_prof, amg_phar, amg_sl_exp, amg_sl_credit, amg_vab_adj, amg_adj, amg_pcp_cap, amg_spec_cap, amg_dental_cap, amg_trans_cap, amg_vision_cap, amg_ibnr_inst, amg_ibnr_prof,   file_id, created_date, updated_date, created_by, updated_by, active_ind)
-select a.insurance_id,a.prvdr_id , :activityMonth reportMonth,ACTIVITYMONTH, 
+ replace  into new_medical_loss_ratio  
+  ( ins_id, prvdr_id, report_month, activity_month, qmlr,qmlr_claims, amg_funding, mbr_cnt,  inst_claims, prof_claims, phar_claims,	 unwanted_claims,sl_credit_claims,
+		  amg_mbr_cnt, amg_inst, amg_prof, amg_phar, amg_sl_exp, amg_sl_credit, amg_vab_adj, amg_adj, amg_pcp_cap, amg_spec_cap,
+  amg_dental_cap, amg_trans_cap, amg_vision_cap, amg_ibnr_inst, amg_ibnr_prof,  file_id, created_date, updated_date, created_by, updated_by, active_ind)
+ select a.insurance_id,a.prvdr_id , :activityMonth reportMonth,ACTIVITYMONTH, 
  qmlrfunction(:activityMonth, a.insurance_id,a.prvdr_id,ACTIVITYMONTH,false,false) qmlr,
-  amg_funding FUNDING, amg_mbr_cnt MEMBER_MONTH_CNT,  amg_inst  INST_CLAIMS, amg_prof PROF_CLAIMS, amg_phar PHAR_CLAIMS,
+  qmlr_claims_function(:activityMonth, a.insurance_id,a.prvdr_id,ACTIVITYMONTH,false,false) qmlr_claims,
+  amg_funding FUNDING, mlr.mbr_cnt ,  mlr.inst_claims, mlr.prof_claims, mlr.phar_claims,	 mlr.unwanted_claims,mlr.sl_credit_claims, amg_mbr_cnt MEMBER_MONTH_CNT,  amg_inst  , amg_prof , amg_phar ,
     amg_sl_exp STOPLOSS_CHARGE, amg_sl_credit STOPLOSS_CREDIT_AMT, amg_vab_adj VAB_ADJUSTMENT,a.ADJUSTMENT_AMT, amg_pcp_cap CAPITATION_PCP,
    amg_spec_cap CAPITATION_SPECIALIST, amg_dental_cap CAPITATION_DENTAL, amg_trans_cap CAPITATION_TRANSPORTATION,
    amg_vision_cap CAPITATION_VISION, ibnr_inst ,ibnr_prof IBNR_PROF,    :fileId fileId, now() creadted,now() updated, :username created_by , :username  updated_by, 'Y' active

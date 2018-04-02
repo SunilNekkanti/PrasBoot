@@ -43,7 +43,7 @@ group by tm.MCDMCR;
 
 update  membership_insurance mi
 join membership m on m.Mbr_Id =mi.mbr_id
-join temp_simply_membership  tm on  tm.MCDMCR=m.SRC_SYS_MBR_NBR and  STRING_TO_DATE(tm.memeffstartdate) <= effective_strt_dt and STRING_TO_DATE(memeffenddate) >= mi.effecctive_end_dt 
+join temp_simply_membership  tm on  tm.MCDMCR=m.SRC_SYS_MBR_NBR and  STRING_TO_DATE(tm.memeffstartdate) <= effective_strt_dt or STRING_TO_DATE(memeffenddate) >= mi.effecctive_end_dt 
 set  mi.New_Medicare_Bene_Medicaid_Flag = case when tm.mbrstatus =1 then 'Y' else 'N' end ,
 effecctive_end_dt= STRING_TO_DATE(tm.memeffenddate),
 mi.product = tm.program,
@@ -84,7 +84,7 @@ tm.updated_by
  from temp_simply_membership tm  
   join membership m on tm.MCDMCR=m.SRC_SYS_MBR_NBR
   join temp_cur_activity_month tcam 
-  left join membership_insurance mi on mi.mbr_id =  m.mbr_id and  STRING_TO_DATE(tm.memeffstartdate) <= effective_strt_dt and STRING_TO_DATE(memeffenddate) >= mi.effecctive_end_dt 
+  left join membership_insurance mi on mi.mbr_id =  m.mbr_id and  STRING_TO_DATE(tm.memeffstartdate) <= effective_strt_dt or STRING_TO_DATE(memeffenddate) >= mi.effecctive_end_dt 
   where   case when mi.mbr_id is not  null then effective_strt_dt is null else mi.mbr_id is   null end
   group by tm.MCDMCR   ,STRING_TO_DATE(tm.memeffstartdate), tm.program ;
  

@@ -38,8 +38,8 @@ group by SBSB_ID,prvdr_id,CAP_PERIOD,eff_start_date  ;
 
 alter table temp_membership_cap_report_1 add key lastname(lastname), add key firstname(firstname), add key dob(dob), add key eff_start_date(eff_start_date);
 
-insert ignore into membership (  Mbr_LastName,Mbr_FirstName,Mbr_GenderID,Mbr_CountyCode,Mbr_DOB,Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,file_id,created_date,updated_date,created_by,updated_by)
-select a.* from  
+insert   into membership (  Mbr_LastName,Mbr_FirstName,Mbr_GenderID,Mbr_CountyCode,Mbr_DOB,Mbr_Status,SRC_SYS_MBR_NBR,Mbr_MedicaidNo,file_id,created_date,updated_date,created_by,updated_by)
+		select a.* from  
       (
 	select lastname,firstname, sex,county, 
 	case when tm.dob    > current_date   then  DATE_SUB( tm.dob ,INTERVAL 100 YEAR)   else  tm.dob  end  dob ,
@@ -47,7 +47,8 @@ select a.* from
 	 group by tm.SBSB_ID  having max(MEMBEREFFDT) 
      ) a 
 	 LEFT OUTER JOIN membership m on   m.SRC_SYS_MBR_NBR=a.SBSB_ID 
-	 where m.mbr_id is null ;
+	 where m.mbr_id is null
+	 ON DUPLICATE KEY UPDATE Mbr_LastName =lastname ,Mbr_FirstName= firstname,Mbr_DOB= dob,Mbr_Status= status;
 
  update membership  m
  join  temp_membership_cap_report_1 tm on     m.SRC_SYS_MBR_NBR =  tm.SBSB_ID

@@ -81,13 +81,18 @@
 	                    <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns"  dt-instance="ctrl.dtInstanceCallback" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
 	                    cellspacing="0" width="97%"></table>
 	 			</tab>
-	 			<tab  heading="Graph"    select="ctrl.select()" deselect="ctrl.deselect()" >
+	 			<tab  heading="AMGGraph"    select="ctrl.select()" deselect="ctrl.deselect()" >
 	 			</tab>	
-	 				
+	 			<tab  heading="ClaimsGraph"    select="ctrl.select1()" deselect="ctrl.deselect1()" >
+	 			</tab>		
 	 				
              </tabset>
              <div  class="table-responsive" ng-show="ctrl.chartTabShow" >
              <canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options"  chart-dataset-override="ctrl.graph.datasetOverride"   height="70"> </canvas>
+             </div>
+             
+              <div  class="table-responsive" ng-show="ctrl.chartTabShow1" >
+             <canvas class="chart chart-line" id="chart2" chart-data="ctrl.graph.data1" chart-labels="ctrl.graph.labels1" chart-series="ctrl.graph.series1" chart-options="ctrl.graph.options1"  chart-dataset-override="ctrl.graph.datasetOverride1"   height="70"> </canvas>
              </div>
          </div>
 

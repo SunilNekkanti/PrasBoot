@@ -18,13 +18,6 @@ INSERT ignore INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB
  
  
 
- -- INSERT INTO membership_insurance (ins_id,mbr_id,SRC_SYS_MBR_NBR,file_id,created_date,updated_date,created_by ,   updated_by ,   active_ind ) 
- -- SELECT :insId, m.mbr_id, csv2AmgClaim.SRC_SYS_MEMBER_NBR , :fileId, now(),now(),:username,:username,'Y'   FROM csv2Table_Amg_Claim_temp csv2AmgClaim
- -- join membership m  on m.SRC_SYS_MBR_NBR=csv2AmgClaim.SRC_SYS_MBR_NBR
- --  LEFT  JOIN  membership_insurance mi on mi.mbr_id = m.mbr_id and  mi.ins_Id=:insId
- -- where mi.mbr_id is null
- -- group by csv2AmgClaim.SRC_SYS_MEMBER_NBR;
- 
 
 INSERT INTO membership_claims
 (

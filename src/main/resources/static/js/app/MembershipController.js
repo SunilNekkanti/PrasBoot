@@ -194,10 +194,14 @@
         DTColumnBuilder.newColumn('genderId.code').withTitle('GENDER').withOption('defaultContent', ''),
          DTColumnBuilder.newColumn('contact.homePhone').withTitle('PHONE').withOption('defaultContent', ''),
         DTColumnBuilder.newColumn('mbrMMRList').renderWith(function(data, type, full, meta) { 
+        if(data !== undefined && data !== null && data.length > 0){
             var latestMbrMMRRecord = data.reduce(function(prev, current) {
               return (prev.activityMonth > current.activityMonth) ? prev : current
                  });
                  return latestMbrMMRRecord.riskAdjusterFactorA; 
+          } else {
+          return '';
+          }
         }).withOption('defaultContent', ''),
         DTColumnBuilder.newColumn('mbrRafScores').renderWith(
           function(data, type, full, meta) {
