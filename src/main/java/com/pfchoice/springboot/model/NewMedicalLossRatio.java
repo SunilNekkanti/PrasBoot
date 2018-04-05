@@ -14,6 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -23,6 +27,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "new_medical_loss_ratio")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@FilterDef(
+	    name = "reportMonthFilter", 
+	    parameters = @ParamDef(name = "reportMonths", type = "text")
+	)
+	@Filter(
+	    name = "reportMonthFilter", 
+	    condition = "report_Month  in (:reportMonths)"
+	)
 public class NewMedicalLossRatio extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;

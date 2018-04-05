@@ -10,37 +10,75 @@
       <div class="panel-body">
         <div class="panel-body">
           <div class="formcontainer">
-            <div class="col-sm-2">
-              <div class="form-group col-sm-12">
-                <label for="plan">Insurance</label>
-                <multiselect ng-model="ctrl.selectedInsurances" ng-change="ctrl.setProviders()" placeholder="Choose Insurance(s)" options="ctrl.insurances" id-prop="id" display-prop="name" show-search="true" show-select-all="true" show-unselect-all="true" search-limit="10"></multiselect>
 
+            <div class="col-sm-6">
+             <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group col-sm-12">
+                  <label for="plan">Insurance</label>
+                  <multiselect ng-model="ctrl.selectedInsurances" ng-change="ctrl.setProviders()" placeholder="Choose Insurance(s)" options="ctrl.insurances" id-prop="id" display-prop="name" show-search="true" show-select-all="true" show-unselect-all="true" search-limit="10"></multiselect>
+                </div>
               </div>
+
+              <div class="col-sm-6">
+                <div class="form-group col-sm-12">
+                  <label for="plan">Provider</label>
+                  <multiselect ng-model="ctrl.selectedPrvdrs" placeholder="Choose Provider(s)" options="ctrl.providers" id-prop="id" display-prop="name" show-search="true" show-select-all="true" show-unselect-all="true" search-limit="10"></multiselect>
+
+                </div>
+              </div>
+             </div>
+ 
+ 		<div class="row">
+              <div class="col-sm-6">
+                <label for="plan">MLR &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      From  : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; To</label>
+                <div class="form-group col-sm-12">
+                  <div class="form-group col-sm-6">
+                    <input type="text" ng-model="ctrl.mlrFrom" name="mlrFrom" class="username form-control input-sm" placeholder="MLR From" required ng-minlength="1" />
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <input type="text" ng-model="ctrl.mlrTo" name="mlrTo" class="username form-control input-sm" placeholder="MLR To" required ng-minlength="1" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group col-sm-12">
+                  <label for="plan">DataFile</label>
+                  <multiselect ng-model="ctrl.selectedReportMonths" ng-change="ctrl.reset()" placeholder="Choose a DataFile" options="ctrl.reportMonths" show-search="true" show-select-all="true" show-unselect-all="true" selection-limit="1" search-limit="10"></multiselect>
+                </div>
+              </div>
+ 			</div>
+
+			<div class="row">
+              <div class="col-sm-6">
+                <div class="form-group col-sm-12">
+                  <label for="startDate">Start Date</label>
+                  <div class="input-group date" id="startDate" name="startDate" ng-model="ctrl.startDate" date1-picker>
+                    <input type="text" class="form-control netto-input" ng-model="ctrl.startDate" date-picker-input ng-required="true"/>
+                    <span class="input-group-addon">
+			           							<span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group col-sm-12">
+                  <label for="endDate">End Date</label>
+                  <div class="input-group date" id="endDate" name="endDate" ng-model="ctrl.endDate" date1-picker>
+                    <input type="text" class="form-control netto-input" ng-model="ctrl.endDate" date-picker-input ng-required="true"/>
+                    <span class="input-group-addon">
+			           							<span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+             	   </div>
+             	 </div>
+ 			</div>
+ 
+ 
             </div>
 
-            <div class="col-sm-2">
-              <div class="form-group col-sm-12">
-                <label for="plan">Provider</label>
-                <multiselect ng-model="ctrl.selectedPrvdrs" placeholder="Choose Provider(s)" options="ctrl.providers" id-prop="id" display-prop="name" show-search="true" show-select-all="true" show-unselect-all="true" search-limit="10"></multiselect>
-
-              </div>
-            </div>
-
-            <div class="col-sm-1">
-              <div class="form-group col-sm-12">
-                <label for="plan">MLR From</label>
-                <input type="text" ng-model="ctrl.mlrFrom" name="mlrFrom" class="username form-control input-sm" placeholder="Enter  MLR From" required ng-minlength="1" />
-                <label for="plan">MLR To</label>
-                <input type="text" ng-model="ctrl.mlrTo" name="mlrTo" class="username form-control input-sm" placeholder="Enter  MLR To" required ng-minlength="1" />
-              </div>
-            </div>
-
-            <div class="col-sm-1">
-              <div class="form-group col-sm-12">
-                <label for="plan">DataFile</label>
-                <multiselect ng-model="ctrl.selectedReportMonths" ng-change="ctrl.reset()" placeholder="Choose a DataFile" options="ctrl.reportMonths" show-search="true" show-select-all="true" show-unselect-all="true" selection-limit="1" search-limit="10"></multiselect>
-              </div>
-            </div>
 
             <div class="col-sm-6">
               <div class="form-group col-sm-12">
@@ -75,9 +113,9 @@
 
             </div>
 
-
+    
             <div class=" col-sm-3">
-              <button type="button" ng-click="ctrl.generate()" class="btn btn-warning btn-xs align-bottom">Generate</button>
+              <button type="button" ng-click="ctrl.generate()" class="btn btn-warning btn-xs align-bottom" ng-disabled="((ctrl.selectedInsurances === undefined) ||  (ctrl.selectedInsurances.length ===0) ||(ctrl.selectedPrvdrs ===undefined) || (ctrl.selectedPrvdrs.length ===0) || (ctrl.selectedReportMonths.length ===0)|| (ctrl.selectedReportingYears.length ===0) || (ctrl.selectedReportingQuarters.length ===0 && ctrl.selectedReportingMonths.length===0))">Generate</button>
             </div>
           </div>
         </div>
@@ -405,7 +443,8 @@
       <div class="panel panel-success panel-heading"><span class="membership">Membership Utilization Report </span> </div>
       <div class="table-responsive">
         <div class="panel-body">
-          <canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options" legend="ctrl.graph.legend"  chart-dataset-override="ctrl.graph.datasetOverride"  height="70"> </canvas>
+          <canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options" legend="ctrl.graph.legend" chart-dataset-override="ctrl.graph.datasetOverride"
+          height="70"> </canvas>
         </div>
       </div>
     </div>
@@ -521,12 +560,12 @@
         </div>
       </form>
 
-<div  class="table-responsive" ng-show="ctrl.chartTabShow" >
- <canvas   class="chart chart-bar" chart-type="ctrl.graph.mraDatasetOverride[$index].type"   chart-data="ctrl.graph.mraData"  chart-labels="ctrl.graph.mraLabels"  chart-dataset-override="ctrl.graph.mraDatasetOverride"  chart-options="ctrl.graph.mraOptions"  height="30" > </canvas>
-           
-</canvas> 
+      <div class="table-responsive" ng-show="ctrl.chartTabShow">
+        <canvas class="chart chart-bar" chart-type="ctrl.graph.mraDatasetOverride[$index].type" chart-data="ctrl.graph.mraData" chart-labels="ctrl.graph.mraLabels" chart-dataset-override="ctrl.graph.mraDatasetOverride" chart-options="ctrl.graph.mraOptions" height="30">
+        </canvas>
 
-</div>
+
+      </div>
     </div>
 
 

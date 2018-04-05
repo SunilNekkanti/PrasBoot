@@ -11,10 +11,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.NewMedicalLossRatio;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
+import com.pfchoice.springboot.repositories.intf.ReportMonthAwareRepository;
 
 @Repository
 public interface NewMedicalLossRatioRepository
-		extends JpaRepository<NewMedicalLossRatio, Integer>, JpaSpecificationExecutor<NewMedicalLossRatio> {
+		extends JpaRepository<NewMedicalLossRatio, Integer>, JpaSpecificationExecutor<NewMedicalLossRatio>, RecordDetailsAwareRepository<NewMedicalLossRatio, Integer>
+, ReportMonthAwareRepository<NewMedicalLossRatio, Integer>{
 
 	
 	 @Query(value ="SELECT NEW com.pfchoice.springboot.model.NewMedicalLossRatio( mlr.reportMonth , "

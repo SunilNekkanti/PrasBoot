@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.FileType;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface FileTypeRepository
-		extends PagingAndSortingRepository<FileType, Integer>, JpaSpecificationExecutor<FileType> {
+		extends PagingAndSortingRepository<FileType, Integer>, JpaSpecificationExecutor<FileType>, RecordDetailsAwareRepository<FileType, Integer>   {
 
 	FileType findByDescription(String description);
 	

@@ -89,7 +89,7 @@ public class MembershipSpecifications implements Specification<Membership> {
 			        cb.like(cb.lower(subQueryRoot.join("mbrRafScores", JoinType.LEFT).get("rafScore").as(String.class)), containsLikePattern)));
 		}
 
-		if (reportMonths != null && reportMonths.size() > 0 && activityMonths != null && activityMonths.size() > 0) {
+		if (reportMonths != null && reportMonths.size() > 0 && activityMonths != null && activityMonths.size() > 0 && insIds.contains(3) ) {
 			Join<Membership, MembershipLevelSummary> mbrLevelSummaryList = subQueryRoot.join("mbrLevelSummaryList", JoinType.LEFT) ;
 			
 			p.getExpressions().add(cb.and(mbrLevelSummaryList.get("reportMonth").in(reportMonths)));
@@ -134,4 +134,14 @@ public class MembershipSpecifications implements Specification<Membership> {
 			return "%" + searchTerm.toLowerCase() + "%";
 		}
 	}
+
+
+	/**
+	 * @return the reportMonths
+	 */
+	public List<Integer> getReportMonths() {
+		return reportMonths;
+	}
+
+	
 }

@@ -7,10 +7,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.CurrentUser;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface CurrentUserRepository
-		extends PagingAndSortingRepository<CurrentUser, Integer>, JpaSpecificationExecutor<CurrentUser> {
+		extends PagingAndSortingRepository<CurrentUser, Integer>, JpaSpecificationExecutor<CurrentUser>, RecordDetailsAwareRepository<CurrentUser, Integer> {
 
 	CurrentUser findByUsername(String name);
 	

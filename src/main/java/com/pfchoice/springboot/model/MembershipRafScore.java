@@ -16,7 +16,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.ParamDef;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,13 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author sarath
  */
 @Entity(name = "membership_raf_scores")
-/*
- * @FilterDef( name = "reportMonthFilter", parameters = @ParamDef(name =
- * "reportMonth", type = "int") )
- * 
- * @Filter( name = "reportMonthFilter", condition =
- * "reportMonth  = :reportMonth" )
- */
+@FilterDef(name="reportMonthFilter", defaultCondition="FIND_IN_SET(report_Month,:reportMonths)" , parameters = { @ParamDef(name = "reportMonths", type = "text") })
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class MembershipRafScore extends RecordDetails implements Serializable {
 

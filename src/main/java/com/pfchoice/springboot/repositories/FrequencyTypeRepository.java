@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.FrequencyType;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface FrequencyTypeRepository
-		extends PagingAndSortingRepository<FrequencyType, Integer>, JpaSpecificationExecutor<FrequencyType> {
+		extends PagingAndSortingRepository<FrequencyType, Integer>, JpaSpecificationExecutor<FrequencyType>, RecordDetailsAwareRepository<FrequencyType, Integer> {
 
 	FrequencyType findByDescription(String description);
 

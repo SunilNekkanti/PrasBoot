@@ -9,10 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.ICDMeasure;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface ICDMeasureRepository
-		extends PagingAndSortingRepository<ICDMeasure, Integer>, JpaSpecificationExecutor<ICDMeasure> {
+		extends PagingAndSortingRepository<ICDMeasure, Integer>, JpaSpecificationExecutor<ICDMeasure> , RecordDetailsAwareRepository<ICDMeasure, Integer>{
 
 	public ICDMeasure findById(Integer id);
 

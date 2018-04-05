@@ -9,10 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.MembershipProblem;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface MembershipProblemRepository
-		extends PagingAndSortingRepository<MembershipProblem, Integer>, JpaSpecificationExecutor<MembershipProblem> {
+		extends PagingAndSortingRepository<MembershipProblem, Integer>, JpaSpecificationExecutor<MembershipProblem> , RecordDetailsAwareRepository<MembershipProblem, Integer> {
 
 	public MembershipProblem findById(Integer id);
 	

@@ -13,7 +13,7 @@ import com.pfchoice.springboot.model.RiskScore;
 
 @Repository
 public interface RiskScoreRepository
-		extends PagingAndSortingRepository<RiskScore, Integer>, JpaSpecificationExecutor<RiskScore> ,RiskScoreRepositoryCustom {
+		extends PagingAndSortingRepository<RiskScore, Integer>, JpaSpecificationExecutor<RiskScore>, RiskScoreRepositoryCustom {
 
 	@Query(value="select distinct cast(effective_year as char) from hcc order by effective_year desc", nativeQuery= true)
 	public List<String> findAllPaymentYears();

@@ -1,5 +1,7 @@
 package com.pfchoice.springboot.repositories.specifications;
 
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -16,12 +18,15 @@ public class MembershipClaimSpecifications implements Specification<MembershipCl
 	private Integer insId;
 
 	private Integer prvdrId;
+	
+	private List<Integer> reportMonths;
 
-	public MembershipClaimSpecifications(String searchTerm, Integer insId, Integer prvdrId) {
+	public MembershipClaimSpecifications(String searchTerm, Integer insId, Integer prvdrId, List<Integer> reportMonths) {
 		super();
 		this.searchTerm = searchTerm;
 		this.insId = insId;
 		this.prvdrId = prvdrId;
+		this.reportMonths  = reportMonths;
 	}
 
 	public Predicate toPredicate(Root<MembershipClaim> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -55,4 +60,12 @@ public class MembershipClaimSpecifications implements Specification<MembershipCl
 			return "%" + searchTerm.toLowerCase() + "%";
 		}
 	}
+	
+	/**
+	 * @return the reportMonths
+	 */
+	public List<Integer> getReportMonths() {
+		return reportMonths;
+	}
+
 }

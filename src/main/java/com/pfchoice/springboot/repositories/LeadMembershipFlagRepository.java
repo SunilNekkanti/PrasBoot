@@ -6,10 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.LeadMembership;
 import com.pfchoice.springboot.model.LeadMembershipFlag;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface LeadMembershipFlagRepository
-		extends PagingAndSortingRepository<LeadMembershipFlag, Integer>, JpaSpecificationExecutor<LeadMembershipFlag> {
+		extends PagingAndSortingRepository<LeadMembershipFlag, Integer>, JpaSpecificationExecutor<LeadMembershipFlag>, RecordDetailsAwareRepository<LeadMembershipFlag, Integer> {
 
 	public LeadMembershipFlag findById(Integer id);
 	

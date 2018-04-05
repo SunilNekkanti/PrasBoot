@@ -96,11 +96,11 @@ app.controller('HedisMeasureRuleController',
         	DTColumnBuilder.newColumn('shortDescription').withTitle('SHORT_DESCRIPTION').withOption("width",'10%').renderWith(
 					function(data, type, full,meta) {
 						 return '<a href="javascript:void(0)" class="'+full.id+'" ng-click="ctrl.hedisMeasureRuleEdit('+full.id+')">'+data+'</a>';
-					}).withClass("text-left").withOption("width",'20%'),
-        	DTColumnBuilder.newColumn('description').withTitle('DESCRIPTION').withOption("width",'10%'),
-        	DTColumnBuilder.newColumn('hedisMeasure.code').withTitle('HEDIS_CODE').withOption("width",'20%'),
+					}).withClass("text-left").withOption('width','20%'),
+        	DTColumnBuilder.newColumn('description').withTitle('DESCRIPTION').withOption('width','10%'),
+        	DTColumnBuilder.newColumn('hedisMeasure.code').withTitle('HEDIS_CODE').withOption('width','20%'),
         	DTColumnBuilder.newColumn('pbm.description').withTitle('PROBLEM').withOption('defaultContent', ''),
-            DTColumnBuilder.newColumn('cptCodes').withTitle('CPT CODES').withOption("width",'10%').withClass('cptCodes').renderWith(
+            DTColumnBuilder.newColumn('cptCodes').withTitle('CPT CODES').withOption('width','10%').withClass('cptCodes text-wrap').renderWith(
 					function(data, type, full, meta) {
 						var cptCodes=[];
 		            	if(data !== undefined && data !== null ){
@@ -115,7 +115,7 @@ app.controller('HedisMeasureRuleController',
 		            	return '';
 						
 					}),
-            DTColumnBuilder.newColumn('icdCodes').withTitle('ICD CODES').withOption("width",'10%').withClass('icdCodes').renderWith(
+            DTColumnBuilder.newColumn('icdCodes').withTitle('ICD CODES').withOption('width','10%').withClass('icdCodes  text-wrap').renderWith(
 					function(data, type, full, meta) {
 						var icdCodes=[];
 		            	if(data !== undefined && data !== null ){
@@ -156,6 +156,7 @@ app.controller('HedisMeasureRuleController',
 		.withOption('order', [[0,'ASC']])
 		.withOption('aLengthMenu', [[15, 20, -1],[ 15, 20, "All"]])
 		.withOption('bDeferRender', true)
+		.withBootstrap()
 		.withFnServerData(serverData);
 
     	function serverData(sSource, aoData, fnCallback) {

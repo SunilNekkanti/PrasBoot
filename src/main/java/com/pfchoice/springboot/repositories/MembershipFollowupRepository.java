@@ -8,9 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.MembershipFollowup;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
-public interface MembershipFollowupRepository extends JpaRepository<MembershipFollowup, Integer> {
+public interface MembershipFollowupRepository extends JpaRepository<MembershipFollowup, Integer>, RecordDetailsAwareRepository<MembershipFollowup, Integer> {
 
 	@Query("select mf from membership_followup mf where mbr_id= :mbrId order by created_date desc")
 	public List<MembershipFollowup> findAllMembershipFollowupsByMbrId(@Param("mbrId") Integer mbrId);

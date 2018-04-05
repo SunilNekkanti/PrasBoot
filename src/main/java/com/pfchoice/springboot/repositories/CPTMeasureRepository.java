@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.CPTMeasure;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface CPTMeasureRepository
-		extends PagingAndSortingRepository<CPTMeasure, Integer>, JpaSpecificationExecutor<CPTMeasure> {
+		extends PagingAndSortingRepository<CPTMeasure, Integer>, JpaSpecificationExecutor<CPTMeasure>, RecordDetailsAwareRepository<CPTMeasure, Integer> {
 
 	public CPTMeasure findById(Integer id);
 

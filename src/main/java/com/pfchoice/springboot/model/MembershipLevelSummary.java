@@ -34,7 +34,6 @@ public class MembershipLevelSummary extends RecordDetails implements Serializabl
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "mbr_level_id", nullable = false)
 	private Integer id;
@@ -581,7 +580,7 @@ public class MembershipLevelSummary extends RecordDetails implements Serializabl
 
 	@Override
 	public String toString() {
-		return "com.pfchoice.springboot.model.Membership[ id=" + id + "]";
+		return "com.pfchoice.springboot.model.MembershipLevelSummary[ id=" + id + "]";
 	}
 
 }

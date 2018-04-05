@@ -1032,6 +1032,8 @@
 								        }
 								      }
 								    }
+								    
+								setSelectedActivityMonths();    
 								  };
 
 		function syncQuarters(bool, item){
@@ -1049,6 +1051,7 @@
 								        }
 								      }
 								    }
+								    setSelectedActivityMonths();
 								  };
 
          function isCheckedQuarter(item){
@@ -1076,6 +1079,7 @@
 								        }
 								      }
 								    }
+								    setSelectedActivityMonths();
 								  };
 
          function isCheckedMonth(item){
@@ -1100,8 +1104,62 @@
 	    }
     return age;
     }
-
-
+   
+   function setSelectedActivityMonths() {
+	    self.selectedActivityMonths = [];
+	    if( self.selectedReportingYears !== undefined && self.selectedReportingYears.length >0){
+	         self.selectedReportingYears.forEach(function(reportYear){
+	
+			        if(self.selectedReportingQuarters != null && self.selectedReportingQuarters.length> 0){
+				         self.selectedReportingQuarters.forEach(function(reportingQuarter){
+				            reportingQuarter.months.forEach(function(reportMonth) {
+				            self.selectedActivityMonths.push(''+reportYear+reportMonth);
+				            });
+				         });
+			        } else if(self.selectedReportingMonths != null && self.selectedReportingMonths.length> 0){
+			        	self.selectedReportingMonths.forEach(function(reportMonth) {
+				            self.selectedActivityMonths.push(''+reportYear+reportMonth.value);
+				            });
+			        } 
+	        setStartDate();
+	        setEndDate();
+	        }) ;
+	    }
+       
+   }
+   
+   
+   function setStartDate(){
+    console.log('setStartDate', self.selectedActivityMonths);
+    
+    if( self.selectedActivityMonths.length ==0 && self.selectedReportingYears !== undefined && self.selectedReportingYears.length >0){
+   	   var minReportingYear = Math.min.apply(null, self.selectedReportingYears);
+       var  myDate = moment(''.concat(minReportingYear).concat('0101'), 'YYYYMMDD').format('MM/DD/YYYY');
+      console.log('setStartDate myDate ',myDate);
+      self.startDate = myDate;
+    }else{
+     var minActivityMonth = Math.min.apply(null, self.selectedActivityMonths);
+      var  myDate = moment(''.concat(minActivityMonth).concat('01'), 'YYYYMMDD').format('MM/DD/YYYY');
+      console.log('setStartDate myDate ',myDate);
+      self.startDate = myDate;
+    }
+    
+   } 
+   
+   function setEndDate(){
+   
+   if( self.selectedActivityMonths.length ==0 && self.selectedReportingYears !== undefined && self.selectedReportingYears.length >0){
+   	   var maxReportingYear = Math.max.apply(null, self.selectedReportingYears);
+       var  myDate = moment(''.concat(maxReportingYear).concat('1231'), 'YYYYMMDD').format('MM/DD/YYYY');
+      console.log('setStartDate myDate ',myDate);
+      self.endDate = myDate;
+    }else{
+    var maxActivityMonth = Math.max.apply(null, self.selectedActivityMonths);
+      var  myDate = moment(''.concat(maxActivityMonth).concat('01'), 'YYYYMMDD').endOf('month').format('MM/DD/YYYY');
+      console.log(' setEndDate myDate ',myDate);
+      self.endDate = myDate;
+      }
+   }
 	
 	function   select() {
 	   self.chartTabShow = true;

@@ -75,4 +75,12 @@ public class NewMedicalLossRatioSpecifications implements Specification<NewMedic
 			return "%" + searchTerm.toLowerCase() + "%";
 		}
 	}
+	
+	/**
+	 * @return the reportMonths
+	 */
+	public List<Integer> getReportMonths() {
+		return reportMonths;
+	}
+
 }

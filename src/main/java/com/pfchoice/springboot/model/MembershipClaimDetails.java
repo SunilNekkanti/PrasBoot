@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -33,7 +33,7 @@ public class MembershipClaimDetails extends RecordDetails implements Serializabl
 	@Column(name = "mbr_claim_details_id", nullable = false)
 	private Integer id;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mbr_claim_id", referencedColumnName = "mbr_claim_id")
 	private MembershipClaim mbrClaim;
 
@@ -65,7 +65,7 @@ public class MembershipClaimDetails extends RecordDetails implements Serializabl
 	@Column(name = "revenue_code")
 	private String revenueCode;
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY, orphanRemoval = true)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "cpt_code", referencedColumnName = "cpt_id")
 	private CPTMeasure cpt;
 
@@ -78,7 +78,7 @@ public class MembershipClaimDetails extends RecordDetails implements Serializabl
 	@Column(name = "claim_status")
 	private String claimStatus;
 
-	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	private PlaceOfService roomType;
 

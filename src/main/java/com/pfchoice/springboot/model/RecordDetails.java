@@ -8,6 +8,10 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.FilterDefs;
+import org.hibernate.annotations.ParamDef;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.pfchoice.springboot.util.JsonDateAndTimeDeserializer;
@@ -17,6 +21,10 @@ import com.pfchoice.springboot.util.JsonDateAndTimeDeserializer;
  *
  */
 @MappedSuperclass
+@FilterDefs({
+    @FilterDef(name = "activeIndFilter", defaultCondition = "active_Ind  = :activeInd", parameters = { @ParamDef(name = "activeInd", type = "char") }),
+    @FilterDef(name="reportMonthFilter", defaultCondition="FIND_IN_SET(report_Month,:reportMonths)" , parameters = { @ParamDef(name = "reportMonths", type = "text") })
+})
 public class RecordDetails {
 
 	@JsonIgnore

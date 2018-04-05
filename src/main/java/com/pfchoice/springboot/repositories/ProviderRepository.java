@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.Provider;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface ProviderRepository
-		extends PagingAndSortingRepository<Provider, Integer>, JpaSpecificationExecutor<Provider> {
+		extends PagingAndSortingRepository<Provider, Integer>, JpaSpecificationExecutor<Provider>, RecordDetailsAwareRepository<Provider, Integer> {
 
 	public Provider findById(Integer id);
 

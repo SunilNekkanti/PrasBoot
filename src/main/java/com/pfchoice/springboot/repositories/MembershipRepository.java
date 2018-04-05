@@ -8,10 +8,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.Membership;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
+import com.pfchoice.springboot.repositories.intf.ReportMonthAwareRepository;
 
 @Repository
 public interface MembershipRepository
-		extends PagingAndSortingRepository<Membership, Integer>, JpaSpecificationExecutor<Membership> {
+		extends PagingAndSortingRepository<Membership, Integer>, JpaSpecificationExecutor<Membership>, RecordDetailsAwareRepository<Membership, Integer> 
+, ReportMonthAwareRepository<Membership, Integer>{
 
 	public Membership findById(Integer id);
 

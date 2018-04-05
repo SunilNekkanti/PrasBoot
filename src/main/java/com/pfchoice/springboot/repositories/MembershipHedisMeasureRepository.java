@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.MembershipHedisMeasure;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface MembershipHedisMeasureRepository extends PagingAndSortingRepository<MembershipHedisMeasure, Integer>,
-		JpaSpecificationExecutor<MembershipHedisMeasure> {
+		JpaSpecificationExecutor<MembershipHedisMeasure>, RecordDetailsAwareRepository<MembershipHedisMeasure, Integer> {
 
 	public MembershipHedisMeasure findById(Integer id);
 

@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.MembershipStatus;
+import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 
 @Repository
 public interface MembershipStatusRepository
-		extends PagingAndSortingRepository<MembershipStatus, Byte>, JpaSpecificationExecutor<MembershipStatus> {
+		extends PagingAndSortingRepository<MembershipStatus, Byte>, JpaSpecificationExecutor<MembershipStatus>, RecordDetailsAwareRepository<MembershipStatus, Byte>{
 
 	public MembershipStatus findById(Byte id);
 

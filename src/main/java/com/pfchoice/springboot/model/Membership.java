@@ -26,6 +26,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Where;
@@ -121,7 +122,6 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@Fetch(FetchMode.SELECT)
 	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
-	@Where(clause = "active_ind ='Y'")
 	@OrderBy("admitDate")
 	private List<MembershipHospitalization> mbrHospitalizationList;
 
@@ -151,6 +151,7 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
 	@OrderBy("rafPeriodDate")
+	@Filter(name="reportMonthFilter")
 	private List<MembershipRafScore> mbrRafScores;
 	
 

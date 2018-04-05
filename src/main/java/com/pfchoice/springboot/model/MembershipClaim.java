@@ -12,15 +12,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedStoredProcedureQueries;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.StoredProcedureParameter;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
@@ -34,14 +33,7 @@ import com.pfchoice.springboot.model.converter.ICDMeasureListConverter;
  * @author sarath
  */
 @Entity(name = "membership_claims")
-@FilterDef(
-	    name = "reportMonthFilter", 
-	    parameters = @ParamDef(name = "reportMonth", type = "int")
-	)
-	@Filter(
-	    name = "reportMonthFilter", 
-	    condition = "reportMonth  = :reportMonth"
-	)
+@FilterDef(name="reportMonthFilter", defaultCondition="FIND_IN_SET(report_Month,:reportMonths)" , parameters = { @ParamDef(name = "reportMonths", type = "text") })
 @NamedStoredProcedureQueries({
 		@NamedStoredProcedureQuery(name = "new_clm_report",  procedureName = "NEW_CLM_REPORT", parameters = {
 				@StoredProcedureParameter(name = "tableName", type = String.class),
@@ -74,16 +66,16 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	private Integer report_month;
 	
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mbr_id", referencedColumnName = "mbr_id")
 	private Membership mbr;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id")
 	@Where(clause = "active_ind ='Y'")
 	private Provider prvdr;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", referencedColumnName = "insurance_id")
 	@Where(clause = "active_ind ='Y'")
 	private Insurance ins;
@@ -91,17 +83,17 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	@Column(name = "claim_type")
 	private String claimType;
 
-	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "facility_type_code", referencedColumnName = "code")
 	@Where(clause = "active_ind ='Y'")
 	private FacilityType facilityType;
 
-	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@Where(clause = "active_ind ='Y'")
 	@JoinColumn(name = "bill_type_code", referencedColumnName = "code")
 	private BillType billType;
 
-	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@Where(clause = "active_ind ='Y'")
 	@JoinColumn(name = "frequency_type_code", referencedColumnName = "code")
 	private FrequencyType frequencyType;
@@ -115,8 +107,8 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	@Column(name = "memEnrollId")
 	private String MemEnrollId;
 
-	@Column(name = "diagnoses")
-	private String diagnosis;
+	/*@Column(name = "diagnoses")
+	private String diagnosis;*/
 
 	@Column(name = "product_label")
 	private String productLabel;
@@ -354,17 +346,17 @@ public class MembershipClaim extends RecordDetails implements Serializable {
 	/**
 	 * @return the diagnosis
 	 */
-	public String getDiagnosis() {
+	/*public String getDiagnosis() {
 		return diagnosis;
 	}
-
+*/
 	/**
 	 * @param diagnosis
 	 *            the diagnosis to set
 	 */
-	public void setDiagnosis(String diagnosis) {
+	/*public void setDiagnosis(String diagnosis) {
 		this.diagnosis = diagnosis;
-	}
+	}*/
 
 	/**
 	 * @return the productLabel
