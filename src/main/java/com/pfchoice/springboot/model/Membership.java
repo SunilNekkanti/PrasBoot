@@ -92,12 +92,14 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
 	@OrderBy("reportMonth, activityMonth")
+	@Filter(name="reportMonthFilter")
 	private List<MembershipLevelSummary> mbrLevelSummaryList;
 	
 	@Fetch(FetchMode.SELECT)
 	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
 	@OrderBy("reportMonth, activityMonth")
+	@Filter(name="reportMonthFilter")
 	private List<MembershipMMR> mbrMMRList;
 	
 	

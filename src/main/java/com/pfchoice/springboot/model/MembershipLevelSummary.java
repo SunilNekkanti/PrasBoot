@@ -15,7 +15,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.bytecode.internal.javassist.FieldHandled;
 import org.hibernate.bytecode.internal.javassist.FieldHandler;
 
@@ -29,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "simply_member_level_summary")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@FilterDef(name="reportMonthFilter", defaultCondition="FIND_IN_SET(report_Month,:reportMonths)" , parameters = { @ParamDef(name = "reportMonths", type = "text") })
 public class MembershipLevelSummary extends RecordDetails implements Serializable, FieldHandled {
 
 	private static final long serialVersionUID = 1L;
