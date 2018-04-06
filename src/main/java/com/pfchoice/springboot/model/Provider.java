@@ -19,7 +19,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.ParamDef;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -30,6 +34,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(name = "provider")
+@FilterDefs({
+@FilterDef(name="insuranceFilter", defaultCondition="FIND_IN_SET(insurance_id,:insIds)" , parameters = { @ParamDef(name = "insIds", type = "text") })
+})
 public class Provider extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -44,11 +51,12 @@ public class Provider extends RecordDetails implements Serializable {
 	private Integer id;
 
 	@Column(name = "name")
-	private String name;;
+	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "prvdr", fetch = FetchType.LAZY)
 	@OrderBy(clause = "insurance_id asc")
 	@OrderColumn(name = "insurance_id")
+	@Filter(name="insuranceFilter")
 	private Set<ProviderReferenceContract> prvdrRefContracts;
 
 	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)

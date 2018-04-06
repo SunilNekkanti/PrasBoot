@@ -251,6 +251,10 @@
           serie: true,
           files: ['js/app/MembershipClaimsService.js', 'js/app/RiskReconService.js', 'js/app/MembershipClaimsController.js']
         }, {
+          name: 'main.membershipClaimsNew',
+          serie: true,
+          files: ['js/app/MembershipClaimsServiceNew.js', 'js/app/RiskReconService.js', 'js/app/MembershipClaimsControllerNew.js']
+        }, {
           name: 'main.membershipHedis',
           serie: true,
           files: ['js/app/HedisReportModalInstanceController.js', 'js/app/MembershipClaimsService.js', 'js/app/HedisMeasureRuleService.js', 'js/app/MembershipHedisService.js', 'js/app/MembershipHedisMeasureService.js', 'js/app/MembershipFollowupService.js', 'js/app/MembershipHedisController.js']
@@ -614,13 +618,6 @@
             loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
               return $ocLazyLoad.load('main.membership'); // Resolve promise and load before view
             }],
-            icdMeasures: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var ICDMeasureService = $injector.get("ICDMeasureService");
-              console.log('Load all  ICDMeasures');
-              var deferred = $q.defer();
-              ICDMeasureService.loadAllICDMeasures().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }],
             reportMonths: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
               console.log('Load all reportMonths');
               var NewMedicalLossRatioService = $injector.get("NewMedicalLossRatioService");
@@ -647,12 +644,24 @@
             'membershipDisplay': false,
           },
           resolve: {
-            statuses: function($q, MembershipStatusService) {
-              console.log('Load all statuses');
+          loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
+              return $ocLazyLoad.load('main.membership'); // Resolve promise and load before view
+            }],
+            icdMeasures: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
+              var ICDMeasureService = $injector.get("ICDMeasureService");
+              console.log('Load all  ICDMeasures');
               var deferred = $q.defer();
-              MembershipStatusService.loadAllMembershipStatuses().then(deferred.resolve, deferred.resolve);
+              ICDMeasureService.loadAllICDMeasures().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
-            }
+            }],
+            statuses: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
+              var MembershipStatusService = $injector.get("MembershipStatusService");
+              console.log('Load all  ICDMeasures');
+              var deferred = $q.defer();
+               MembershipStatusService.loadAllMembershipStatuses().then(deferred.resolve, deferred.resolve);
+              return deferred.promise;
+            }] 
+            
           }
         })
         .state('main.insurance', {
@@ -1132,6 +1141,24 @@
               var MembershipClaimsService = $injector.get("MembershipClaimsService");
               var deferred = $q.defer();
               MembershipClaimsService.loadAllRiskCategories().then(deferred.resolve, deferred.resolve);
+              return deferred.promise;
+            }]
+          }
+        })
+        .state('main.membershipClaimsNew', {
+          url: '/membershipClaimsNew',
+          templateUrl: 'partials/membershipClaimsNew_list',
+          controller: 'MembershipClaimsControllerNew',
+          controllerAs: 'ctrl',
+          resolve: {
+            loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
+              return $ocLazyLoad.load('main.membershipClaimsNew'); // Resolve promise and load before view
+            }],
+            categories: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
+              console.log('Load all categories');
+              var MembershipClaimsServiceNew = $injector.get("MembershipClaimsServiceNew");
+              var deferred = $q.defer();
+              MembershipClaimsServiceNew.loadAllRiskCategories().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
             }]
           }

@@ -17,8 +17,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.bytecode.internal.javassist.FieldHandled;
-import org.hibernate.bytecode.internal.javassist.FieldHandler;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.FilterDefs;
+import org.hibernate.annotations.ParamDef;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -30,7 +32,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "membership_activity_month")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class MembershipActivityMonth extends RecordDetails implements Serializable, FieldHandled {
+@FilterDefs({
+	@FilterDef(name="insuranceFilter", defaultCondition="FIND_IN_SET(insurance_id,:insIds)" , parameters = { @ParamDef(name = "insIds", type = "text") }),
+	@FilterDef(name="providerFilter", defaultCondition="FIND_IN_SET(prvdr_id,:prvdrIds)" , parameters = { @ParamDef(name = "prvdrIds", type = "text") }),
+})
+public class MembershipActivityMonth extends RecordDetails implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,10 +56,12 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "prvdr_id", nullable = false, referencedColumnName = "prvdr_id")
+	@Filter(name="providerFilter")
 	private Provider prvdr;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ins_id", nullable = false, referencedColumnName = "insurance_id")
+	@Filter(name="insuranceFilter")
 	private Insurance ins;
 
 	@JsonIgnore
@@ -75,9 +83,6 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 
 	@Transient
 	private String prvdrName;
-	
-	@JsonIgnore
-	private FieldHandler fieldHandler;
 	
 
 	/**
@@ -128,9 +133,6 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	 * @return the mbr
 	 */
 	public Membership getMbr() {
-		if (fieldHandler != null) {
-			return (Membership) fieldHandler.readObject(this, "mbr", mbr);
-		}
 		return mbr;
 	}
 
@@ -139,10 +141,6 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 	 *            the mbr to set
 	 */
 	public void setMbr(Membership mbr) {
-		if (fieldHandler != null) {
-			this.mbr = (Membership) fieldHandler.writeObject(this, "mbr", this.mbr, mbr);
-			return;
-		}
 		this.mbr = mbr;
 	}
 
@@ -263,13 +261,6 @@ public class MembershipActivityMonth extends RecordDetails implements Serializab
 		this.prvdrName = prvdrName;
 	}
 
-	public void setFieldHandler(FieldHandler fieldHandler) {
-		this.fieldHandler = fieldHandler;
-	}
-
-	public FieldHandler getFieldHandler() {
-		return fieldHandler;
-	}
 	
 	@Override
 	public int hashCode() {

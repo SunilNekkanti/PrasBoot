@@ -39,7 +39,7 @@ spring:
 spring:
   profiles: local,default
 envProperties:
-      filesUploadDirectory:  C:\\ProgramData\\MySQL\\MySQL Server 5.6\\Uploads\\
+      filesUploadDirectory:  C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\
       sqlDirectoryPath: c:\\softwares\\gitworkspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Pras\\WEB-INF\\classes\\sql\\
       queryTypeFetch: _fetch
       queryTypeStopLoss: _stoploss

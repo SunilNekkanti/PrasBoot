@@ -23,7 +23,7 @@ pharmacy, membership_claims, psychare, simple_county, triangles,
 cover, created_date, updated_date, created_by, updated_by, active_ind, file_id,
  mony, drug_label_name, drug_version
  )  
-SELECT   distinct  mc.mc_mbr_claim_id, csv2BhClaim.claimline, csv2BhClaim.ReferralID clm_line_adj_seq_nbr, 
+SELECT   mc.mc_mbr_claim_id, csv2BhClaim.claimline, csv2BhClaim.ReferralID clm_line_adj_seq_nbr, 
 STRING_TO_DATE(csv2BhClaim.activity_date),    
  date_format(STRING_TO_DATE(csv2BhClaim.activity_date) ,'%Y%m'),
  STRING_TO_DATE(csv2BhClaim.ServiceStart ), 
@@ -38,7 +38,7 @@ null cover, now() created_date, now() updated_date, :username created_by ,:usern
  null mony, csv2BhClaim.drg, null drug_version
   FROM temp_member_claims_full csv2BhClaim  
    JOIN (
-  select mc.mbr_claim_id mc_mbr_claim_id,mc.claim_id_number, mc.mbr_id,mc.ins_id,mc.prvdr_id, mc.report_month,mc.claim_type,mcd.* from  membership_claims mc 
+  select mc.mbr_claim_id mc_mbr_claim_id,mc.claim_id_number, mc.mbr_id,mc.ins_id,mc.prvdr_id, mc.report_month,mc.claim_type,mcd.mbr_claim_id from  membership_claims mc 
 		  LEFT  JOIN membership_claim_details mcd on mcd.mbr_claim_id =  mc.mbr_claim_id where mcd.mbr_claim_id is null)mc  on 
    (mc.report_month, mc.ins_id, mc.mbr_id, mc.claim_type, mc.claim_id_number) =   (:activityMonth,:insId,csv2BhClaim.mbr_id ,csv2BhClaim.ClaimType, csv2BhClaim.ClaimNum) 
   LEFT OUTER JOIN cpt_measure  cpt on cpt.code =  NULLIF(csv2BhClaim.servcode,'')

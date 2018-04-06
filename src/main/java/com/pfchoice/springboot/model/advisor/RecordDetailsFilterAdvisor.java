@@ -6,17 +6,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.hibernate.Filter;
 import org.hibernate.Session;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Component;
-
-import com.pfchoice.springboot.repositories.specifications.MembershipClaimSpecifications;
-import com.pfchoice.springboot.repositories.specifications.MembershipSpecifications;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,7 +29,6 @@ public class RecordDetailsFilterAdvisor {
 
     @Around(value = "recordDetailsAwareRepositoryMethod()")
     public Object enableRecordDetailsFilter(ProceedingJoinPoint joinPoint) throws Throwable{
-    	 System.out.println("  annotation = **************************" );
     	
     	 // Variable holding the session
         Session session = null;

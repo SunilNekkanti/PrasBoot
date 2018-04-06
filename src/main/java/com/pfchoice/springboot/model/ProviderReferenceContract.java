@@ -14,6 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.FilterDefs;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,6 +29,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity(name = "reference_contracts")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@FilterDefs({
+	@FilterDef(name="insuranceFilter", defaultCondition="FIND_IN_SET(insurance_id,:insIds)" , parameters = { @ParamDef(name = "insIds", type = "text") }),
+	@FilterDef(name="providerFilter", defaultCondition="FIND_IN_SET(prvdr_id,:prvdrIds)" , parameters = { @ParamDef(name = "prvdrIds", type = "text") }),
+})
+
 public class ProviderReferenceContract implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -37,11 +46,13 @@ public class ProviderReferenceContract implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_id", nullable = true, unique = true)
+	@Filter(name="insuranceFilter")
 	private Insurance ins;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "prvdr_id", referencedColumnName = "prvdr_id", unique = true)
+	@Filter(name="providerFilter")
 	private Provider prvdr;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

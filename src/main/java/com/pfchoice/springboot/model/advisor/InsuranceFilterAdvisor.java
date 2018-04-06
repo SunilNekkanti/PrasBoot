@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.pfchoice.springboot.repositories.specifications.MembershipSpecifications;
-import com.pfchoice.springboot.repositories.specifications.NewMedicalLossRatioSpecifications;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,32 +21,32 @@ import javax.persistence.PersistenceContext;
 
 @Aspect
 @Component
-public class ReportMonthFilterAdvisor {
+public class InsuranceFilterAdvisor {
 
-	public static final Logger log = LoggerFactory.getLogger(ReportMonthFilterAdvisor.class);
-
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	private List<Integer> reportMonths = new ArrayList<>();
+	public static final Logger log = LoggerFactory.getLogger(InsuranceFilterAdvisor.class);
 	
-	@Pointcut("execution(public * com.pfchoice.springboot.repositories.intf.ReportMonthAwareRepository+.*(..))")
-	protected void reportMonthAwareRepositoryMethod() {
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	}
+    private List<Integer> insIds = new ArrayList<>();
+    
+    @Pointcut("execution(public * com.pfchoice.springboot.repositories.intf.InsuranceAwareRepository+.*(..)) ")
+    protected void insuranceAwareRepositoryMethod(){
 
-	@Around(value = "reportMonthAwareRepositoryMethod()")
-    public Object enableReportMonthFilter(ProceedingJoinPoint joinPoint) throws Throwable{
-        // Variable holding the session
+    }
+
+    @Around(value = "insuranceAwareRepositoryMethod()")
+    public Object enableInsuranceFilter(ProceedingJoinPoint joinPoint) throws Throwable{
+    	
+    	 // Variable holding the session
         Session session = null;
         Object[] arguments = joinPoint.getArgs();
 	   	 for(Object arg : arguments){
 	   		 if( arg instanceof MembershipSpecifications ){
-	   			reportMonths =  ((MembershipSpecifications) arg).getReportMonths();
-	   		 }  else if( arg instanceof NewMedicalLossRatioSpecifications ){
-	   			reportMonths =  ((NewMedicalLossRatioSpecifications) arg).getReportMonths();
-	   		 }
-		   			
+	   			insIds =  ((MembershipSpecifications) arg).getInsIds();
+	   		 }  
+		   	
+	   		 System.out.println("insuranceAwareRepositoryMethod ****"+insIds);
 	   	 }
         try {
 
@@ -55,15 +54,15 @@ public class ReportMonthFilterAdvisor {
             session = entityManager.unwrap(Session.class);
 
             // Enable the filter
-            Filter filter = session.enableFilter("reportMonthFilter");
+            Filter filter = session.enableFilter("insuranceFilter");
 
             // Set the parameter from the session
-            filter.setParameter("reportMonths", StringUtils.collectionToCommaDelimitedString(reportMonths));
+            filter.setParameter("insIds", StringUtils.collectionToCommaDelimitedString(insIds));
 
         } catch (Exception ex) {
 
             // Log the error
-            log.error("Error enabling reportMonthFilter : Reason -" +ex.getMessage());
+            log.error("Error enabling insuranceFilter : Reason -" +ex.getMessage());
 
         }
 
@@ -74,7 +73,7 @@ public class ReportMonthFilterAdvisor {
         if ( session != null ) {
 
             // Disable the filter
-            session.disableFilter("reportMonthFilter");
+            session.disableFilter("insuranceFilter");
 
         }
 

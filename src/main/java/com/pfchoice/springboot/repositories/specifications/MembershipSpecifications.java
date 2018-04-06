@@ -143,5 +143,27 @@ public class MembershipSpecifications implements Specification<Membership> {
 		return reportMonths;
 	}
 
+	/**
+	 * @return the insIds
+	 */
+	public List<Integer> getInsIds() {
+		return insIds;
+	}
+
+	/**
+	 * @return the prvdrIds
+	 */
+	public List<Integer> getPrvdrIds() {
+		return prvdrIds;
+	}
+
+	/**
+	 * @return the effectiveYear
+	 */
+	public Integer getEffectiveYear() {
+		return effectiveYear;
+	}
+
+
 	
 }

@@ -126,6 +126,7 @@
               <li><a ui-sref="main.membershipHedis" ui-sref-active="active">Hedis</a></li>
               <li><a ui-sref="main.membershipHospitalization" ui-sref-active="active">Hospitalization</a></li>
               <li><a ui-sref="main.membershipClaims" ui-sref-active="active">Claims</a></li>
+              <li><a ui-sref="main.membershipClaimsNew" ui-sref-active="active">NewClaims</a></li>
               <li><a ui-sref="main.membershipProblem" ui-sref-active="active">Problems</a></li>
               <li><a ui-sref="main.membershipActivityMonth" ui-sref-active="active">Activity	Month</a></li>
               <li><a ui-sref="main.newMedicalLossRatio" ui-sref-active="active">New Medical Loss Ratio(MLR) </a></li>

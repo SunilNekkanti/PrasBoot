@@ -42,8 +42,6 @@ public class ProviderSpecifications implements Specification<Provider> {
 			));
 		}
 
-		//p.getExpressions().add(cb.and(cb.equal(root.get("activeInd"), 'Y')));
-		
 		Expression<Date> contractStartTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("startDate");
 		Expression<Date> contractEndTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("endDate");
         

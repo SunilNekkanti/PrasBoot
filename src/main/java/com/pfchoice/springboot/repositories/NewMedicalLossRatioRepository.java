@@ -55,6 +55,7 @@ public interface NewMedicalLossRatioRepository
 			+ " qmlr_claims_function(  mlr.reportMonth, mlr.ins.id, mlr.prvdr.id,mlr.activityMonth,false,true)  ) "
 			+" from com.pfchoice.springboot.model.NewMedicalLossRatio mlr"
 			+ " WHERE mlr.ins.id =:insId and mlr.prvdr.id in (:prvdrIds) and mlr.reportMonth in (:reportMonths) and mlr.activityMonth in (:activityMonths)"
+		//	+ " and ( cast(mlr.reportMonth as char) like ('%:searchString%') or cast(mlr.activity_month as char) like ('%:searchString%') "
 			+ "group by mlr.reportMonth,mlr.ins.name,mlr.activityMonth ")
 	 Page<NewMedicalLossRatio> findSummary(@Param("insId") Integer insId, @Param("prvdrIds") List<Integer> prvdrIds, 
 			@Param("reportMonths") List<Integer> reportMonths, @Param("activityMonths") List<Integer> activityMonths, Pageable page);

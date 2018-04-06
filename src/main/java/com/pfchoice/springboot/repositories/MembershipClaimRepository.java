@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import com.pfchoice.springboot.model.Membership;
 import com.pfchoice.springboot.model.MembershipClaim;
 import com.pfchoice.springboot.repositories.intf.RecordDetailsAwareRepository;
 import com.pfchoice.springboot.repositories.intf.ReportMonthAwareRepository;

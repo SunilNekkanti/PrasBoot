@@ -217,7 +217,6 @@ public class MembershipClaimController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
 		}
-		logger.info("size" + entities.size());
 		return new ResponseEntity<List<Object[]>>(entities, HttpStatus.OK);
 	}
 

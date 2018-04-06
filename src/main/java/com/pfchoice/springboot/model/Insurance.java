@@ -55,7 +55,7 @@ public class Insurance extends RecordDetails implements Serializable {
 	@JoinTable(name = "reference_contracts", joinColumns = {
 			@JoinColumn(name = "insurance_id", referencedColumnName = "Insurance_Id", nullable = false, unique = true) }, inverseJoinColumns = {
 					@JoinColumn(name = "contract_id", referencedColumnName = "contract_id", nullable = false, unique = true) })
-	@WhereJoinTable(clause = "prvdr_id is null")
+	@WhereJoinTable(clause="prvdr_id is null")
 	private Set<Contract> contracts;
 
 	/**

@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.pfchoice.springboot.model.RefContractInsurance;
+import com.pfchoice.springboot.repositories.intf.InsuranceAwareRepository;
 
 @Repository
 public interface RefContractInsuranceRepository extends PagingAndSortingRepository<RefContractInsurance, Integer>,
-		JpaSpecificationExecutor<RefContractInsurance> {
+		JpaSpecificationExecutor<RefContractInsurance> , InsuranceAwareRepository<RefContractInsurance, Integer>{
 
 	public RefContractInsurance findById(Integer id);
 

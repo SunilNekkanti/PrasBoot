@@ -44,7 +44,9 @@ public class NewMedicalLossRatioSpecifications implements Specification<NewMedic
 
 		if (searchTerm != null && !"".equals(searchTerm)) {
 			p.getExpressions().add(cb.or(cb.like(cb.lower(root.join("ins").get("name")), containsLikePattern),
-					cb.like(cb.lower(root.join("prvdr").get("name")), containsLikePattern)));
+					cb.like(cb.lower(root.join("prvdr").get("name")), containsLikePattern),
+					cb.like(root.get("reportMonth").as(String.class), containsLikePattern),
+					cb.like(root.get("activityMonth").as(String.class), containsLikePattern)));
 			System.out.println("searchTerm" + searchTerm);
 
 		}

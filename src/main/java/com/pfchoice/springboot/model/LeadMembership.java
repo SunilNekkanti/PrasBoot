@@ -107,7 +107,7 @@ public class LeadMembership extends RecordDetails implements Serializable {
 	@Column(name = "consent_form_signed")
 	private Character consentFormSigned = new Character('N');
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(optional=true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "file_upload_id", referencedColumnName = "file_upload_id", nullable = false)
 	private FileUpload fileUpload;
 
