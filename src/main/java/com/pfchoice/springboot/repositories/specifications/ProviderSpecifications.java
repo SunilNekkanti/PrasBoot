@@ -22,7 +22,7 @@ public class ProviderSpecifications implements Specification<Provider> {
 	public ProviderSpecifications(String searchTerm, String currentScreen) {
 		super();
 		this.searchTerm = searchTerm;
-		this.currentScreen = (currentScreen != null) ? currentScreen :"Active";
+		this.currentScreen = (currentScreen != null) ? currentScreen :"All";
 	}
 
 	public Predicate toPredicate(Root<Provider> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -42,16 +42,19 @@ public class ProviderSpecifications implements Specification<Provider> {
 			));
 		}
 
-		Expression<Date> contractStartTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("startDate");
-		Expression<Date> contractEndTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("endDate");
-        
+	   
 		if("Active".equals(this.currentScreen)){
+			Expression<Date> contractStartTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("startDate");
+			Expression<Date> contractEndTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("endDate");
+	     
 			p.getExpressions().add(cb.and(cb.between(
 					cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d")),
 					cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")),
 					cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d"))))); 
 	
-		} else{
+		} else if(!"All".equals(this.currentScreen)) {
+			Expression<Date> contractStartTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("startDate");
+			Expression<Date> contractEndTime = root.join("prvdrRefContracts", JoinType.LEFT).join("contract", JoinType.LEFT).get("endDate");
 			p.getExpressions().add(cb.or(
 					cb.greaterThan(cb.function("date_format", Date.class, contractStartTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
 			        cb.lessThan(cb.function("date_format", Date.class, contractEndTime, cb.literal("%Y-%m-%d")), cb.function("date_format", Date.class, cb.literal(new Date()), cb.literal("%Y-%m-%d"))),
