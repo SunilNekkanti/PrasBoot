@@ -3,7 +3,7 @@
 var app = angular.module('my-app');
 
 app.controller('UserController',
-    ['UserService', 'roles', 'languages', 'states', 'insurances',  '$scope', '$compile','$location','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( UserService, roles, languages, states, insurances, $scope,$compile,$location,$state, $stateParams, DTOptionsBuilder, DTColumnBuilder) {
+    ['UserService', 'InsuranceService', 'StateService', 'RoleService', 'LanguageService', '$scope', '$compile','$location','$state','$stateParams','DTOptionsBuilder', 'DTColumnBuilder', function( UserService,InsuranceService, StateService,RoleService, LanguageService, $scope,$compile,$location,$state, $stateParams, DTOptionsBuilder, DTColumnBuilder) {
 
         var self = this;
       //$location.url('/');
@@ -12,21 +12,23 @@ app.controller('UserController',
         self.display =  $stateParams.userDisplay||false;
         self.displayEditButton = false;
         self.submit = submit;
-        self.roles=roles;
-        self.languages=languages;
         self.counties=[];
-        self.states = states;
-        self.insurances = insurances;
         self.getAllUsers = getAllUsers;
         self.createUser = createUser;
         self.updateUser = updateUser;
         self.removeUser = removeUser;
         self.editUser = editUser;
+        self.getAllInsurances = getAllInsurances;
+        self.getAllStates = getAllStates;
 		self.userId = null;
         self.reset = reset;
-        self.userEdit = userEdit;
         self.cancelEdit = cancelEdit;
         self.addUser = addUser;
+        self.insurances = getAllInsurances();
+        self.states =  getAllStates();
+        self.roles=  getAllRoles();
+        self.languages = getAllLanguages();
+        self.userEdit = userEdit;
         self.successMessage = '';
         self.errorMessage = '';
         self.done = false;
@@ -198,12 +200,30 @@ app.controller('UserController',
                 );
         }
 
-
+        function getAllInsurances(){
+        	return  InsuranceService.getAllInsurances();
+        }
+        
+        function getAllStates() {
+			return StateService.getAllStates();
+		}
+		
+		 function getAllRoles() {
+			return RoleService.getAllRoles();
+		}
+		
         function getAllUsers(){
              self.users = UserService.getAllUsers();
    
             return self.users;
         }
+
+		function getAllLanguages(){
+             return LanguageService.getAllLanguages();
+   
+        }
+        
+
 
         function editUser(id) {
             self.successMessage='';
@@ -235,24 +255,24 @@ app.controller('UserController',
         }
        
         function addUser() {
-        	var params = {'userDisplay':true};
-			var trans =  $state.go('main.user.edit',params).transition;
-			trans.onSuccess({}, function() { 
-				   self.successMessage='';
-		            self.errorMessage='';
+        
+         self.successMessage='';
+		           self.errorMessage='';
+		           self.insurances = getAllInsurances();
+        		   self.states =  getAllStates();
+        		   self.roles=  getAllRoles();
+        		   self.user ={};
 		            self.display =true;
-			}, { priority: -1 });
-			
          
         }
         
-        function userEdit(id){
-        	
+        function userEdit(id) {
         	var params = {'userDisplay':true};
-			var trans =  $state.go('main.user.edit',params).transition;
-			trans.onSuccess({}, function() { editUser(id); }, { priority: -1 });
-			 
-		}
+        	var trans  =  $state.go('main.user.edit',params).transition;
+			trans.onSuccess({}, function() { editUser(id);  }, { priority: -1 });
+			
+        }
+        
     }
     
 

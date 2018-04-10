@@ -87,6 +87,18 @@
 
                 <div class="row">
                   <div class="form-group col-md-12">
+                		<label class="col-md-2 control-lable" for="plan">Effective Year(YYYY)</label>
+                		 <div class="col-md-7">
+                		 <input type="text" ng-model="ctrl.user.effectiveYear" name="effYear" class="username form-control input-sm" placeholder="Enter Effective Year" ng-required="true" ng-minlength="4" />
+                			<div class="has-error" ng-show="myForm.$dirty">
+                        		<span ng-show="myForm.effYear.$error.required">This is a required field</span>
+                       		</div>
+                       	</div>
+                 </div>
+                </div>
+            
+                <div class="row">
+                  <div class="form-group col-md-12">
                     <label class="col-md-2 control-lable" for="uname">Language</label>
                     <div class="col-md-7">
                       <select ng-model="ctrl.user.language" name="language" ng-options="language as language.description for language in ctrl.languages | orderBy:'description' track by language.description" ng-required="(ctrl.user.roles|filter:{role:'AGENT'}).length > 0"></select>

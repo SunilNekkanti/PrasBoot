@@ -393,13 +393,11 @@ app.controller('NewMedicalLossRatioController',
         
         function getAllReportMonths() {
         	self.reportMonths = NewMedicalLossRatioService.getAllReportMonths();
-        	console.log('self.reportMonths',self.reportMonths);
         	return self.reportMonths;
 		}
         
          function getAllReportingYears() {
         	self.reportingYears = NewMedicalLossRatioService.getAllReportingYears();
-        	console.log('self.reportingYears', self.reportingYears);
         	return self.reportingYears;
 		}
         

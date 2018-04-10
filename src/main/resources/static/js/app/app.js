@@ -145,7 +145,7 @@
         }, {
           serie: true,
           name: 'main.user',
-          files: ['js/app/RoleService.js', 'js/app/UserController.js']
+          files: ['js/app/InsuranceService.js', 'js/app/StateService.js','js/app/RoleService.js', 'js/app/UserController.js']
         }, {
           serie: true,
           name: 'main.lead',
@@ -361,7 +361,9 @@
           controller: 'UserController',
           controllerAs: 'ctrl',
           resolve: {
-
+           loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
+              return $ocLazyLoad.load('main.user');
+            }]
           }
         })
         .state('main.user.edit', {
@@ -389,20 +391,6 @@
               console.log('Load all  Languages');
               var deferred = $q.defer();
               LanguageService.loadAllLanguages().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }],
-            insurances: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var LanguageService = $injector.get("InsuranceService");
-              console.log('Load all  insurances');
-              var deferred = $q.defer();
-              InsuranceService.loadAllInsurances().then(deferred.resolve, deferred.resolve);
-              return deferred.promise;
-            }],
-            states: ['loadMyService', '$q', '$injector', function(loadMyService, $q, $injector) {
-              var LanguageService = $injector.get("StateService");
-              console.log('Load all  states');
-              var deferred = $q.defer();
-              StateService.loadAllStates().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
             }]
           }
