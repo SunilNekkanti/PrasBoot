@@ -423,6 +423,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			final String queryTypeInsert = configProperties.getQueryTypeInsert();
 
 			logger.info("tableName " + tableName);
+			logger.info("fileTypeId " + fileTypeId);
+			logger.info("insuranceCode " + insuranceCode);
 			String sqlQuery = "select BigToInt(count(*)> 0) from " + tableName;
 			logger.info("sqlQuery " + sqlQuery);
 			Integer dataExists = prasUtil.executeSqlScript(sqlQuery, params, true);

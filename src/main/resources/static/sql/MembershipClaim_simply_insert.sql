@@ -1,4 +1,6 @@
    
+delete from csv2Table_simply_Claim where product_label like 'Medicaid';
+
  drop table if exists csv2Table_simply_Claim_temp;
  create temporary table csv2Table_simply_Claim_temp as
  select *   from csv2Table_simply_Claim group by MedicaidNumber;

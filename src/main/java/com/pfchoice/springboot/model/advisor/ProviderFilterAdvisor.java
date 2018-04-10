@@ -45,7 +45,6 @@ public class ProviderFilterAdvisor {
 	   		 if( arg instanceof MembershipSpecifications ){
 	   			prvdrIds =  ((MembershipSpecifications) arg).getPrvdrIds();
 	   		 }  
-	   		System.out.println("providerAwareRepositoryMethod ****"+prvdrIds);	
 	   	 }
         try {
 

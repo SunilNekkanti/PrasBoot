@@ -211,7 +211,8 @@ public class MembershipClaimController {
 		params.put("levelNo", levelNo);
 		params.put("maxReportMonth", maxReportMonth);
 
-		List<Object[]> entities = prasUtil.executeStoredProcedure("new_clm_report", params);
+		List<Object[]> entities = membershipClaimService.executeStoredProcedure("new_clm_report", params);
+		
 		if (entities.isEmpty()) {
 			logger.info("no data in membershipClaims");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);

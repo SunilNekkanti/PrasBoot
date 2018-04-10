@@ -74,4 +74,9 @@ public class MembershipClaimServiceImpl implements MembershipClaimService {
 	public Integer loadData(final Map<String, Object> parameters, String insuranceCode) throws IOException, InterruptedException{
 		return prasUtil.executeSQLQuery(membershipClaimRepository,insuranceCode, parameters, configProperties.getQueryTypeInsert() );
 	}
+	
+	
+	public List<Object[]>  executeStoredProcedure(final String spName, final Map<String, Object> params){
+		return prasUtil.executeStoredProcedure(spName,params);
+	}
 }

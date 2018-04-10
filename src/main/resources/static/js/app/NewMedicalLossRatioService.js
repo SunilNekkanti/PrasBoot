@@ -45,7 +45,7 @@ app.service('NewMedicalLossRatioService',
                 console.log('Fetching all reportMonths');
                 var deferred = $q.defer();
                 var pageable = {
-                 		 page:0, size:5000
+                 		 page:0, size:500
                  		};
 
                  		var config = {
@@ -87,7 +87,7 @@ app.service('NewMedicalLossRatioService',
                 console.log('Fetching all reportingYears');
                 var deferred = $q.defer();
                  		   var pageable = {
-                 		 page:0, size:5000
+                 		 page:0, size:50
                  		};
 
                  		var config = {

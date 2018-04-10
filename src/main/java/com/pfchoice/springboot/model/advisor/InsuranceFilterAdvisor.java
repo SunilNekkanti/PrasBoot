@@ -46,7 +46,6 @@ public class InsuranceFilterAdvisor {
 	   			insIds =  ((MembershipSpecifications) arg).getInsIds();
 	   		 }  
 		   	
-	   		 System.out.println("insuranceAwareRepositoryMethod ****"+insIds);
 	   	 }
         try {
 

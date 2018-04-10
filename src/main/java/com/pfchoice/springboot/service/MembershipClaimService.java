@@ -1,6 +1,7 @@
 package com.pfchoice.springboot.service;
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +34,6 @@ public interface MembershipClaimService {
 	List<String> findAllMembershipClaimRiskCategories();
 	
 	Integer loadData(Map<String, Object> parameters, String insuranceCode)  throws IOException, InterruptedException;
+	
+	List<Object[]>  executeStoredProcedure(String spName, Map<String, Object> params);
 }
