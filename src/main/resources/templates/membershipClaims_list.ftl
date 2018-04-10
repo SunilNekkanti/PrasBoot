@@ -37,8 +37,7 @@
             <div class="col-sm-1">
               <div class="form-group col-sm-12">
                 <label for="plan">ReportMonth</label>
-                <select class=" form-control"  ng-model="ctrl.selectedReportMonth"  ng-change ="ctrl.reset()" ng-options="reportMonth for reportMonth in ctrl.reportMonths" ></select>
-
+                <multiselect ng-model="ctrl.selectedReportMonths"  ng-change="ctrl.reset()"  placeholder="Choose a DataFile" options="ctrl.reportMonths" show-search="true" show-select-all="true" show-unselect-all="true" selection-limit="1" search-limit="10"></multiselect>
               </div>
             </div>
             
@@ -58,7 +57,7 @@
             
             <div class=" col-sm-1">
               <button type="button" ng-click="ctrl.generate()" ng-disabled="(!ctrl.insurance.id || ctrl.selectedPrvdrs.length == 0 || ctrl.selectedClaimTypes.length == 0 
-    			   || ctrl.selectedCategories.length == 0 || !ctrl.selectedReportMonth  
+    			   || ctrl.selectedCategories.length == 0 || ctrl.selectedReportMonths.length == 0   
     			   ||  ctrl.selectedCaps.length == 0   ||  ctrl.selectedRosters.length == 0 )" class="btn btn-warning btn-xs align-bottom">Generate</button>
             </div>
           </div>
