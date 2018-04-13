@@ -69,7 +69,7 @@ app.controller('ProviderController',
           ];
      
         
-        self.dtOptions = DTOptionsBuilder.newOptions()
+        self.dtOptions = DTOptionsBuilder.newOptions().withBootstrap()
          .withDisplayLength(20)
 		.withOption('bServerSide', true)
 		.withOption('responsive', true)
@@ -84,6 +84,7 @@ app.controller('ProviderController',
 		.withOption('order', [[0,'ASC']])
 		.withOption('aLengthMenu', [[15, 20, -1],[ 15, 20, "All"]])
 		.withOption('bDeferRender', true)
+		.withColReorder()
 		.withFnServerData(serverData);
 
     	function serverData(sSource, aoData, fnCallback) {

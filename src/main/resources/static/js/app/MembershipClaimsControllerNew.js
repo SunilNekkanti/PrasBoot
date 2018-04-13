@@ -10,12 +10,13 @@ app.controller('MembershipClaimsControllerNew',
         self.effectiveYear = $filter('date')(new Date($localStorage.loginUser.effectiveYear+'-01-01T06:00:00Z') ,'yyyy');
         self.displayEditButton = false;
         self.claimTypes = [{id:'INST'}, {id:'PHAR'}, {id:'PROF'}];
-        self.selectedClaimTypes = [];
+        self.selectedClaimTypes = [{id:'INST'}, {id:'PHAR'}, {id:'PROF'}];
         self.isCaps = [{id:'Y'}, {id:'N'}];
-        self.selectedCaps =[];
+        self.selectedCaps =[{id:'Y'}, {id:'N'}];
         self.isRosters = [{id:'Y'}, {id:'N'}];
-        self.selectedRosters =[];
+        self.selectedRosters =[{id:'Y'}, {id:'N'}];
         self.selectedProviders = [];
+        self.selectedPrvdrs = [];
         self.insurances=[];
         self.selectedCategories=[];
         self.selectedReportMonths =[];
@@ -28,6 +29,7 @@ app.controller('MembershipClaimsControllerNew',
         self.getAllReportMonths = getAllReportMonths;
         self.insurances = getAllInsurances();
         self.setProviders = setProviders;
+        self.setCategories = setCategories;
         self.cancelEdit = cancelEdit;
         self.successMessage = '';
         self.errorMessage = '';
@@ -82,7 +84,17 @@ app.controller('MembershipClaimsControllerNew',
         function dt3InstanceCallback(dt3Instance) {
 	        self.dt3Instance = dt3Instance;
 	    }
+	    
+	    if(self.insurances != null && self.insurances.length > 0){
+           self.insurance = self.insurance || self.insurances[0];
+        }else  {
+           self.insurance = {};
+        }
+        self.selectedReportMonths.push(self.reportMonths[0]);
         
+        setProviders();
+        setCategories();
+       
 		 function reloadData() {
 			var resetPaging = false;
 			self.dtInstance.reloadData(callback,
@@ -107,7 +119,6 @@ app.controller('MembershipClaimsControllerNew',
                 var prvdrIdss = self.selectedPrvdrId || prvdrIds.join();
                 var claimTypes = ( self.selectedClaimTypes === undefined || self.selectedClaimTypes === null)? 0 :  self.selectedClaimTypes.map(a => a.id);
                 var claimTypess = '\''+claimTypes.join()+'\'';
-                //var categories = (self.selectedCategories === undefined || self.selectedCategories === null)? 0 :  self.selectedCategories.map(a => a.id);
                 var categoriess = self.category||self.selectedCategories.join();
                 categoriess= '\''+categoriess+'\'';
                 var caps = ( self.selectedCaps === undefined || self.selectedCaps === null)? 0 :  self.selectedCaps.map(a => a.id);
@@ -115,10 +126,11 @@ app.controller('MembershipClaimsControllerNew',
                 var rosters = ( self.selectedRosters === undefined || self.selectedRosters === null)? 0 :  self.selectedRosters.map(a => a.id);
                 var rosterss =  '\''+rosters.join()+'\'';
                 var mbrId =  self.selectedMbrId || self.mbrId;
-    			// Then just call your service to get the
-    			// records from server side
+                var reportMonth = self.selectedReportMonths.join();
+                
+    			// Then just call your service to get the records from server side
     			MembershipClaimsService
-    					.loadMembershipClaims( insId, prvdrIdss, mbrId ,claimTypess,categoriess, self.selectedReportMonth, self.activityMonth,capss,rosterss ,self.levelNo,self.maxReportMonth)
+    					.loadMembershipClaims( insId, prvdrIdss, mbrId ,claimTypess,categoriess, reportMonth, self.activityMonth,capss,rosterss ,self.levelNo,self.maxReportMonth)
     					.then(
     							function(result) {
     								self.finalData[self.levelNo -1] = [];
@@ -255,16 +267,22 @@ app.controller('MembershipClaimsControllerNew',
              
         	self.providers =   $filter('providerFilter')(self.prvdrs, self.insurance.id);
         	self.providers =   $filter('orderBy')(self.providers, 'name');
+        	self.providers.forEach(function(prvdr){self.selectedPrvdrs.push(prvdr) });
         	
         	self.Claimss =   $filter('filter')(self.pbms, {insId:{id:self.insurance.id}});
           	self.Claimss =   $filter('orderBy')(self.Claimss, 'description');
           	reset();
+          	
         }
         
         
+        function setCategories(){
+        	self.categories.forEach(function(category){self.selectedCategories.push(category); }); 
+        }
+        
         
         function getAllInsurances() {
-			return InsuranceService.getAllInsurances();
+			return $filter('orderBy')(InsuranceService.getAllInsurances(), 'name');
 		}
         
         

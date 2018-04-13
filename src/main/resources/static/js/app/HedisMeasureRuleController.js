@@ -3,7 +3,7 @@
 var app = angular.module('my-app');
 
 app.controller('HedisMeasureRuleController',
-    ['HedisMeasureRuleService', 'InsuranceService', 'ICDMeasureService','ProblemService', 'HedisMeasureService', 'FrequencyTypeService', 'GenderService', '$scope', '$compile','$state','$stateParams','$filter','$modal','$log','$localStorage','DTOptionsBuilder', 'DTColumnBuilder', function( HedisMeasureRuleService,InsuranceService, ICDMeasureService,ProblemService,HedisMeasureService, FrequencyTypeService,GenderService,  $scope,$compile, $state, $stateParams,$filter,$modal,$log,$localStorage, DTOptionsBuilder, DTColumnBuilder) {
+    ['HedisMeasureRuleService', 'InsuranceService', 'ICDMeasureService','ProblemService', 'HedisMeasureService', 'FrequencyTypeService', 'GenderService', '$scope', '$compile','$state','$stateParams','$filter','$modal','$log','$localStorage','DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', function( HedisMeasureRuleService,InsuranceService, ICDMeasureService,ProblemService,HedisMeasureService, FrequencyTypeService,GenderService,  $scope,$compile, $state, $stateParams,$filter,$modal,$log,$localStorage, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
         var self = this;
         self.hedisMeasureRule = {};
@@ -90,7 +90,14 @@ app.controller('HedisMeasureRuleController',
   
       //  Short Description	Description	Hedis Code	Problem	CPT Codes	ICD Codes	Frequency	Dose	Sex	Lower Age Limit	Upper Age Limit	Eff. Date From	Eff. Date To
 
-        
+       self.dtColumnDefs = [
+                              DTColumnDefBuilder.newColumnDef(4)
+ 							    .notSortable().withOption("width",'10%')
+ 					            .withClass('cptCodes text-wrap'),
+ 					            DTColumnDefBuilder.newColumnDef(5)
+ 							    .notSortable().withOption("width",'10%')
+ 					            .withClass('icdCodes text-wrap')
+ 					            ];
         
         self.dtColumns = [
         	DTColumnBuilder.newColumn('shortDescription').withTitle('SHORT_DESCRIPTION').withOption("width",'10%').renderWith(
@@ -141,7 +148,7 @@ app.controller('HedisMeasureRuleController',
           ];
      
         
-        self.dtOptions = DTOptionsBuilder.newOptions()
+        self.dtOptions = DTOptionsBuilder.newOptions().withBootstrap()
 		 .withDisplayLength(20)
 		.withOption('bServerSide', true)
 		.withOption('responsive', true)
@@ -156,7 +163,6 @@ app.controller('HedisMeasureRuleController',
 		.withOption('order', [[0,'ASC']])
 		.withOption('aLengthMenu', [[15, 20, -1],[ 15, 20, "All"]])
 		.withOption('bDeferRender', true)
-		.withBootstrap()
 		.withFnServerData(serverData);
 
     	function serverData(sSource, aoData, fnCallback) {

@@ -56,44 +56,65 @@
             </div>
             
             <div class=" col-sm-1">
-              <button type="button" ng-click="ctrl.generate()" ng-disabled="(!ctrl.insurance.id || ctrl.selectedPrvdrs.length == 0 || ctrl.selectedClaimTypes.length == 0 
+              <button type="button" ng-click="ctrl.generate(true)" ng-disabled="(!ctrl.insurance.id || ctrl.selectedPrvdrs.length == 0 || ctrl.selectedClaimTypes.length == 0 
     			   || ctrl.selectedCategories.length == 0 || ctrl.selectedReportMonths.length == 0   
     			   ||  ctrl.selectedCaps.length == 0   ||  ctrl.selectedRosters.length == 0 )" class="btn btn-warning btn-xs align-bottom">Generate</button>
             </div>
           </div>
         </div>
         
-        <div style="height:600px" ng-if="(!ctrl.displayTable || ctrl.displayTable === false)">  </div>
+        <div style="height:550px" ng-if="(!ctrl.displayTable || ctrl.displayTable === false)">  </div>
         
 		<div class="table-responsive" ng-if="ctrl.displayTable===true">
+			<div>
                <tabset>
-                 <tab heading="IPA Level"  ng-if="(ctrl.displayTable===true && ctrl.levelNo>=1)" active="(ctrl.levelNo ===1 )" ng-click="ctrl.activateLevel1()">
+                    <tab heading="IPA Level"  ng-if="(ctrl.displayTable===true && ctrl.levelNo>=1)" active="(ctrl.levelNo ==1 && !ctrl.chartTabShow)" ng-click="ctrl.activateLevel1()">
 	                  <div >
 	                    <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns" dt-instance="dtInstance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
 	                    cellspacing="0" width="100%"></table>
 	                  </div>
 	 				</tab>
-	 				 <tab heading="Provider Level" ng-if="(ctrl.displayTable1===true && ctrl.levelNo >=2)" active="(ctrl.levelNo ===2 )" ng-click="ctrl.activateLevel2()">
+	 				<tab heading="Selected Providers"  ng-if="(ctrl.displayTableSelPrvdr===true && ctrl.levelNo>=2)" active="(ctrl.levelNo ==2 && !ctrl.chartTabShow)" ng-click="ctrl.activateLevel2()">
+	                  <div >
+	                    <table datatable="" id="content" dt-options="ctrl.dtSelPrvdrsOptions" dt-columns="ctrl.dtSelPrvdrsColumns" dt-instance="dtSelPrvdrsInstance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
+	                    cellspacing="0" width="100%"></table>
+	                  </div>
+	 				</tab>
+	 				 <tab heading="Provider Level" ng-if="(ctrl.displayTable1===true && ctrl.levelNo >=3)" active="(ctrl.levelNo ==3 && !ctrl.chartTabShow)" ng-click="ctrl.activateLevel3()">
 	 				  <div class="panel-body">
 	 				      <table datatable="" id="content1" dt-options="ctrl.dt1Options" dt-columns="ctrl.dt1Columns" dt-instance="dt1Instance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
 	                    cellspacing="0" width="100%"></table>
 	 				  </div>
 	                 </tab>
-	                 <tab heading="Membership Level" ng-if="(ctrl.displayTable2===true && ctrl.levelNo >=3)" active="(ctrl.levelNo ===3 )" ng-click="ctrl.activateLevel3()">
+	                 <tab heading="Membership Level" ng-if="(ctrl.displayTable2===true && ctrl.levelNo >=4)" active="(ctrl.levelNo ==4 && !ctrl.chartTabShow)" ng-click="ctrl.activateLevel4()">
 	 				  <div class="panel-body">
 	 				      <table datatable="" id="content2" dt-options="ctrl.dt2Options" dt-columns="ctrl.dt2Columns" dt-instance="dt2Instance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
 	                    cellspacing="0" width="100%"></table>
 	 				  </div>
 	                 </tab>
-	                 <tab heading="Individual Membership Level" ng-if="(ctrl.displayTable3===true && ctrl.levelNo >=4)" active="(ctrl.levelNo ===4 )" >
+	                 <tab heading="Individual Membership Level" ng-if="(ctrl.displayTable3===true && ctrl.levelNo >=5)" active="(ctrl.levelNo == 5 && !ctrl.chartTabShow)" >
 	 				  <div class="panel-body">
 	 				      <table datatable="" id="content3" dt-options="ctrl.dt3Options" dt-columns="ctrl.dt3Columns" dt-instance="dt3Instance" dt-disable-deep-watchers="true" class="table table-hover table-responsive  bordered table-striped table-condensed datatable dt-responsive nowrap dataTable row-border hover"
 	                    cellspacing="0" width="100%"></table>
 	 				  </div>
 	                 </tab>
-             </tabset>
+	                 <tab heading="Chart">
+	                 		<div id="chart-analyser" class="analyser"></div> 
+	                 </tab>	
+             </tabset>  
+             
+             </div>
+              <div class="panel panel-success">
+              <div class="panel-heading"><span class="membership">Chart</span>     </div>
+   			  	<div class="table-responsive">
+      				<div class="panel-body">
+             			<canvas class="chart chart-line" id="chart" chart-data="ctrl.graph.data" chart-labels="ctrl.graph.labels" chart-series="ctrl.graph.series" chart-options="ctrl.graph.options"  chart-dataset-override="ctrl.graph.datasetOverride"   height="80"> </canvas>
+                     </div>    
+                 </div>        
+             </div> 
+             </div>      		
         </div>
-        
+      
         
       </div>
     </div>

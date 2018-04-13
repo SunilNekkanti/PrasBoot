@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns" dt-instance="ctrl.dtInstance" class="display table-responsive  table table-striped table-hover rowClick" cellspacing="0" width="100%"></table>
+        <table datatable="" id="content" dt-options="ctrl.dtOptions" dt-columns="ctrl.dtColumns" dt-column-defs="ctrl.dtColumnDefs" dt-instance="ctrl.dtInstance" class="display table-responsive  table table-striped table-hover rowClick" cellspacing="0" width="100%"></table>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 (function( ) {
   'use strict';
-  var app = angular.module('my-app', ['datatables', 'ui.bootstrap', 'datatables.bootstrap', , 'datatables.buttons', 'datatables.fixedcolumns', 'ui.router', 'ngStorage', 'ngAnimate', 'ngSanitize', 'btorfs.multiselect', 'oc.lazyLoad', 'ui.select','chart.js']);
+  var app = angular.module('my-app', ['datatables', 'ui.bootstrap', 'datatables.bootstrap', 'datatables.colreorder', 'datatables.buttons', 'datatables.fixedcolumns',  'ui.router', 'ngStorage', 'ngAnimate', 'ngSanitize', 'btorfs.multiselect', 'oc.lazyLoad', 'ui.select','chart.js']);
 
  app.config(['ChartJsProvider', function (ChartJsProvider) {
     // Configure all charts

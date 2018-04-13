@@ -9,6 +9,7 @@
 
   <link rel="stylesheet" href="css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.3.2/css/colReorder.dataTables.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/bootstrap/datatables.bootstrap.min.css" />
   <link rel="stylesheet" href="css/bootstrap-datepicker.min.css" />
   <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.2.4/css/fixedColumns.dataTables.min.css" />
@@ -28,7 +29,7 @@
   <script src="js/lib/bootstrap.min.js"></script>
   <script src="js/lib/bootstrap-datepicker.min.js"></script>
   <script src="js/lib/bootstrap-datetimepicker.min.js"></script>
-  <script src="js/lib/dataTables.bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.16/js/dataTables.bootstrap.js"></script>
   <!-- script src="js/lib/angular-animate.js"></script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular-animate.min.js"></script>
   <script src="js/lib/angular-sanitize.min.js"></script>
@@ -52,11 +53,14 @@
   <script src="js/lib/Chart.min.js"></script>
   <script src="js/lib/angular-chart.min.js"></script>
   
+  <script src="https://cdn.datatables.net/colreorder/1.3.2/js/dataTables.colReorder.min.js"></script>
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/buttons/angular-datatables.buttons.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/fixedcolumns/angular-datatables.fixedcolumns.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/fixedheader/angular-datatables.fixedheader.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/tabletools/angular-datatables.tabletools.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.6.2/plugins/colreorder/angular-datatables.colreorder.min.js"> </script>
+ 
 
   <script src="js/app/app.js"></script>
   <script src="js/app/UserService.js"></script>
