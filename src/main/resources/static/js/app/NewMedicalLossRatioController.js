@@ -213,6 +213,7 @@
         .withOption('bDeferRender', true)
         .withOption('bDestroy', true)
         .withColReorder()
+        .withFixedHeader({bottom: true})
         .withFnServerData(serverData);
 
 
@@ -254,6 +255,7 @@
         .withOption('bDeferRender', true)
         .withOption('bDestroy', true)
         .withColReorder()
+        .withFixedHeader({bottom: true})
         .withOption('scrollY', 450)
         .withOption('scrollX', '100%')
         .withFixedColumns({

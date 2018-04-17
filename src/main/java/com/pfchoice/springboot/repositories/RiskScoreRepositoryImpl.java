@@ -22,4 +22,5 @@ public class RiskScoreRepositoryImpl implements RiskScoreRepositoryCustom {
         riskscoreCalculator.setParameter("icdcodes", icdcodes);
         return riskscoreCalculator.getResultList();
     }
+    
 }

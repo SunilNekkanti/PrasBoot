@@ -38,6 +38,14 @@ spring:
  
 spring:
   profiles: local,default
+  jpa:
+   properties:
+    hibernate:
+     jdbc:
+      time_zone: America/Indiana/Indianapolis
+  cache:
+   ehcache:
+    config: ehcache.xml
 envProperties:
       filesUploadDirectory:  C:\\ProgramData\\MySQL\\MySQL Server 5.7\\Uploads\\
       sqlDirectoryPath: c:\\softwares\\gitworkspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\Pras\\WEB-INF\\classes\\sql\\

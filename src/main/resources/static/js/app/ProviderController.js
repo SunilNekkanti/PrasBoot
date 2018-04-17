@@ -85,6 +85,7 @@ app.controller('ProviderController',
 		.withOption('aLengthMenu', [[15, 20, -1],[ 15, 20, "All"]])
 		.withOption('bDeferRender', true)
 		.withColReorder()
+		.withFixedHeader({bottom: true})
 		.withFnServerData(serverData);
 
     	function serverData(sSource, aoData, fnCallback) {

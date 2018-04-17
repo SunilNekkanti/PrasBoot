@@ -7,6 +7,7 @@ import com.pfchoice.springboot.repositories.InsuranceRepository;
 import com.pfchoice.springboot.service.InsuranceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +49,7 @@ public class InsuranceServiceImpl implements InsuranceService {
 		return (List<Insurance>) insuranceRepository.findAll();
 	}
 
+	@Cacheable("insurances")
 	public Page<Insurance> findAllInsurancesByPage(Specification<Insurance> spec, Pageable pageable) {
 		return insuranceRepository.findAll(spec, pageable);
 	}

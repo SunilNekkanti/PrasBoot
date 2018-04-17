@@ -7,6 +7,7 @@ import com.pfchoice.springboot.service.NewMedicalLossRatioService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,7 +47,8 @@ public class NewMedicalLossRatioServiceImpl implements NewMedicalLossRatioServic
 			Pageable page) {
 		return medicalLossRatioRepository.findSummary(insId, prvdrIds,  reportMonths, activityMonths, page);
 	}
-
+	
+	@Cacheable("reportingYears")
 	public List<String> findAllReportingYears(){
 		return medicalLossRatioRepository.findAllReportingYears();
 	}

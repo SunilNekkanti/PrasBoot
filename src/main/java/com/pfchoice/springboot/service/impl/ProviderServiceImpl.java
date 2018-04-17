@@ -7,6 +7,7 @@ import com.pfchoice.springboot.service.ProviderService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +49,7 @@ public class ProviderServiceImpl implements ProviderService {
 		return (List<Provider>) providerRepository.findAll();
 	}
 
+	@Cacheable("providers")
 	public Page<Provider> findAllProvidersByPage(Specification<Provider> spec, Pageable pageable) {
 		return providerRepository.findAll(spec, pageable);
 	}

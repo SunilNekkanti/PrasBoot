@@ -213,6 +213,8 @@
                     .withOption('bResponsive', true)
                     .withOption('createdRow', createdRow)
                     .withOption('bDeferRender', true)
+                    .withColReorder()
+        			.withFixedHeader({bottom: true})
                     .withOption('bDestroy', true);
                   graphData();
                   self.displayTable = true;
@@ -240,6 +242,8 @@
                     .withOption('responsive', true)
                     .withOption('createdRow', createdRow)
                     .withOption('bDeferRender', true)
+                    .withColReorder()
+        			.withFixedHeader({bottom: true})
                     .withOption('bDestroy', true);
                   graphData();
                   self.displayTable = true;
@@ -268,6 +272,8 @@
                     .withOption('responsive', true)
                     .withOption('createdRow', createdRow)
                     .withOption('bDeferRender', true)
+                    .withColReorder()
+        			.withFixedHeader({bottom: true})
                     .withOption('bDestroy', true);
                   mbrLevelGraphData();
                   self.displayTable = true;
@@ -294,6 +300,8 @@
                     .withOption('responsive', true)
                     .withOption('createdRow', createdRow)
                     .withOption('bDeferRender', true)
+                    .withColReorder()
+        			.withFixedHeader({bottom: true})
                     .withOption('bDestroy', true);
                   self.displayTable = true;
                   self.displayTableSelPrvdr = true;

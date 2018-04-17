@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -67,6 +68,7 @@ public class MembershipServiceImpl implements MembershipService {
 		return (List<Membership>) membershipRepository.findAll();
 	}
 
+	@Cacheable("memberships")
 	public Page<Membership> findAllMembershipsByPage(Specification<Membership> spec, Pageable pageable) {
 		return membershipRepository.findAll(spec, pageable);
 	}

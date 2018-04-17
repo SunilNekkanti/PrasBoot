@@ -1,0 +1,43 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+	 name="MyCacheManager" updateCheck="true"
+         monitoring="autodetect"
+         dynamicConfig="true" >
+	<!-- | Please see http://ehcache.sourceforge.net/documentation/configuration.html 
+		for | detailed information on how to configurigure caches in this file + -->
+	<!-- Location of persistent caches on disk -->
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache timeToIdleSeconds="0" timeToLiveSeconds="300" 
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="newMedicalLossRatio" timeToIdleSeconds="0" timeToLiveSeconds="300" 
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />
+	<cache name="user" timeToIdleSeconds="0" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />
+	<cache name="membershipClaims" timeToIdleSeconds="0" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />	
+	<cache name="insurances" timeToIdleSeconds="0" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />		
+	<cache name="providers" timeToIdleSeconds="0" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />	
+	<cache name="memberships" timeToIdleSeconds="0" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />	
+	<cache name="reportingYears" timeToIdleSeconds="0" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />		
+	<cache name="Remote" timeToIdleSeconds="300" timeToLiveSeconds="300"  
+		eternal="false" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU" />
+	<cache name="Configuration" timeToIdleSeconds="300"  
+		timeToLiveSeconds="0" eternal="false" overflowToDisk="false"
+		diskPersistent="false" memoryStoreEvictionPolicy="LFU" />
+
+</ehcache>
