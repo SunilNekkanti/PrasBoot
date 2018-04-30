@@ -71,7 +71,8 @@
     LEADSTATUS_SERVICE_API: '/Pras/api/leadStatus/',
     LEAD_FLAG_SERVICE_API: '/Pras/api/leadMembershipFlag/',
     LEADSTATUS_DETAIL_SERVICE_API: '/Pras/api/leadStatusDetail/',
-    EVENTTYPE_SERVICE_API: '/Pras/api/eventType/'
+    EVENTTYPE_SERVICE_API: '/Pras/api/eventType/',
+    MEMBERSHIP_HOSPITALIZATION_SERVICE_API: '/Pras/api/membershipHospitalization/' 
   });
 
 
@@ -261,7 +262,7 @@
         }, {
           name: 'main.membershipHospitalization',
           serie: true,
-          files: ['js/app/MembershipHospitalizationService.js', 'js/app/MembershipHospitalizationController.js']
+          files: ['js/app/MembershipHospitalizationModalInstanceController.js', 'js/app/MembershipFollowupService.js',  'js/app/MembershipHospitalizationService.js', 'js/app/MembershipHospitalizationController.js']
         }]
 
       });

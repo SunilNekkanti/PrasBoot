@@ -507,14 +507,14 @@
 
 
       self.dt5Columns = [
-        DTColumnBuilder.newColumn('hospital.name').withTitle('Hospital').renderWith(
+        DTColumnBuilder.newColumn('facilityName').withTitle('Hospital').renderWith(
           function(data, type, full,
             meta) {
             return '<a href="javascript:void(0)" class="' + full.id + '" ng-click="ctrl.membershipEdit(' + full.id + ')">' + data + '</a>';
           }).withClass("text-left"),
-        DTColumnBuilder.newColumn('admitDate').withTitle('ADMIT DATE'),
-        DTColumnBuilder.newColumn('expDisDate').withTitle('EXPECTED DISCHARGE DATE').withOption('defaultContent', ''),
-        DTColumnBuilder.newColumn('priorAdmits').withTitle('PRIOR ADMITS').withOption('defaultContent', '')
+        DTColumnBuilder.newColumn('erVisitDate').withTitle('ADMIT DATE'),
+        DTColumnBuilder.newColumn('erLastVisitDate').withTitle('LAST VISIT DATE').withOption('defaultContent', ''),
+        DTColumnBuilder.newColumn('erNoOfVisits').withTitle('PRIOR ADMITS').withOption('defaultContent', '')
 
       ];
 

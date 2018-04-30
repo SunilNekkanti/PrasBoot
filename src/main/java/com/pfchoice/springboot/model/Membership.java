@@ -124,7 +124,7 @@ public class Membership extends RecordDetails implements Serializable, FieldHand
 	@Fetch(FetchMode.SELECT)
 	@BatchSize(size = 25)
 	@OneToMany(mappedBy = "mbr", fetch = FetchType.EAGER)
-	@OrderBy("admitDate")
+	@OrderBy("erVisitDate Desc")
 	private List<MembershipHospitalization> mbrHospitalizationList;
 
 	@JsonIgnore
