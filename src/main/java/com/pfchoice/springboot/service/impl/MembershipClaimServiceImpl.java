@@ -76,7 +76,7 @@ public class MembershipClaimServiceImpl implements MembershipClaimService {
 		return prasUtil.executeSQLQuery(membershipClaimRepository,insuranceCode, parameters, configProperties.getQueryTypeInsert() );
 	}
 	
-	@Cacheable("membershipClaims")
+	//@Cacheable("membershipClaims")
 	public List<Object[]>  executeStoredProcedure(final String spName, final Map<String, Object> params){
 		return prasUtil.executeStoredProcedure(spName,params);
 	}

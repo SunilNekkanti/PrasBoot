@@ -51,7 +51,7 @@ app.controller('HedisReportModalInstanceController',
 		 .withDOM('t')
 		 .withOption('bServerSide', true)
 		.withOption("bLengthChange", false)
-		.withOption('bSaveState', true)
+		.withOption('stateSave', true)
 	    .withOption('createdRow', createdRow)
 		.withOption('bDeferRender', true)
 		.withOption('bDestroy', true)

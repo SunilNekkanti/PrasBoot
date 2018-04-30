@@ -37,6 +37,7 @@ public class ConfigProperties {
 	private Integer acceptableClaim;
 	private Integer unacceptableClaim;
 	private String queryTypeInsertLevel2;
+	private String fileSeparator;
 
 	/**
 	 * @return the filesUploadDirectory
@@ -487,5 +488,21 @@ public class ConfigProperties {
 	public void setQueryTypeInsertLevel2(String queryTypeInsertLevel2) {
 		this.queryTypeInsertLevel2 = queryTypeInsertLevel2;
 	}
+
+	/**
+	 * @return the fileSeparator
+	 */
+	public String getFileSeparator() {
+		return fileSeparator;
+	}
+
+	/**
+	 * @param fileSeparator the fileSeparator to set
+	 */
+	public void setFileSeparator(String fileSeparator) {
+		this.fileSeparator = fileSeparator;
+	}
+	
+	
 
 }

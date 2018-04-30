@@ -36,7 +36,7 @@ public class JpaConfiguration {
 	@Autowired
 	private Environment environment;
 
-	@Value("${datasource.pras.maxPoolSize:10}")
+	@Value("${spring.datasource.pras.maxPoolSize:10}")
 	private int maxPoolSize;
 
 	/*
@@ -47,7 +47,7 @@ public class JpaConfiguration {
 	 */
 	@Bean
 	@Primary
-	@ConfigurationProperties(prefix = "datasource.pras")
+	@ConfigurationProperties(prefix = "spring.datasource")
 	public DataSourceProperties dataSourceProperties() {
 		return new DataSourceProperties();
 	}
@@ -93,18 +93,30 @@ public class JpaConfiguration {
 	 */
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
-		properties.put("hibernate.dialect", environment.getRequiredProperty("datasource.pras.hibernate.dialect"));
+		properties.put("hibernate.dialect", environment.getRequiredProperty("spring.datasource.hibernate.dialect"));
 		properties.put("hibernate.hbm2ddl.auto",
-				environment.getRequiredProperty("datasource.pras.hibernate.hbm2ddl.method"));
-		properties.put("hibernate.show_sql", environment.getRequiredProperty("datasource.pras.hibernate.show_sql"));
-		properties.put("hibernate.format_sql", environment.getRequiredProperty("datasource.pras.hibernate.format_sql"));
+				environment.getRequiredProperty("spring.datasource.hibernate.hbm2ddl.method"));
+		properties.put("hibernate.show_sql", environment.getRequiredProperty("spring.datasource.hibernate.show_sql"));
+		properties.put("hibernate.format_sql", environment.getRequiredProperty("spring.datasource.hibernate.format_sql"));
 		properties.put("hibernate.hikari.idleTimeout",
-				environment.getRequiredProperty("datasource.pras.hibernate.hikari.idleTimeout"));
+				environment.getRequiredProperty("spring.datasource.hibernate.hikari.idleTimeout"));
 		properties.put("hibernate.hikari.maxLifeTime",
-				environment.getRequiredProperty("datasource.pras.hibernate.hikari.maxLifeTime"));
-		if (StringUtils.isNotEmpty(environment.getRequiredProperty("datasource.pras.defaultSchema"))) {
-			properties.put("hibernate.default_schema", environment.getRequiredProperty("datasource.v.defaultSchema"));
+				environment.getRequiredProperty("spring.datasource.hibernate.hikari.maxLifeTime"));
+		if (StringUtils.isNotEmpty(environment.getRequiredProperty("spring.datasource.defaultSchema"))) {
+			properties.put("hibernate.default_schema", environment.getRequiredProperty("spring.datasource.defaultSchema"));
 		}
+		properties.put("ibernate.cache.use_second_level_cache",
+				environment.getRequiredProperty("spring.jpa.properties.hibernate.cache.use_second_level_cache"));
+		
+		properties.put("hibernate.cache.use_query_cache",
+				environment.getRequiredProperty("spring.jpa.properties.hibernate.cache.use_query_cache"));
+		
+		//properties.put("hibernate.cache.region.factory_class",
+		//		environment.getRequiredProperty("spring.jpa.properties.hibernate.cache.region.factory_class"));
+		
+		//properties.put("hibernate.javax.cache.provider",
+		//		environment.getRequiredProperty("spring.jpa.properties.hibernate.javax.cache.provider"));
+		
 		return properties;
 	}
 

@@ -198,6 +198,11 @@ public class PrasUtil {
 		      .forEach( File::delete );
 	 }
 	 
+	 public void deleteFile(String path) throws IOException {
+		 Path filePath = Paths.get(path);
+		 Files.deleteIfExists(filePath);
+	 }
+	 
 	 
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;

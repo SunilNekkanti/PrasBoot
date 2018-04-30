@@ -258,6 +258,10 @@
           name: 'main.membershipHedis',
           serie: true,
           files: ['js/app/HedisReportModalInstanceController.js', 'js/app/MembershipClaimsService.js', 'js/app/HedisMeasureRuleService.js', 'js/app/MembershipHedisService.js', 'js/app/MembershipHedisMeasureService.js', 'js/app/MembershipFollowupService.js', 'js/app/MembershipHedisController.js']
+        }, {
+          name: 'main.membershipHospitalization',
+          serie: true,
+          files: ['js/app/MembershipHospitalizationService.js', 'js/app/MembershipHospitalizationController.js']
         }]
 
       });
@@ -1010,10 +1014,6 @@
           templateUrl: 'partials/attPhysician_list',
           controller: 'AttPhysicianController',
           controllerAs: 'ctrl',
-          params: {
-            'id': '',
-            'attPhysicianDisplay': false,
-          },
           resolve: {
 
           }
@@ -1173,6 +1173,17 @@
               var deferred = $q.defer();
               HedisMeasureRuleService.loadAllHedisMeasureRules().then(deferred.resolve, deferred.resolve);
               return deferred.promise;
+            }]
+          }
+        })
+         .state('main.membershipHospitalization', {
+          url: '/membershipHospitalization',
+          templateUrl: 'partials/membershipHospitalization_list',
+          controller: 'MembershipHospitalizationController',
+          controllerAs: 'ctrl',
+          resolve: {
+            loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
+              return $ocLazyLoad.load('main.membershipHospitalization'); // Resolve promise and load before view
             }]
           }
         });

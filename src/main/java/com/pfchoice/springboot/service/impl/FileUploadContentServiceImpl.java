@@ -6,7 +6,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import com.pfchoice.springboot.configuration.ConfigProperties;
 import com.pfchoice.springboot.controller.FileUploadContentController;
@@ -34,7 +34,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
@@ -113,8 +112,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 		return findByFileName(fileUploadContent.getFileName()) != null;
 	}
 	
-	@Async
-	public Future<?> asyncMbrRosterOrCapFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	@Async("prasExecutor")
+	public CompletableFuture<?> asyncMbrRosterOrCapFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
 		Hashtable<String, Object> params = new Hashtable<>();
 
@@ -135,9 +134,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 		if (dataExists > 0) {
 			logger.info("Previous file processing is incomplete ");
 			CustomErrorType errorMessage = new CustomErrorType("Previous file processing is incomplete");
-
-			return new AsyncResult<ResponseEntity<CustomErrorType>>(
-					new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+		
+			return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 		} else {
 			Integer fileId = 0;
 			try {
@@ -153,9 +151,9 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			} catch (Exception e) {
 				logger.warn(e.getCause().getMessage());
 				logger.info("Similar file already processed in past");
-				CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past");
-				return new AsyncResult<ResponseEntity<CustomErrorType>>(
-						new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+				CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past:"+fileName);
+			
+				return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 			}
 			
 			Resource loadFromCSVTable = getResource(
@@ -167,12 +165,11 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			Integer loadedData = prasUtil.executeSqlScript(sqlQuery, params, false);
 			if (loadedData < 0) {
 				CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
-				return new AsyncResult<ResponseEntity<CustomErrorType>>(
-						new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+			
+				return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 			}
 
-				logger.info("loaded  " + loadedData + "  records into table " + tableName);
-
+			logger.info("loaded  " + loadedData + "  records into table " + tableName);
 			logger.info("processing " + fileTypeDescription + " data" + new Date());
 
 			params.clear();
@@ -191,14 +188,14 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			sqlQuery = String.format("truncate table %s ", tableName);
 			prasUtil.executeSqlScript(sqlQuery, params, false);
 			logger.info("cleared CSV Table " + tableName); 
-
 			logger.info("processed " + fileTypeDescription + " data " + new Date());
-			return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));
+		
+			return CompletableFuture.completedFuture(new ResponseEntity<Object>(HttpStatus.OK));
 		}
 	}
 
-	@Async
-	public Future<?> asyncMbrClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	@Async("prasExecutor")
+	public CompletableFuture<?> asyncMbrClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
 		synchronized(this){
 			Hashtable<String, Object> params = new Hashtable<>();
@@ -219,9 +216,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			if (dataExists > 0) {
 				logger.info("Previous file processing is incomplete ");
 				CustomErrorType errorMessage = new CustomErrorType("Previous file processing is incomplete");
-
-				return new AsyncResult<ResponseEntity<CustomErrorType>>(
-						new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+			
+				return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 			} else {
 				Integer fileId = 0;
 				try {
@@ -237,9 +233,9 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				} catch (Exception e) {
 					logger.warn(e.getCause().getMessage());
 					logger.info("Similar file already processed in past");
-					CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past");
-					return new AsyncResult<ResponseEntity<CustomErrorType>>(
-							new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+					CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past:"+fileName);
+				
+					return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 				}
 				
 				Resource loadFromCSVTable = getResource(
@@ -258,8 +254,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 					Integer loadedData = prasUtil.executeSqlScript(formatedSqlQuery, params, false);
 					if (loadedData < 0) {
 						CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
-						return new AsyncResult<ResponseEntity<CustomErrorType>>(
-								new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+				
+						return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 					}
 
 					logger.info("loaded  " + loadedData + "  records into table " + tableName);
@@ -281,8 +277,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				Integer mbrClaimLoadedData = mbrClaimService.loadData(params, insuranceCode);
 				logger.info("membershipClaimLoadedData " + mbrClaimLoadedData + new Date());
 				
-				Integer mbrClaimDetailsLoadedData = mbrClaimDetailsService.loadData(params, insuranceCode);
-				logger.info("membershipClaimDetailsLoadedData " + mbrClaimDetailsLoadedData + new Date());
+			//	Integer mbrClaimDetailsLoadedData = mbrClaimDetailsService.loadData(params, insuranceCode);
+			//	logger.info("membershipClaimDetailsLoadedData " + mbrClaimDetailsLoadedData + new Date());
 				
 				Integer mbrProblemLoadedData = mbrProblemService.loadData(params, insuranceCode);
 				logger.info("mbrProblemLoadedData " + mbrProblemLoadedData + new Date());
@@ -293,16 +289,16 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				sqlQuery = String.format("truncate table %s ", tableName);
 				prasUtil.executeSqlScript(sqlQuery, params, false);
 				logger.info("cleared CSV Table " + tableName);
-
 				logger.info("processed " + fileTypeDescription + " data " + new Date());
-				return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));
+				
+				return CompletableFuture.completedFuture(new ResponseEntity<Object>(HttpStatus.OK));
 			}
 		}
 		
 	}
 	
-	@Async
-	public Future<?> asyncMbrPharmacyClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	@Async("prasExecutor")
+	public CompletableFuture<?> asyncMbrPharmacyClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
 		synchronized(this){
 			Hashtable<String, Object> params = new Hashtable<>();
@@ -323,9 +319,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			if (dataExists > 0) {
 				logger.info("Previous file processing is incomplete ");
 				CustomErrorType errorMessage = new CustomErrorType("Previous file processing is incomplete");
-
-				return new AsyncResult<ResponseEntity<CustomErrorType>>(
-						new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+				
+				return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 			} else {
 				Integer fileId = 0;
 				try {
@@ -341,9 +336,9 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				} catch (Exception e) {
 					logger.warn(e.getCause().getMessage());
 					logger.info("Similar file already processed in past");
-					CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past");
-					return new AsyncResult<ResponseEntity<CustomErrorType>>(
-							new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+					CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past:"+fileName);
+					
+					return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 				}
 				
 				Resource loadFromCSVTable = getResource(
@@ -360,8 +355,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 					Integer loadedData = prasUtil.executeSqlScript(formatedSqlQuery, params, false);
 					if (loadedData < 0) {
 						CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
-						return new AsyncResult<ResponseEntity<CustomErrorType>>(
-								new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+					
+						return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 					}
 
 					logger.info("loaded  " + loadedData + "  records into table " + tableName);
@@ -402,17 +397,18 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				logger.info("cleared CSV Table " + tableName);
 
 				logger.info("processed " + fileTypeDescription + " data " + new Date());
-				return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));
+			
+				return CompletableFuture.completedFuture(new ResponseEntity<Object>( HttpStatus.OK));
 			}
 		}
 		
 	}
 	
 	
-	@Async
-	public Future<?> asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	@Async("prasExecutor")
+	public CompletableFuture<?> asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
-		synchronized(this){
+	//	synchronized(this){
 			Hashtable<String, Object> params = new Hashtable<>();
 			final FileType fileType = fileTypeService.findById(fileTypeId);
 			final String tableName = fileType.getTablesName();
@@ -433,9 +429,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			if (dataExists > 0) {
 				logger.info("Previous file processing is incomplete ");
 				CustomErrorType errorMessage = new CustomErrorType("Previous file processing is incomplete");
-
-				return new AsyncResult<ResponseEntity<CustomErrorType>>(
-						new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+			
+				return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 			} else {
 				Integer fileId = 0;
 				try {
@@ -451,9 +446,9 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				} catch (Exception e) {
 					logger.warn(e.getCause().getMessage());
 					logger.info("Similar file already processed in past");
-					CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past");
-					return new AsyncResult<ResponseEntity<CustomErrorType>>(
-							new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+					CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past:"+fileName);
+					
+					return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 				}
 				
 				Resource loadFromCSVTable = getResource(
@@ -470,8 +465,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 					Integer loadedData = prasUtil.executeSqlScript(formatedSqlQuery, params, false);
 					if (loadedData < 0) {
 						CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
-						return new AsyncResult<ResponseEntity<CustomErrorType>>(
-								new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+						
+						return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 					}
 
 					logger.info("loaded  " + loadedData + "  records into table " + tableName);
@@ -512,16 +507,17 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				logger.info("cleared CSV Table " + tableName);
 
 				logger.info("processed " + fileTypeDescription + " data " + new Date());
-				return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));
+				
+				return CompletableFuture.completedFuture(new ResponseEntity<Object>( HttpStatus.OK));
 			}
-		}
+	//	}
 		
 	}
 	
-	@Async
-	public Future<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	@Async("prasExecutor")
+	public CompletableFuture<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
-		synchronized(this){
+	//	synchronized(this){
  					Hashtable<String, Object> params = new Hashtable<>();
 					final FileType fileType = fileTypeService.findById(fileTypeId);
 					final String tableName = fileType.getTablesName();
@@ -540,9 +536,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 					if (dataExists > 0) {
 						logger.info("Previous file processing is incomplete ");
 						CustomErrorType errorMessage = new CustomErrorType("Previous file processing is incomplete");
-
-						return new AsyncResult<ResponseEntity<CustomErrorType>>(
-								new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+					
+						return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 					} else {
 						Integer fileId = 0;
 						try {
@@ -557,10 +552,10 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 
 						} catch (Exception e) {
 							logger.warn(e.getCause().getMessage());
-							logger.info("Similar file already processed in past");
-							CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past");
-							return new AsyncResult<ResponseEntity<CustomErrorType>>(
-									new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+							logger.warn("Similar file already processed in past");
+							CustomErrorType errorMessage = new CustomErrorType("Similar file already processed in past:"+fileName);
+							
+							return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 						}
 						logger.info("insuranceCode " + insuranceCode);
 						Resource loadFromCSVTable = getResource(
@@ -577,8 +572,8 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 							Integer loadedData = prasUtil.executeSqlScript(formatedSqlQuery, params, false);
 							if (loadedData < 0) {
 								CustomErrorType errorMessage = new CustomErrorType("ZERO records to process");
-								return new AsyncResult<ResponseEntity<CustomErrorType>>(
-										new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
+								
+								return CompletableFuture.completedFuture(new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT));
 							}
 
 							logger.info("loaded  " + loadedData + "  records into table " + tableName);
@@ -591,13 +586,11 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 						params.put("activityMonth", activityMonth);
 						params.put("username", username);
 
-						
 						logger.info("insuranceCode " + insuranceCode);
 						
 						Resource insertIntoTable = getResource(
 								"classpath:static/sql/" + entityClassName +insuranceCode+ queryTypeInsert + configProperties.getSqlQueryExtn());
 						sqlQuery = StreamUtils.copyToString(insertIntoTable.getInputStream(), StandardCharsets.UTF_8);
-						logger.info("5555555  " + sqlQuery);
 						Integer noOfRecordsLoaded = prasUtil.executeSqlScript(sqlQuery, params, false);
 						logger.info("insertedData " + noOfRecordsLoaded + " records into " + entityClassName);
 
@@ -607,9 +600,10 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 						logger.info("cleared CSV Table " + tableName);
 
 						logger.info("processed " + fileTypeDescription + " data " + new Date());
-						return new AsyncResult<ResponseEntity<Object>>(new ResponseEntity<Object>(HttpStatus.OK));
+						
+						return CompletableFuture.completedFuture(new ResponseEntity<Object>(HttpStatus.OK));
 					}
-				}
+			//	}
 				
 			}		
 			

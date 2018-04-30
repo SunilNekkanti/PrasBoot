@@ -64,7 +64,7 @@ app.controller('MembershipActivityMonthController',
 		.withOption("bLengthChange", false)
 		.withOption("bPaginate", true)
 		.withOption('bProcessing', true)
-		.withOption('bSaveState', true)
+		.withOption('stateSave', true)
 		.withOption('searchDelay', 1000)
 	    .withOption('createdRow', createdRow)
 	    .withDOM('ftrip<"clear">')
@@ -197,10 +197,10 @@ app.controller('MembershipActivityMonthController',
         }
   
        function   isCapIsRoster(data, type, full, meta ) {
-    	  var activityMonth =  (meta.col -1 < 10 ) ? self.effectiveYear+'0'+(meta.col-1):self.effectiveYear+''+(meta.col-1);
-		       var  mbrActivityMonthList  =    $filter('filter')(data, { activityMonth: activityMonth  });
+    	  var activityMonth =  (meta.col -2 < 10 ) ? self.effectiveYear+'0'+(meta.col-2):self.effectiveYear+''+(meta.col-2);
+		       var  mbrActivityMonthList  =    $filter('filter')(data, { activityMonth:activityMonth  });
 		           if(mbrActivityMonthList !== undefined && mbrActivityMonthList.length > 0 )
-		        	   return ((mbrActivityMonthList[0].isCap =='Y')?'C':'').concat( (mbrActivityMonthList[0].isRoster =='Y')?'R':'');
+		        	   return ((mbrActivityMonthList[0].isCap ==='Y')?'C':'').concat( (mbrActivityMonthList[0].isRoster ==='Y')?'R':'');
 		           else 
 		        	   return '';
        }

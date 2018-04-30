@@ -24,6 +24,7 @@ import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.ParamDef;
+import org.springframework.cache.annotation.CacheConfig;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

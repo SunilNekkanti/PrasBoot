@@ -2,7 +2,7 @@ package com.pfchoice.springboot.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import com.pfchoice.springboot.model.FileUploadContent;
 
@@ -24,19 +24,19 @@ public interface FileUploadContentService {
 
 	boolean isFileUploadContentExists(FileUploadContent fileUploadContent);
 
-	Future<?> asyncMbrRosterOrCapFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
+	CompletableFuture<?> asyncMbrRosterOrCapFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
 			Integer reportMonth, String fileName) throws IOException, InterruptedException;
 	
 
-	Future<?> asyncMbrClaimsFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
+	CompletableFuture<?> asyncMbrClaimsFileUploadProcessing(String username, Integer insId, Integer fileTypeId, Integer activityMonth,
 			Integer reportMonth, String fileName) throws IOException, InterruptedException;
 	
-	Future<?> asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(String username, Integer insId, Integer fileTypeId,
+	CompletableFuture<?> asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(String username, Integer insId, Integer fileTypeId,
 			Integer activityMonth, Integer reportMonth, String fileName) throws IOException, InterruptedException;
 	
-	Future<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	CompletableFuture<?> asyncMbrMedicalRiskAdjustFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException;
 	
-	 Future<?> asyncMbrPharmacyClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
+	CompletableFuture<?> asyncMbrPharmacyClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 				final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException;
 }

@@ -101,7 +101,7 @@ where rc.prvdr_id is not null and tm.PAYEE_ID is not null and tm.PAYEE_ID != '';
 
  
 
-insert into membership_activity_month (mbr_id,ins_id,prvdr_id,activity_month,is_roster,is_cap, file_id,created_date,updated_date,created_by,updated_by)
+insert ignore into membership_activity_month (mbr_id,ins_id,prvdr_id,activity_month,is_roster,is_cap, file_id,created_date,updated_date,created_by,updated_by)
   select  cap.mbr_id, cap.ins_id, cap.prvdr_id, cap.cap_period, 'N', 'Y', :fileId,  now() , now() , :username , :username  
  from membership_cap_report cap 
  left join membership_activity_month mam on mam.activity_month=cap.cap_period and mam.mbr_id= cap.mbr_id and mam.prvdr_id=cap.prvdr_id 

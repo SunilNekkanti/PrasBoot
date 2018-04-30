@@ -76,7 +76,7 @@ app.controller('ProviderController',
 		.withOption("bLengthChange", false)
 		.withOption("bPaginate", true)
 		.withOption('bProcessing', true)
-		.withOption('bSaveState', true)
+		.withOption('saveState', true)
 		.withOption('searchDelay', 1000)
 	    .withOption('createdRow', createdRow)
         .withPaginationType('full_numbers')

@@ -21,8 +21,9 @@
                 <label for="plan">File Type</label>
                 <select class=" form-control" ng-model="ctrl.fileType" ng-options="fileType.description for fileType in ctrl.fileTypes | filter:{ins:{id:ctrl.insurance.id }} | orderBy:'description' track by fileType.description"></select>
               </div>
-               <div class="form-group  col-sm-1 "> </div>
-              <div class="form-group col-md-2 " ng-if="ctrl.fileType.activityMonthInd ==='Y'">
+              
+              <div class="form-group  col-sm-1 "> </div>
+              <div class="form-group col-md-2 " ng-if="ctrl.fileType.activityMonthInd =='Y'">
                 <label class="control-lable" for="uname">Activity Month</label>
                 <div class="input-group date" id="dob" ng-model="ctrl.activityMonth" date1-picker>
                   <input type="text" class="form-control netto-input" ng-model="ctrl.activityMonth" date-picker-input>

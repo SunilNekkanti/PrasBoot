@@ -3,9 +3,12 @@ package com.pfchoice.springboot.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +87,7 @@ public class FileUploadContentController implements ResourceLoaderAware {
 
 		List<FileUploadContent> fileUploadContents = fileUploadContentService.findAllFileUploadContents();
 		if (fileUploadContents.isEmpty()) {
-			System.out.println("no fileUploadContents");
+			logger.info("no fileUploadContents");
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 			// You many decide to return HttpStatus.NOT_FOUND
 		}
@@ -297,7 +300,7 @@ public class FileUploadContentController implements ResourceLoaderAware {
 
 			sourceFile = new java.io.File(configProperties.getFilesUploadDirectory() + fileName);
 			sourceFile.createNewFile();
-			System.out.println("sourceFile"+sourceFile);
+			logger.info("sourceFile"+sourceFile);
 			if (!"csv".equals(ext) && !"zip".equals(ext)) {
 				newSourceFile = new java.io.File(configProperties.getFilesUploadDirectory() + newfileName + ".csv");
 				
@@ -350,9 +353,11 @@ public class FileUploadContentController implements ResourceLoaderAware {
 			@RequestParam(value = "fileName", required = true) String fileName) throws IOException, InterruptedException, ExecutionException  {
 
 		FileType  fileType = fileTypeService.findById(fileTypeId);
+		logger.info("fileName "+fileName);
 		 String foldername = fileName.substring(0, fileName.lastIndexOf('.'));
-		List<Future<ResponseEntity<?>>> futures = new ArrayList<>();
-		File[] files = new File[0];
+		 logger.info("foldername "+foldername);
+		List<CompletableFuture<ResponseEntity<?>>> futures = new ArrayList<>();
+		List<File> files = Arrays.asList(new File[0]);
 		 if(activityMonth != null)
 			{
 			    if (fileType != null && fileType.getDescription().contains("Package") ) {
@@ -360,40 +365,40 @@ public class FileUploadContentController implements ResourceLoaderAware {
 					 File zipFolder = new File(foldername);
 					 zipFolder.mkdir();
 					prasUtil.unZip(fileName, foldername);
-					 files = zipFolder.listFiles();
+					 files = Arrays.asList(zipFolder.listFiles());
 					for (File file : files) {
 					    if (!file.isFile()) continue;
-					 String  filename = foldername.replace("/", "\\")+"\\"+file.getName();
-					  if(file.getName().contains("memberlevel")){
+         			    String  filename1 = foldername.replace("/", configProperties.getFileSeparator())+configProperties.getFileSeparator()+file.getName();
+         			    if(file.getName().contains("memberlevel")){
 						   logger.info("forwarding to member Level");
 						   FileType fileType3 = fileTypeService.findByDescriptionAndInsId("Membership Level", insId);
-						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType3.getId(), activityMonth, reportMonth, filename);
+						   CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType3.getId(), activityMonth, reportMonth, filename1);
 							futures.add(future);
-					   }  else    if( file.getName().contains("pharmacy")){
+         			    }  else    if( file.getName().contains("pharmacy")){
 						   logger.info("forwarding to pharmacy"+file.getAbsolutePath());
 						   FileType  fileType2 = fileTypeService.findByDescriptionAndInsId("Membership Claims Pharmacy", insId);
-							 Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-							        .asyncMbrLevelOrPrvdrAdjustFileUploadProcessing( username,insId,fileType2.getId(), activityMonth, reportMonth,  filename);
+						   CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
+							        .asyncMbrLevelOrPrvdrAdjustFileUploadProcessing( username,insId,fileType2.getId(), activityMonth, reportMonth,  filename1);
 							 futures.add(future);
 							 
 					   }   else if(file.getName().contains("claims") ){
 						   logger.info("forwarding to claims file.getAbsolutePath()"+file.getAbsolutePath());
 						   FileType fileType1 = fileTypeService.findByDescriptionAndInsId("Membership Claim", insId);
-						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType1.getId(), activityMonth, reportMonth, filename);
+						   CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrClaimsFileUploadProcessing(username, insId, fileType1.getId(), activityMonth, reportMonth, filename1);
 							futures.add(future);
 					   }  else if( file.getName().contains("adjust")){
 						   logger.info("forwarding to adjust");
 						   FileType fileType4 = fileTypeService.findByDescription("AMG Adjust");
-						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType4.getId(), activityMonth, reportMonth, filename);
+						   CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileType4.getId(), activityMonth, reportMonth, filename1);
 							futures.add(future);
 					   }  else if( file.getName().contains("mmr")){
-						   logger.info("*******************forwarding to mmr******************");
+						   logger.info("forwarding to mmr");
 						   FileType fileType5 = fileTypeService.findByDescription("Simply Membership MMR");
-						   Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
-									.asyncMbrMedicalRiskAdjustFileUploadProcessing(username, insId, fileType5.getId(), activityMonth, reportMonth, filename);
+						   CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
+									.asyncMbrMedicalRiskAdjustFileUploadProcessing(username, insId, fileType5.getId(), activityMonth, reportMonth, filename1);
 							futures.add(future);
 					   }  
 					     
@@ -402,17 +407,17 @@ public class FileUploadContentController implements ResourceLoaderAware {
 				}
 			    else if (fileType != null && fileType.getDescription().contains("Claim") ) {
 					logger.info("forwarding to claims");
-					Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+					CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
 							.asyncMbrClaimsFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
 					futures.add(future);
 				} else	if(fileType != null && (fileType.getDescription().contains("Level") || fileType.getDescription().contains("Adjust"))){
 					logger.info("forwarding to member Level");
-					Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+					CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
 							.asyncMbrLevelOrPrvdrAdjustFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
 					futures.add(future);
 				}else {
 					logger.info("forwarding to roster or cap");
-					Future<ResponseEntity<?>> future = (Future<ResponseEntity<?>>) fileUploadContentService
+					CompletableFuture<ResponseEntity<?>> future = (CompletableFuture<ResponseEntity<?>>) fileUploadContentService
 					.asyncMbrRosterOrCapFileUploadProcessing(username, insId, fileTypeId, activityMonth, reportMonth, fileName);
 					futures.add(future);
 				}
@@ -425,30 +430,72 @@ public class FileUploadContentController implements ResourceLoaderAware {
 				}  
 			}
 			
-		 Future<ResponseEntity<?>> finalFuture =null;
-		 Integer index =0;
-		 logger.info("futures.size()",futures.size());
-			while (index < futures.size() && futures.get(index) != null && true) {
-				try {
-					if (futures.get(index).isDone()) {
-						finalFuture = futures.get(index);
-						if(++index >= files.length )
-							break;
-					}
-				} catch (Exception ex) {
-					finalFuture = futures.get(index);
-					if(++index >=files.length )
-						break;
-				} 
-				System.out.println("FileUpload  processing is in progress. ");
-				Thread.sleep(5000);
-			}
+		 CompletableFuture[] cfs = futures.toArray(new CompletableFuture[futures.size()]);
+		  
+		// Wait until they are all done	
+		 CompletableFuture<List<ResponseEntity<?>>> allCompletableFuture = CompletableFuture.allOf(cfs).thenApply(future -> {
+			    return futures.stream()
+			            .map(completableFuture -> completableFuture.join())
+			            .collect(Collectors.toList());
+			});
+		 
+		 // Check for exceptions during file(s) processing	
+		 CompletableFuture completableFutureWithExceptions = allCompletableFuture.thenApply(resEntities -> {
+	           return resEntities.stream().filter(Objects::nonNull).filter(re -> re.getStatusCodeValue() == 204).count();
+	      });
+		 
+		// Check for successful file(s) processing	
+		 CompletableFuture completableFutureWithNoExceptions = allCompletableFuture.thenApply(resEntities -> {
+	           return resEntities.stream().filter(Objects::nonNull).filter(re -> re.getStatusCodeValue() == 200).count();
+	      });
+		 
+				
+		 Long exceptionCount = 0L;
+		 exceptionCount = (Long) completableFutureWithExceptions.get();
+		 Long successfulCount = 0L;
+		 successfulCount = (Long) completableFutureWithNoExceptions.get();
+	        
+		 logger.info("exceptionCount: "+exceptionCount);
+		 logger.info("successfulCount :"+successfulCount);
+		 logger.info("files.size(): "+files.size());
+		 if(exceptionCount> 0){
+			 CompletableFuture completableFutureWithException = allCompletableFuture.thenApply(resEntities -> {
+		           return resEntities.stream().filter(Objects::nonNull)
+		        		   .filter(re -> re.getStatusCodeValue() == 204).findFirst().get();
+		      });
+			  if(files.size() >= 1 ) { 
+				logger.debug("Deleting processed folder. ");
+				prasUtil.deleteFolder(foldername);
+			  }
+				logger.debug("Deleteed processed file. ");
+				prasUtil.deleteFile(fileName.replace("\\", configProperties.getFileSeparator()));
 			
-			if(files.length >1){
+			 return (ResponseEntity<?>) completableFutureWithException.get();
+		 }else if(successfulCount >= files.size()){
+			 CompletableFuture completableFutureWithNoException = allCompletableFuture.thenApply(resEntities -> {
+		           return resEntities.stream().filter(Objects::nonNull)
+		        		   .filter(re -> re.getStatusCodeValue() == 200).findFirst().get();
+		      });
+			  if(files.size() >= 1 ) { 
+				logger.debug("Deleting processed folder. ");
 				prasUtil.deleteFolder(foldername);
 			}
+				logger.debug("Deleteed processed file. ");
+				prasUtil.deleteFile(fileName.replace("\\", configProperties.getFileSeparator()));
 			
-		return finalFuture.get();
+			 return (ResponseEntity<?>) completableFutureWithNoException.get();
+		 }else{
+			 if(files.size() >= 1 ) { 
+					logger.debug("Deleting processed folder. ");
+					prasUtil.deleteFolder(foldername);
+				  }
+					logger.debug("Deleteed processed file. ");
+					prasUtil.deleteFile(fileName.replace("\\", configProperties.getFileSeparator()));
+				 CustomErrorType errorMessage = new CustomErrorType("Exception in file Processing");
+				
+				return new ResponseEntity<CustomErrorType>(errorMessage, HttpStatus.NO_CONTENT);
+	
+		 }
 	}
 
 	public void setResourceLoader(ResourceLoader resourceLoader) {
@@ -458,5 +505,7 @@ public class FileUploadContentController implements ResourceLoaderAware {
 	public Resource getResource(String location) {
 		return resourceLoader.getResource(location);
 	}
+	
+	
 
 }

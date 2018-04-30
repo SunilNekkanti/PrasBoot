@@ -48,7 +48,7 @@ public class NewMedicalLossRatioServiceImpl implements NewMedicalLossRatioServic
 		return medicalLossRatioRepository.findSummary(insId, prvdrIds,  reportMonths, activityMonths, page);
 	}
 	
-	@Cacheable("reportingYears")
+	//@Cacheable("reportingYears")
 	public List<String> findAllReportingYears(){
 		return medicalLossRatioRepository.findAllReportingYears();
 	}

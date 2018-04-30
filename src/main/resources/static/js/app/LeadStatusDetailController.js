@@ -47,7 +47,7 @@ app.controller('LeadStatusDetailController',
 				.withOption("bLengthChange", false)
 				.withOption("bPaginate", true)
 				.withOption('bProcessing', true)
-				.withOption('bSaveState', true)
+				.withOption('stateSave', true)
 			    .withOption('createdRow', createdRow)
 		        .withPaginationType('full_numbers')
 		        

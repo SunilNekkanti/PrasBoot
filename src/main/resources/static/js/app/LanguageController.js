@@ -57,7 +57,7 @@ app.controller('LanguageController',
 				.withOption("bLengthChange", false)
 				.withOption("bPaginate", true)
 				.withOption('bProcessing', true)
-				.withOption('bSaveState', true)
+				.withOption('stateSave', true)
 		        .withDisplayLength(20).withOption( 'columnDefs', [ {
 					                                orderable : false,
 													className : 'select-checkbox',
