@@ -4,7 +4,7 @@
 
 	<groupId>com.pfchoice.springboot</groupId>
 	<artifactId>Pras</artifactId>
-	<version>1.0.61</version>
+	<version>1.0.64</version>
 	<packaging>jar</packaging>
 
 	<name>Pras</name>
@@ -20,7 +20,7 @@
 		<h2.version>1.4.187</h2.version>
 		<basedir>C:\Softwares\mavenproject\PrasBoot </basedir>
 		<project.build.directory>C:\Softwares\mavenproject\PrasBoot\target</project.build.directory>
-		<project.build.finalName>Pras-1.0.61</project.build.finalName>
+		<project.build.finalName>Pras-1.0.64</project.build.finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springsecurity.version>4.1.1.RELEASE</springsecurity.version>
         <springsecurityoauth2.version>2.0.10.RELEASE</springsecurityoauth2.version>

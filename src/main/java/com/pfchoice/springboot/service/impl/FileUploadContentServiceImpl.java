@@ -197,7 +197,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 	@Async("prasExecutor")
 	public CompletableFuture<?> asyncMbrClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
-		synchronized(this){
+	//	synchronized(this){
 			Hashtable<String, Object> params = new Hashtable<>();
 			logger.info("asyncMbrClaimsFileUploadProcessing  fileTypeId " + fileTypeId);
 			FileType fileType = fileTypeService.findById(fileTypeId);
@@ -293,14 +293,14 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 				
 				return CompletableFuture.completedFuture(new ResponseEntity<Object>(HttpStatus.OK));
 			}
-		}
+		//}
 		
 	}
 	
 	@Async("prasExecutor")
 	public CompletableFuture<?> asyncMbrPharmacyClaimsFileUploadProcessing(final String username, final Integer insId, final Integer fileTypeId,
 			final Integer activityMonth, final Integer reportMonth, final String fileName) throws IOException, InterruptedException {
-		synchronized(this){
+	//	synchronized(this){
 			Hashtable<String, Object> params = new Hashtable<>();
 			final FileType fileType = fileTypeService.findById(fileTypeId);
 			final String tableName = fileType.getTablesName();
@@ -400,7 +400,7 @@ public class FileUploadContentServiceImpl implements FileUploadContentService {
 			
 				return CompletableFuture.completedFuture(new ResponseEntity<Object>( HttpStatus.OK));
 			}
-		}
+	//	}
 		
 	}
 	

@@ -1,5 +1,5 @@
  
-replace into provider_adjustment select null,c.insurance_id, c.prvdr_id, :fileId, :activityMonth reportMonth, ml.IPA_CD, ml.RISK_ENTITY_TYPE, ml.CONTRACT_YEAR, ml.TIME_PERIOD, ml.CONTRACT_PERIOD_START_DT, 
+replace into provider_adjustment select null,c.insurance_id, c.prvdr_id, :fileId, :activityMonth reportMonth, cast(concat(:activityMonth, '01') as date) reportdate,  ml.IPA_CD, ml.RISK_ENTITY_TYPE, ml.CONTRACT_YEAR, ml.TIME_PERIOD, ml.CONTRACT_PERIOD_START_DT, 
 ml.CONTRACT_PERIOD_END_DT, ml.TRACK_MODEL, ml.RISK_IND, ml.PCP_PROVIDER_NBR, ml.ACTIVITYDATE, ml.ACTIVITYMONTH, ml.RISK_RECON_COS_DESC, ml.ADJUSTMENT_DESC, ml.PRODUCT_LABEL, ml.PRODUCT_LVL1, 
 ml.PRODUCT_LVL2, ml.PRODUCT_LVL3, ml.PRODUCT_LVL4, ml.PRODUCT_LVL5, ml.PRODUCT_LVL6, ml.PRODUCT_LVL7, ml.MARKET_LVL1, ml.MARKET_LVL2, ml.MARKET_LVL3, ml.MARKET_LVL4, ml.MARKET_LVL5, ml.MARKET_LVL6,
 ml.MARKET_LVL7, ml.MARKET_LVL8,(ml.ADJUSTMENT_AMT), ml.TIN

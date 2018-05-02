@@ -8,7 +8,7 @@ PHARMACYCITYNAME, PHARMACYSTATECODE, PHARMACYZIP, PHARMACYPHONENUMBER, PHARMACYN
 PHARMACYNPINUMBER, PHARMACYNUMBER, :fileId, now(),now(),:username,:username,'Y' 
 FROM 
 csv2table_amg_pharmacy csv2talbe_phar
-LEFT OUTER JOIN  pharmacy phar  on TRIM(csv2talbe_phar.PHARMACYNAME)  =  phar.name
+LEFT OUTER JOIN  pharmacy phar  on  csv2talbe_phar.PHARMACYNAME   =  phar.name
 WHERE   phar.pharmacy_id IS NULL
 group by PHARMACYNAME;
 
@@ -22,11 +22,17 @@ SELECT   MLNAME,MFNAME,lg.gender_id,STRING_TO_DATE(MBRDOB), 4,SRC_SYS_MEMBER_NBR
  where m.SRC_SYS_MBR_NBR is null
  group by phar.SRC_SYS_MEMBER_NBR;
 
+ 
+UPDATE membership m
+JOIN (select lg.gender_id,phar.SRC_SYS_MEMBER_NBR  FROM  csv2table_amg_pharmacy phar
+   join lu_gender lg on lg.code = phar.MBRGENDER 
+		   group by phar.SRC_SYS_MEMBER_NBR) pharm on pharm.SRC_SYS_MEMBER_NBR = m.SRC_SYS_MBR_NBR
+	SET mbr_genderid= gender_id
+	where mbr_genderid not in (1,2); 		   
 
-
-
+  
 INSERT INTO membership_claims
-( claim_id_number, mbr_id, prvdr_id, pcp_prov_Id, ins_id, report_Month, claim_type,
+( claim_id_number, mbr_id, prvdr_id, pcp_prov_Id, ins_id, report_Month, report_date,claim_type,
  location_id, facility_type_code, bill_type_code, frequency_type_code,  
  bill_type, dischargestatus, MemEnrollId, Diagnoses, 
  product_label, product_lvl1, product_lvl2, product_lvl3, product_lvl4, product_lvl5, product_lvl6, product_lvl7, 
@@ -34,7 +40,7 @@ INSERT INTO membership_claims
  risk_recon_cos_des, tin, dx_type_cd, proc_type_cd, created_date, updated_date, created_by, updated_by, active_ind, file_id
  )
 SELECT 
-CLAIMNUMBER,m.mbr_id,c.prvdr_id, phar.PCP_PROVIDER_NBR,:insId,@reportMonth reportMonth,CLAIMTYPE,NULL location_id,
+CLAIMNUMBER,m.mbr_id,c.prvdr_id, phar.PCP_PROVIDER_NBR,:insId,@reportMonth reportMonth, cast(concat(@reportMonth, '01') as date) reportdate,CLAIMTYPE,NULL location_id,
 NULL facility_type_code,NULL bill_type_code, NULL frequency_type_code, NULL bill_type,NULL dischargestatus,
 NULL MemEnrollId,NULL Diagnoses,phar.PRODUCT_LABEL,phar.PRODUCT_LVL1,phar.PRODUCT_LVL2,phar.PRODUCT_LVL3,phar.PRODUCT_LVL4,phar.PRODUCT_LVL5,
 phar.PRODUCT_LVL6,phar.PRODUCT_LVL7,phar.MARKET_LVL1,phar.MARKET_LVL2,phar.MARKET_LVL3,phar.MARKET_LVL4,phar.MARKET_LVL5,phar.MARKET_LVL6,

@@ -27,7 +27,7 @@ email:
 
 spring:
   profiles:
-    active: local
+    active: server
   main:
     banner-mode: "off"
     
@@ -57,7 +57,7 @@ spring:
        hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
        hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
   datasource:
-      url: jdbc:mysql://localhost:3306/pfchoices_final_20180425?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+      url: jdbc:mysql://localhost:3306/pfchoices_final_20180501?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
       username: root
       password: test123
       driverClassName: com.mysql.jdbc.Driver
@@ -122,7 +122,7 @@ spring:
        hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider    
   profiles: server
   datasource:
-      url: jdbc:mysql://pras.cp2ok1lxfh49.us-east-1.rds.amazonaws.com:3306/pfchoices_final_20180425?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+      url: jdbc:mysql://pras.cp2ok1lxfh49.us-east-1.rds.amazonaws.com:3306/pfchoices_final_20180501?tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
       username: dbadmin
       password: prasdb20!8
       driverClassName: com.mysql.jdbc.Driver

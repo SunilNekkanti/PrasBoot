@@ -16,19 +16,26 @@ INSERT ignore INTO membership ( Mbr_LastName,Mbr_FirstName,Mbr_GenderID, Mbr_DOB
  LEFT  JOIN  membership m on m.SRC_SYS_MBR_NBR  =   csv2AmgClaim.SRC_SYS_MEMBER_NBR
  where m.SRC_SYS_MBR_NBR is null;
  
- 
+UPDATE membership m
+JOIN (select lg.gender_id,csv2AmgClaim.SRC_SYS_MEMBER_NBR  FROM  csv2Table_Amg_Claim_temp csv2AmgClaim
+   join lu_gender lg on lg.code = csv2AmgClaim.MBRGENDER 
+		   group by csv2AmgClaim.SRC_SYS_MEMBER_NBR)  AmgClaim on AmgClaim.SRC_SYS_MEMBER_NBR = m.SRC_SYS_MBR_NBR
+	SET mbr_genderid= gender_id
+	where mbr_genderid not in (1,2);
 
 
-INSERT INTO membership_claims
+drop table if exists csv2Table_Amg_Claim_temp;
+
+INSERT ignore INTO membership_claims
 (
-claim_id_number,mbr_id,prvdr_id,ins_id,report_month,claim_type,facility_type_code,bill_type_code,
+claim_id_number,mbr_id,prvdr_id,ins_id,report_month,report_date,claim_type,facility_type_code,bill_type_code,
 frequency_type_code,bill_type,dischargestatus,
 MemEnrollId,Diagnoses,product_label,product_lvl1,product_lvl2,product_lvl3,product_lvl4,product_lvl5,product_lvl6,product_lvl7,
 market_lvl1,market_lvl2,market_lvl3,market_lvl4,market_lvl5,market_lvl6,market_lvl7,market_lvl8,
 tin,dx_type_cd,proc_type_cd,created_date,updated_date,created_by,updated_by,active_ind,file_id
 )
 SELECT 
-CLAIMNUMBER,m.mbr_id,c.prvdr_id,:insId, @reportMonth reportMonth,CLAIMTYPE,lft.code,null,
+CLAIMNUMBER,m.mbr_id,c.prvdr_id,:insId, @reportMonth reportMonth, cast(concat(@reportMonth, '01') as date) reportdate,CLAIMTYPE,lft.code,null,
 null,csv2AmgClaim.BILLTYPE,csv2AmgClaim.DISCHARGESTATUS,null,
 CONCAT_WS(',',NULLIF(DIAGNOSIS1,'') , NULLIF(DIAGNOSIS2,'') , NULLIF(DIAGNOSIS3,''), NULLIF(DIAGNOSIS4,'') ,NULLIF(DIAGNOSIS5,'') , NULLIF(DIAGNOSIS6,'') , NULLIF(DIAGNOSIS7,'') ,NULLIF(DIAGNOSIS8,'')) diagnoses,
 csv2AmgClaim.PRODUCT_LABEL,csv2AmgClaim.PRODUCT_LVL1,csv2AmgClaim.PRODUCT_LVL2,csv2AmgClaim.PRODUCT_LVL3,csv2AmgClaim.PRODUCT_LVL4,csv2AmgClaim.PRODUCT_LVL5,
@@ -60,7 +67,7 @@ select csv2AmgClaim.*,mc.mbr_claim_id,mc.mbr_id,mc.prvdr_id,mc.ins_id,mc.claim_t
   
   
    
-insert into membership_claim_details 
+insert ignore into membership_claim_details 
  (mbr_claim_id,claim_line_seq_nbr,clm_line_adj_seq_nbr,activity_date,activity_month,claim_start_date,claim_end_date,paid_date,revenue_code,cpt_code,cpt_code_modifier1,cpt_code_modifier2,
 claim_status,location_id,srv_provider,srv_provider_name,srv_provider_code,srv_provider_desc,risk_recon_cos_des,amount_paid,allow_amt,co_insurance,co_pay,deductible,cob_paid_amount,processing_status,pharmacy_name,
 quantity,npos,risk_id,runn_date,ndc,mony,drug_label_name,drug_version,pharmacy,membership_claims,psychare,simple_county,triangles,cover,
@@ -90,7 +97,7 @@ where csv2AmgClaim.mbr_id is not null  and mc.mc_mbr_claim_id is not null and  m
 
 
 
- insert into membership_activity_month (mbr_id,ins_id,prvdr_id,activity_month,is_roster, is_cap,file_id,created_date,updated_date,created_by,updated_by)
+ replace into membership_activity_month (mbr_id,ins_id,prvdr_id,activity_month,is_roster, is_cap,file_id,created_date,updated_date,created_by,updated_by)
 select  distinct
 csv2AmgClaim.mbr_id,csv2AmgClaim.ins_id,csv2AmgClaim.prvdr_id,  mcd.activity_month activityMonth,'N', 'N',:fileId fileId,
 now() created_date,now() updated_date,:username created_by,:username updated_by 
@@ -102,7 +109,7 @@ group by csv2AmgClaim.mbr_id,csv2AmgClaim.ins_id,csv2AmgClaim.prvdr_id,mcd.activ
 
  
 
-                        		  replace into new_medical_loss_ratio
+   replace into new_medical_loss_ratio
                         		  ( ins_id, prvdr_id, report_month, activity_month, amg_funding, mbr_cnt, inst_claims, prof_claims, phar_claims, unwanted_claims, sl_credit_claims, amg_mbr_cnt, amg_inst, amg_prof, amg_phar,
                         		   amg_sl_exp, amg_sl_credit, amg_vab_adj, amg_adj, amg_pcp_cap, amg_spec_cap, amg_dental_cap, amg_trans_cap, amg_vision_cap, amg_ibnr_inst, amg_ibnr_prof, 
                         		    file_id, created_date, updated_date, created_by, updated_by)
@@ -146,5 +153,5 @@ group by csv2AmgClaim.mbr_id,csv2AmgClaim.ins_id,csv2AmgClaim.prvdr_id,mcd.activ
  
  
 drop table if exists csv2Table_Amg_Claim_details;
-drop table if exists csv2Table_Amg_Claim_temp;
+
  

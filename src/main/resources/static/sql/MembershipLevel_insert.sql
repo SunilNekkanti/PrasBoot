@@ -9,9 +9,17 @@ SELECT   MLNAME,MFNAME,lg.gender_id,STRING_TO_DATE(MBRDOB), 4,SRC_SYS_MEMBER_NBR
  group by csv2AmgMbrLvl.SRC_SYS_MEMBER_NBR;
 
  
+ UPDATE membership m
+ JOIN (select lg.gender_id,csv2AmgMbrLvl.SRC_SYS_MEMBER_NBR  FROM  csv2table_amg_member_level csv2AmgMbrLvl
+    join lu_gender lg on lg.code = csv2AmgMbrLvl.MBRGENDER 
+ 		   group by csv2AmgMbrLvl.SRC_SYS_MEMBER_NBR)  AmgMbrLvl on AmgMbrLvl.SRC_SYS_MEMBER_NBR = m.SRC_SYS_MBR_NBR
+ 	SET mbr_genderid= gender_id
+ 	where mbr_genderid not in (1,2);
+ 
+ 
  select :activityMonth into @reportMonth;
 
-replace into membership_level_claim_summary select  distinct :insId,:fileId, :activityMonth, IPA_CD, IPANAME, PCP_PROVIDER_NBR, PCPFIRSTNAME, PCPLASTNAME, CONTRACT_YR, 
+replace into membership_level_claim_summary select  distinct :insId,:fileId, :activityMonth,  cast(concat(:activityMonth, '01') as date) reportdate, IPA_CD, IPANAME, PCP_PROVIDER_NBR, PCPFIRSTNAME, PCPLASTNAME, CONTRACT_YR, 
 TIME_PERIOD, RISK_ENTITY_TYPE, EFFECTIVE_DT, EXPIRATION_DT, TRACK_MODEL, RISK_FLAG, ACTIVITYDATE, ACTIVITYMONTH, SRC_SYS_MEMBER_NBR, MLNAME, MFNAME, MBRDOB, 
 MBRGENDER, MEDICAIDNO, MEDICARENO, MEMBER_MONTH_CNT, HIC_NUMBER, HOSPICE, ESRD, AGED_DISABLED_MSP, INSTITUTIONAL, NHC, MEDICAID_FLAG, LTI_FLAG, MEDICAID_INDICATOR,
 RISK_ADJUSTER_FACTOR_A, PART_D_RA_FACTOR, LIS_PREMIUM_SUBSIDY, PREMIUM_REBATE_PARTD_AMOUNT, PART_D_SUBSIDY_PAYMENT_AMOUNT, TOTAL_MA_PAYMENT_AMOUNT, 
